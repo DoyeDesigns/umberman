@@ -5,6 +5,7 @@ import { useMemo, useRef, type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useBoostedScrollProgress } from "@/hooks/useScrollEnterProgress";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
 import { VARIANT_3, delayV3Exit } from "@/lib/animations/config";
 
@@ -147,7 +148,7 @@ export function V3TransmissionText({
     [text],
   );
 
-  const { scrollYProgress: enterProgress } = useScroll({
+  const { scrollYProgress: rawEnter } = useScroll({
     target: wrapperRef,
     offset: [
       ...(isDesktop
@@ -155,6 +156,7 @@ export function V3TransmissionText({
         : VARIANT_3.mobileDecodeTextEnterOffset),
     ],
   });
+  const enterProgress = useBoostedScrollProgress(rawEnter, wrapperRef);
 
   const { scrollYProgress: exitProgress } = useScroll({
     target: wrapperRef,

@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useBoostedScrollProgress } from "@/hooks/useScrollEnterProgress";
 import { VARIANT_5 } from "@/lib/animations/config";
 
 type V5HeroFoldProps = {
@@ -18,10 +19,11 @@ export function V5HeroFold({ children, className }: V5HeroFoldProps) {
   const isDesktop = useMediaQuery(VARIANT_5.desktopQuery);
   const ref = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress: rawEnter } = useScroll({
     target: ref,
     offset: [...(isDesktop ? VARIANT_5.enterOffset : VARIANT_5.mobileEnterOffset)],
   });
+  const scrollYProgress = useBoostedScrollProgress(rawEnter, ref);
 
   const progress = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const rotateX = useTransform(progress, (t) => (1 - t) * -VARIANT_5.foldAngleX);

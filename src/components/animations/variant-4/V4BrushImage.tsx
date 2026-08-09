@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useBoostedScrollProgress } from "@/hooks/useScrollEnterProgress";
 import {
   useRestSettleSignal,
   useSettledImageEnter,
@@ -44,7 +45,7 @@ export function V4BrushImage({
   const isDesktop = useMediaQuery(VARIANT_4.desktopQuery);
   const ref = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress: enterProgress } = useScroll({
+  const { scrollYProgress: rawEnter } = useScroll({
     target: ref,
     offset: [
       ...(isDesktop
@@ -52,6 +53,7 @@ export function V4BrushImage({
         : VARIANT_4.mobileImageEnterOffset),
     ],
   });
+  const enterProgress = useBoostedScrollProgress(rawEnter, ref);
 
   const settle = useRestSettleSignal(ref, settleAtRest);
   const progress = useSettledImageEnter(

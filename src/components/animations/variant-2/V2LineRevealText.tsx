@@ -6,6 +6,7 @@ import { useAnimationVariant } from "@/components/animations/AnimationVariantPro
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useBoostedScrollProgress } from "@/hooks/useScrollEnterProgress";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
 import { VARIANT_2, delayV2Exit } from "@/lib/animations/config";
 
@@ -85,7 +86,7 @@ export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps
 
   const words = useMemo(() => text.split(/\s+/).filter(Boolean), [text]);
 
-  const { scrollYProgress: enterProgress } = useScroll({
+  const { scrollYProgress: rawEnter } = useScroll({
     target: wrapperRef,
     offset: [
       ...(isDesktop
@@ -93,6 +94,7 @@ export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps
         : VARIANT_2.mobileLineTextEnterOffset),
     ],
   });
+  const enterProgress = useBoostedScrollProgress(rawEnter, wrapperRef);
 
   const { scrollYProgress: exitProgress } = useScroll({
     target: wrapperRef,

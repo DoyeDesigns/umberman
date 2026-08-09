@@ -6,6 +6,7 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
   getHeroEntrance,
   v4TitleClipKeyframes,
+  type EntranceFrame,
   type IntroEntranceRole,
 } from "@/lib/animations/hero-entrance";
 
@@ -16,6 +17,16 @@ type HeroEntranceMotionProps = {
   style?: React.CSSProperties;
 };
 
+const SCROLL_DRIVEN_VARIANTS = new Set([2, 3, 4, 5]);
+
+function withoutOpacity(frame: EntranceFrame): EntranceFrame {
+  return {
+    initial: { ...frame.initial, opacity: 1 },
+    animate: { ...frame.animate, opacity: 1 },
+    transition: frame.transition,
+  };
+}
+
 export function HeroEntranceMotion({
   children,
   role,
@@ -24,7 +35,19 @@ export function HeroEntranceMotion({
 }: HeroEntranceMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+
+  if (variant === 0) {
+    return (
+      <div className={`overflow-visible ${className ?? ""}`} style={style}>
+        {children}
+      </div>
+    );
+  }
+
   const frame = getHeroEntrance(variant, role, reducedMotion);
+  const entrance = SCROLL_DRIVEN_VARIANTS.has(variant) && !reducedMotion
+    ? withoutOpacity(frame)
+    : frame;
 
   if (variant === 4 && role === "title" && !reducedMotion) {
     const clipFrames = v4TitleClipKeyframes();
@@ -32,10 +55,9 @@ export function HeroEntranceMotion({
       <motion.div
         className={`overflow-visible pt-[0.08em] ${className ?? ""}`}
         style={style}
-        initial={{ opacity: 0, clipPath: clipFrames[0] }}
+        initial={{ opacity: 1, clipPath: clipFrames[0] }}
         animate={{ opacity: 1, clipPath: clipFrames }}
         transition={{
-          opacity: { duration: 0.35, delay: frame.transition.delay },
           clipPath: {
             duration: 1.15,
             delay: Number(frame.transition.delay ?? 0),
@@ -58,9 +80,9 @@ export function HeroEntranceMotion({
         <motion.div
           className="relative overflow-visible"
           style={{ transformOrigin: "top center", transformStyle: "preserve-3d" }}
-          initial={frame.initial}
-          animate={frame.animate}
-          transition={frame.transition}
+          initial={entrance.initial}
+          animate={entrance.animate}
+          transition={entrance.transition}
         >
           {children}
           <motion.div
@@ -83,9 +105,9 @@ export function HeroEntranceMotion({
     <motion.div
       className={`overflow-visible ${className ?? ""}`}
       style={style}
-      initial={frame.initial}
-      animate={frame.animate}
-      transition={frame.transition}
+      initial={entrance.initial}
+      animate={entrance.animate}
+      transition={entrance.transition}
     >
       {children}
     </motion.div>
