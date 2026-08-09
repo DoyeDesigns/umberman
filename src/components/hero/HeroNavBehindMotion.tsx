@@ -49,7 +49,7 @@ export function HeroNavBehindMotion({
     return `${split}px 0 rgba(215,79,36,0.75), ${-split}px 0 rgba(53,67,150,0.7)`;
   });
 
-  if (reducedMotion || (variant !== 2 && variant !== 3) || !isDesktop) {
+  if (reducedMotion || (variant !== 2 && variant !== 3)) {
     return (
       <div className={`relative z-20 ${className ?? ""}`}>{children}</div>
     );

@@ -2,10 +2,10 @@
 
 import { motion } from "framer-motion";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
   getHeroEntrance,
+  v4TitleClipKeyframes,
   type IntroEntranceRole,
 } from "@/lib/animations/hero-entrance";
 
@@ -16,8 +16,6 @@ type HeroEntranceMotionProps = {
   style?: React.CSSProperties;
 };
 
-const SCROLL_DRIVEN_VARIANTS = new Set([2, 3, 4, 5]);
-
 export function HeroEntranceMotion({
   children,
   role,
@@ -26,19 +24,60 @@ export function HeroEntranceMotion({
 }: HeroEntranceMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const isMobile = useIsMobile();
+  const frame = getHeroEntrance(variant, role, reducedMotion);
 
-  // Static + scroll-driven variants: no mount animation (scroll layers own visibility).
-  // iOS Safari often never completes filter/clip mount animations, leaving hero text blurred.
-  if (variant === 0 || SCROLL_DRIVEN_VARIANTS.has(variant) || (variant === 1 && isMobile)) {
+  if (variant === 4 && role === "title" && !reducedMotion) {
+    const clipFrames = v4TitleClipKeyframes();
     return (
-      <div className={`overflow-visible ${className ?? ""}`} style={style}>
+      <motion.div
+        className={`overflow-visible pt-[0.08em] ${className ?? ""}`}
+        style={style}
+        initial={{ opacity: 0, clipPath: clipFrames[0] }}
+        animate={{ opacity: 1, clipPath: clipFrames }}
+        transition={{
+          opacity: { duration: 0.35, delay: frame.transition.delay },
+          clipPath: {
+            duration: 1.15,
+            delay: Number(frame.transition.delay ?? 0),
+            ease: [0.22, 1, 0.36, 1],
+            times: [0, 0.35, 0.72, 1],
+          },
+        }}
+      >
         {children}
-      </div>
+      </motion.div>
     );
   }
 
-  const frame = getHeroEntrance(variant, role, reducedMotion);
+  if (variant === 5 && !reducedMotion) {
+    return (
+      <div
+        className={className}
+        style={{ perspective: 1000, ...style }}
+      >
+        <motion.div
+          className="relative overflow-visible"
+          style={{ transformOrigin: "top center", transformStyle: "preserve-3d" }}
+          initial={frame.initial}
+          animate={frame.animate}
+          transition={frame.transition}
+        >
+          {children}
+          <motion.div
+            aria-hidden
+            className="v5-fold-crease pointer-events-none absolute inset-x-0 top-0 h-8"
+            initial={{ opacity: 0.55 }}
+            animate={{ opacity: 0 }}
+            transition={{
+              duration: 0.65,
+              delay: Number(frame.transition.delay ?? 0) + 0.15,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+          />
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <motion.div

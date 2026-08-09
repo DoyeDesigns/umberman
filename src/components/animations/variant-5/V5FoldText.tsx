@@ -5,7 +5,6 @@ import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useBoostedScrollProgress } from "@/hooks/useScrollEnterProgress";
 import { VARIANT_5 } from "@/lib/animations/config";
 
 type V5FoldTextProps = {
@@ -19,11 +18,10 @@ export function V5FoldText({ text, className = "" }: V5FoldTextProps) {
   const isDesktop = useMediaQuery(VARIANT_5.desktopQuery);
   const ref = useRef<HTMLParagraphElement>(null);
 
-  const { scrollYProgress: rawEnter } = useScroll({
+  const { scrollYProgress } = useScroll({
     target: ref,
     offset: [...(isDesktop ? VARIANT_5.enterOffset : VARIANT_5.mobileEnterOffset)],
   });
-  const scrollYProgress = useBoostedScrollProgress(rawEnter, ref);
 
   const rotateX = useTransform(
     scrollYProgress,

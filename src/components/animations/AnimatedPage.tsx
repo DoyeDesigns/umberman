@@ -7,7 +7,6 @@ import { StickyRevealSection } from "@/components/animations/StickyRevealSection
 import { V3TransmissionOverlay } from "@/components/animations/variant-3/V3TransmissionOverlay";
 import { V4PaperGrain } from "@/components/animations/variant-4/V4PaperGrain";
 import type { AnimationVariant } from "@/lib/animations/config";
-import { useIOSScrollInit } from "@/hooks/useIOSScrollInit";
 
 /** Sections that sit flush against the next panel (natural height, no h-screen gap). */
 const COMPACT_SECTIONS = new Set([1]);
@@ -20,7 +19,6 @@ type AnimatedPageProps = {
 export function AnimatedPage({ variant, children }: AnimatedPageProps) {
   const sections = Children.toArray(children).filter(isValidElement);
   const mainRef = useRef<HTMLElement>(null);
-  useIOSScrollInit();
 
   if (variant === 1) {
     return (

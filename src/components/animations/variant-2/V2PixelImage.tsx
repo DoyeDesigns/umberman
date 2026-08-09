@@ -12,7 +12,6 @@ import { useAnimationVariant } from "@/components/animations/AnimationVariantPro
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useBoostedScrollProgress } from "@/hooks/useScrollEnterProgress";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import {
   useRestSettleSignal,
@@ -114,13 +113,12 @@ export function V2PixelImage({
   const settledRef = useRef(false);
   const directionRef = useRef(scrollDirection);
 
-  const { scrollYProgress: rawEnter } = useScroll({
+  const { scrollYProgress: enterProgress } = useScroll({
     target: containerRef,
     offset: [
       ...(isDesktop ? VARIANT_2.enterOffset : VARIANT_2.mobileEnterOffset),
     ],
   });
-  const enterProgress = useBoostedScrollProgress(rawEnter, containerRef);
 
   const { scrollYProgress: exitProgress } = useScroll({
     target: containerRef,

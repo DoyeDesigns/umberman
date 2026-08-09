@@ -3,10 +3,8 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useBoostedScrollProgress } from "@/hooks/useScrollEnterProgress";
 import { VARIANT_4 } from "@/lib/animations/config";
 
 type V4InkBloomMotionProps = {
@@ -25,14 +23,12 @@ export function V4InkBloomMotion({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const isDesktop = useMediaQuery(VARIANT_4.desktopQuery);
-  const isMobile = useIsMobile();
   const ref = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress: rawEnter } = useScroll({
+  const { scrollYProgress } = useScroll({
     target: ref,
     offset: [...(isDesktop ? VARIANT_4.enterOffset : VARIANT_4.mobileEnterOffset)],
   });
-  const scrollYProgress = useBoostedScrollProgress(rawEnter, ref);
 
   const progress = useTransform(scrollYProgress, (p) => {
     if (delay >= 1) return 0;
@@ -40,10 +36,8 @@ export function V4InkBloomMotion({
   });
 
   const opacity = useTransform(progress, [0, 0.35, 1], [0.15, 0.55, 1]);
-  const filter = useTransform(progress, (p) => {
-    if (isMobile) return "blur(0px)";
-    return `blur(${(1 - p) * 10}px)`;
-  });
+  const blur = useTransform(progress, [0, 1], [10, 0]);
+  const filter = useTransform(blur, (b) => `blur(${b}px)`);
 
   if (variant !== 4 || reducedMotion) {
     return (

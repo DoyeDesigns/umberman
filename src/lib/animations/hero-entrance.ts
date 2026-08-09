@@ -26,13 +26,11 @@ export const LIVE_AT_ENTRANCE_DELAY: Record<"liveAtCall" | "liveAtResponse", num
   liveAtResponse: 1.05,
 };
 
-export type EntranceFrame = {
+type EntranceFrame = {
   initial: TargetAndTransition;
   animate: TargetAndTransition;
   transition: Transition;
 };
-
-type EntranceFrameInternal = EntranceFrame;
 
 function baseTransition(delay: number, duration = 0.72): Transition {
   return { duration, delay, ease: EASE_OUT };
@@ -42,7 +40,7 @@ function springTransition(delay: number, stiffness = 320, damping = 22): Transit
   return { type: "spring", stiffness, damping, delay };
 }
 
-function reducedEntrance(role: IntroEntranceRole): EntranceFrameInternal {
+function reducedEntrance(role: IntroEntranceRole): EntranceFrame {
   const delay =
     role === "liveAtCall" || role === "liveAtResponse"
       ? LIVE_AT_ENTRANCE_DELAY[role] * 0.4
@@ -71,7 +69,7 @@ export function getHeroEntrance(
   variant: AnimationVariant,
   role: IntroEntranceRole,
   reduced: boolean,
-): EntranceFrameInternal {
+): EntranceFrame {
   if (reduced) return reducedEntrance(role);
 
   const delay = roleDelay(variant, role);

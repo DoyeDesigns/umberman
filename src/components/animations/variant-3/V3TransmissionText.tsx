@@ -3,10 +3,8 @@
 import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
 import { useMemo, useRef, type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useBoostedScrollProgress } from "@/hooks/useScrollEnterProgress";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
 import { VARIANT_3, delayV3Exit } from "@/lib/animations/config";
 
@@ -28,7 +26,6 @@ type SentenceProps = {
   duration: number;
   scrollDirection: ScrollDirection;
   peaksRef: RefObject<number[]>;
-  isMobile: boolean;
 };
 
 /**
@@ -45,7 +42,6 @@ function TransmissionSentence({
   duration,
   scrollDirection,
   peaksRef,
-  isMobile,
 }: SentenceProps) {
   const directionRef = useRef(scrollDirection);
   directionRef.current = scrollDirection;
@@ -56,7 +52,7 @@ function TransmissionSentence({
     if (raw > prevPeak) peaksRef.current[index] = raw;
 
     const locked =
-      directionRef.current === "up" ? Math.max(raw, prevPeak) : raw;
+      scrollDirection === "up" ? Math.max(raw, prevPeak) : raw;
 
     const exitValue = scrollDirection === "down" ? delayV3Exit(Number(exit)) : 0;
     const exitStagger = stagger * 0.9;
@@ -80,7 +76,6 @@ function TransmissionSentence({
   const letterSpacing = useTransform(reveal, (t) => `${(1 - t) * 0.055}em`);
 
   const filter = useTransform(reveal, (t) => {
-    if (isMobile) return "blur(0px)";
     const blur = (1 - t) * (1 - t) * 6;
     return blur > 0.2 ? `blur(${blur}px)` : "blur(0px)";
   });
@@ -143,7 +138,6 @@ export function V3TransmissionText({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const isDesktop = useMediaQuery(VARIANT_3.desktopQuery);
-  const isMobile = useIsMobile();
   const scrollDirection = useScrollDirection();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const peaksRef = useRef<number[]>([]);
@@ -153,7 +147,7 @@ export function V3TransmissionText({
     [text],
   );
 
-  const { scrollYProgress: rawEnter } = useScroll({
+  const { scrollYProgress: enterProgress } = useScroll({
     target: wrapperRef,
     offset: [
       ...(isDesktop
@@ -161,7 +155,6 @@ export function V3TransmissionText({
         : VARIANT_3.mobileDecodeTextEnterOffset),
     ],
   });
-  const enterProgress = useBoostedScrollProgress(rawEnter, wrapperRef);
 
   const { scrollYProgress: exitProgress } = useScroll({
     target: wrapperRef,
@@ -194,7 +187,6 @@ export function V3TransmissionText({
             duration={duration}
             scrollDirection={scrollDirection}
             peaksRef={peaksRef}
-            isMobile={isMobile}
           />
         ))}
       </div>

@@ -4,7 +4,6 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
-import { useIsMobile } from "@/hooks/useIsMobile";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -39,7 +38,6 @@ export function V2Motion({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
-  const isMobile = useIsMobile();
   const scrollDirection = useScrollDirection();
   const ref = useRef<HTMLDivElement>(null);
   const enterProgress = useScrollEnterProgress(ref, VARIANT_2);
@@ -98,7 +96,7 @@ export function V2Motion({
   });
 
   const filter = useTransform([enterProgress, exitProgress], ([enter, exit]) => {
-    if (noBlur || isMobile) return "blur(0px)";
+    if (noBlur) return "blur(0px)";
     const delayedEnter = Math.min(1, Math.max(0, (Number(enter) - delay) / (1 - delay || 1)));
     const delayedExit = noExit ? 0 : delayV2Exit(Number(exit));
     if (delayedExit > 0.02) return "blur(0px)";
@@ -131,7 +129,7 @@ export function V2Motion({
       >
         {children}
       </motion.div>
-      {!noExit && !isMobile && (
+      {!noExit && (
         <V2TopExitBlur
           exitProgress={exitProgress}
           scrollDirection={scrollDirection}

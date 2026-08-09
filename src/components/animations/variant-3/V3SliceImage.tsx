@@ -11,7 +11,6 @@ import { useCallback, useEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useBoostedScrollProgress } from "@/hooks/useScrollEnterProgress";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import {
   useRestSettleSignal,
@@ -74,11 +73,10 @@ export function V3SliceImage({
   const settledRef = useRef(false);
   const directionRef = useRef(scrollDirection);
 
-  const { scrollYProgress: rawEnter } = useScroll({
+  const { scrollYProgress: enterProgress } = useScroll({
     target: containerRef,
     offset: [...(isDesktop ? VARIANT_3.enterOffset : VARIANT_3.mobileEnterOffset)],
   });
-  const enterProgress = useBoostedScrollProgress(rawEnter, containerRef);
 
   const { scrollYProgress: exitProgress } = useScroll({
     target: containerRef,
