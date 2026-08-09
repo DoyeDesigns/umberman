@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useTransform } from "framer-motion";
+import { useTransform } from "framer-motion";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import type { RefObject } from "react";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
@@ -20,17 +21,17 @@ export function V3TransmissionOverlay({ targetRef }: V3TransmissionOverlayProps)
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.12, 0.88, 1], [0, 0.07, 0.07, 0]);
-  const y = useTransform(scrollYProgress, (p) => `${(p * 120) % 6}px`);
+  const y = useTransform(scrollYProgress, (p) => (p * 120) % 6);
 
   if (variant !== 3 || reducedMotion) {
     return null;
   }
 
   return (
-    <motion.div
+    <ScrollLinkedDiv
       aria-hidden
       className="v3-transmission-overlay pointer-events-none fixed inset-0 z-40 mix-blend-multiply"
-      style={{ opacity, y }}
+      motionStyle={{ opacity, y }}
     />
   );
 }

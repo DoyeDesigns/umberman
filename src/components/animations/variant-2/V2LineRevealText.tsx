@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useTransform, type MotionValue } from "framer-motion";
+import { useTransform, type MotionValue } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useMemo, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
@@ -69,12 +70,13 @@ function RevealWord({
 
   return (
     <span className="inline-block max-w-full overflow-hidden align-bottom">
-      <motion.span
+      <ScrollLinkedDiv
+        as="span"
         className="inline-block will-change-[transform,opacity]"
-        style={{ clipPath, x, opacity }}
+        motionStyle={{ clipPath, x, opacity }}
       >
         {word}
-      </motion.span>
+      </ScrollLinkedDiv>
     </span>
   );
 }

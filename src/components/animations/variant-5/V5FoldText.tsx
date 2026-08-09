@@ -1,7 +1,8 @@
 "use client";
 
-import { motion, useTransform } from "framer-motion";
+import { useTransform } from "framer-motion";
 import { useRef } from "react";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -48,21 +49,21 @@ export function V5FoldText({ text, className = "" }: V5FoldTextProps) {
 
   return (
     <div ref={ref} className="relative" style={{ perspective: 900 }}>
-      <motion.p
+      <ScrollLinkedDiv
+        as="p"
         className={className}
-        style={{
-          rotateX,
-          opacity,
+        staticStyle={{
           transformOrigin: "top center",
           transformStyle: "preserve-3d",
         }}
+        motionStyle={{ rotateX, opacity }}
       >
         {text}
-      </motion.p>
-      <motion.div
+      </ScrollLinkedDiv>
+      <ScrollLinkedDiv
         aria-hidden
         className="v5-fold-crease pointer-events-none absolute inset-x-0 top-0 h-6"
-        style={{ opacity: crease }}
+        motionStyle={{ opacity: crease }}
       />
     </div>
   );

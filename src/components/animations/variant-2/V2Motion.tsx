@@ -1,9 +1,10 @@
 "use client";
 
-import { motion, useTransform } from "framer-motion";
+import { useTransform } from "framer-motion";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useIntroScroll } from "@/components/animations/IntroScrollContext";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
@@ -135,8 +136,8 @@ export function V2Motion({
 
   return (
     <div ref={ref} className={`relative max-w-full overflow-x-clip ${className ?? ""}`} style={style}>
-      <motion.div
-        style={{
+      <ScrollLinkedDiv
+        motionStyle={{
           opacity,
           x,
           y,
@@ -146,11 +147,10 @@ export function V2Motion({
           rotate,
           skewX,
           filter,
-          willChange: "transform, opacity, filter",
         }}
       >
         {children}
-      </motion.div>
+      </ScrollLinkedDiv>
       {!noExit && (
         <V2TopExitBlur
           exitProgress={exitProgress}

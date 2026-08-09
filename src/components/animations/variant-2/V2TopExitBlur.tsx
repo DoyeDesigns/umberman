@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useTransform, type MotionValue } from "framer-motion";
+import { useTransform, type MotionValue } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { VARIANT_2, delayV2Exit } from "@/lib/animations/config";
 import type { ScrollDirection } from "@/hooks/useScrollDirection";
 
@@ -24,18 +25,19 @@ export function V2TopExitBlur({
   );
 
   return (
-    <motion.div
+    <ScrollLinkedDiv
       aria-hidden
       className="pointer-events-none absolute inset-x-0 top-0 z-20"
-      style={{
+      staticStyle={{
         height: VARIANT_2.topExitBlurHeight,
-        opacity: strength,
-        backdropFilter: backdrop,
-        WebkitBackdropFilter: backdrop,
         maskImage:
           "linear-gradient(to bottom, rgba(0,0,0,0.92) 0%, transparent 100%)",
         WebkitMaskImage:
           "linear-gradient(to bottom, rgba(0,0,0,0.92) 0%, transparent 100%)",
+      }}
+      motionStyle={{
+        opacity: strength,
+        backdropFilter: backdrop,
       }}
     />
   );

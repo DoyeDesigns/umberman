@@ -1,8 +1,9 @@
 "use client";
 
-import { motion, useTransform } from "framer-motion";
+import { useTransform } from "framer-motion";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -35,22 +36,20 @@ export function V5HeroFold({ children, className }: V5HeroFoldProps) {
 
   return (
     <div ref={ref} className={className} style={{ perspective: 1000 }}>
-      <motion.div
-        style={{
-          rotateX,
-          opacity,
+      <ScrollLinkedDiv
+        staticStyle={{
           transformOrigin: "top center",
           transformStyle: "preserve-3d",
-          willChange: "transform, opacity",
         }}
+        motionStyle={{ rotateX, opacity }}
       >
         {children}
-        <motion.div
+        <ScrollLinkedDiv
           aria-hidden
           className="v5-fold-crease pointer-events-none absolute inset-x-0 top-0 h-8"
-          style={{ opacity: crease }}
+          motionStyle={{ opacity: crease }}
         />
-      </motion.div>
+      </ScrollLinkedDiv>
     </div>
   );
 }

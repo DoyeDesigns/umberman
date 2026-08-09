@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useTransform, type MotionValue } from "framer-motion";
+import { useTransform, type MotionValue } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useMemo, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useIntroScroll } from "@/components/animations/IntroScrollContext";
@@ -55,12 +56,13 @@ function InkWord({
   });
 
   return (
-    <motion.span
+    <ScrollLinkedDiv
+      as="span"
       className="inline-block will-change-[opacity,color]"
-      style={{ opacity, color: colorMix }}
+      motionStyle={{ opacity, color: colorMix }}
     >
       {word}
-    </motion.span>
+    </ScrollLinkedDiv>
   );
 }
 

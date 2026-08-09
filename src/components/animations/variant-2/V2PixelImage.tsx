@@ -1,10 +1,7 @@
 "use client";
 
-import {
-  motion,
-  useMotionValueEvent,
-  useTransform,
-} from "framer-motion";
+import { useMotionValueEvent, useTransform } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
@@ -255,7 +252,10 @@ export function V2PixelImage({
 
   return (
     <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
-      <motion.div className="absolute inset-0" style={{ opacity: imageOpacity }}>
+      <ScrollLinkedDiv
+        className="absolute inset-0"
+        motionStyle={{ opacity: imageOpacity }}
+      >
         <Image
           src={src}
           alt={alt}
@@ -264,7 +264,7 @@ export function V2PixelImage({
           priority={priority}
           className={imageClassName}
         />
-      </motion.div>
+      </ScrollLinkedDiv>
       <div ref={gridRef} className="v2-pixel-grid" aria-hidden="true" />
       <V2TopExitBlur
         exitProgress={settledExit}

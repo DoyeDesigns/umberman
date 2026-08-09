@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useTransform, type MotionValue } from "framer-motion";
+import { useTransform, type MotionValue } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useMemo, useRef, type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
@@ -92,7 +93,7 @@ function TransmissionSentence({
 
   const scanLeft = useTransform(reveal, (t) => `${t * 100}%`);
 
-  const scanOpacity = useTransform(reveal, (t) => {
+  const scanOpacity = useTransform(reveal, (t): number => {
     if (directionRef.current !== "down") return 0;
     if (t <= 0.04 || t >= 0.96) return 0;
     return 0.85;
@@ -106,9 +107,10 @@ function TransmissionSentence({
 
   return (
     <span className="relative mb-[0.35em] block last:mb-0">
-      <motion.span
+      <ScrollLinkedDiv
+        as="span"
         className="relative inline-block will-change-[transform,opacity,filter]"
-        style={{
+        motionStyle={{
           opacity,
           y,
           skewX,
@@ -118,18 +120,20 @@ function TransmissionSentence({
         }}
       >
         {sentence}
-      </motion.span>
+      </ScrollLinkedDiv>
 
-      <motion.span
+      <ScrollLinkedDiv
+        as="span"
         aria-hidden
         className="pointer-events-none absolute inset-y-0 w-px bg-orange"
-        style={{ left: scanLeft, opacity: scanOpacity }}
+        motionStyle={{ left: scanLeft, opacity: scanOpacity }}
       />
 
-      <motion.span
+      <ScrollLinkedDiv
+        as="span"
         aria-hidden
         className="v3-transmission-noise pointer-events-none absolute inset-0"
-        style={{ opacity: noiseOpacity }}
+        motionStyle={{ opacity: noiseOpacity }}
       />
     </span>
   );

@@ -1,7 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useTransform } from "framer-motion";
+import { useTransform } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { MobileRevealImage } from "@/components/animations/MobileRevealImage";
@@ -100,9 +101,9 @@ export function V4BrushImage({
 
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`}>
-      <motion.div
+      <ScrollLinkedDiv
         className="relative h-full min-h-[inherit] w-full"
-        style={{
+        motionStyle={{
           clipPath,
           opacity,
         }}
@@ -115,7 +116,7 @@ export function V4BrushImage({
           priority={priority}
           className={imageClassName}
         />
-      </motion.div>
+      </ScrollLinkedDiv>
     </div>
   );
 }

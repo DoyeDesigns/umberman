@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useTransform } from "framer-motion";
+import { useTransform } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
@@ -115,9 +116,9 @@ export function V3Motion({
       className={`relative max-w-full overflow-x-clip overflow-y-visible ${className ?? ""}`}
       style={style}
     >
-      <motion.div
+      <ScrollLinkedDiv
         className="v3-glitch-layer overflow-visible pt-[0.08em] pb-[0.04em] will-change-[transform,opacity,filter]"
-        style={{
+        motionStyle={{
           opacity,
           x,
           y,
@@ -130,7 +131,7 @@ export function V3Motion({
         }}
       >
         {children}
-      </motion.div>
+      </ScrollLinkedDiv>
     </div>
   );
 }

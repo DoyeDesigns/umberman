@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useTransform } from "framer-motion";
+import { useTransform } from "framer-motion";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { MobileRevealImage } from "@/components/animations/MobileRevealImage";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -42,24 +43,22 @@ function FoldPanel({
   const crease = useTransform(progress, (t) => (1 - t) * 0.4);
 
   return (
-    <motion.div
+    <ScrollLinkedDiv
       className="relative h-full w-1/2 overflow-hidden"
-      style={{
-        rotateY,
+      staticStyle={{
         transformOrigin: side === "left" ? "center right" : "center left",
         transformStyle: "preserve-3d",
       }}
+      motionStyle={{ rotateY }}
     >
       {children}
-      <motion.div
+      <ScrollLinkedDiv
         aria-hidden
         className="v5-fold-crease pointer-events-none absolute inset-y-0 w-4"
-        style={{
-          opacity: crease,
-          [side === "left" ? "right" : "left"]: 0,
-        }}
+        staticStyle={side === "left" ? { right: 0 } : { left: 0 }}
+        motionStyle={{ opacity: crease }}
       />
-    </motion.div>
+    </ScrollLinkedDiv>
   );
 }
 
@@ -96,9 +95,6 @@ export function V5FoldImage({
     beat,
     VARIANT_5.beatGap,
   );
-
-  const singleRotateX = useTransform(progress, (t) => (1 - t) * -VARIANT_5.foldAngleX);
-  const opacity = useTransform(progress, [0, 0.2, 1], [0, 0.75, 1]);
 
   if (variant !== 5 || reducedMotion) {
     return (

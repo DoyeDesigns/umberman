@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useTransform } from "framer-motion";
+import { useTransform } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
@@ -61,9 +62,12 @@ export function V4InkBloomMotion({
 
   return (
     <div ref={ref} className={className} style={style}>
-      <motion.div style={{ opacity, filter, willChange: "opacity, filter" }}>
+      <ScrollLinkedDiv
+        staticStyle={{ willChange: "opacity, filter" }}
+        motionStyle={{ opacity, filter }}
+      >
         {children}
-      </motion.div>
+      </ScrollLinkedDiv>
     </div>
   );
 }

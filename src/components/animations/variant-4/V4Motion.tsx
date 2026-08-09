@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useTransform } from "framer-motion";
+import { useTransform } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
@@ -109,12 +110,12 @@ export function V4Motion({
   if (preset === "line") {
     return (
       <div ref={ref} className={className} style={style}>
-        <motion.div
+        <ScrollLinkedDiv
           className="v4-bleed-line origin-left will-change-transform"
-          style={{ scaleX, opacity }}
+          motionStyle={{ scaleX, opacity }}
         >
           {children}
-        </motion.div>
+        </ScrollLinkedDiv>
       </div>
     );
   }

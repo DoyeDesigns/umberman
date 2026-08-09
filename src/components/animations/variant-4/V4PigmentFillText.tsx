@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useTransform } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useId, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useIntroScroll } from "@/components/animations/IntroScrollContext";
@@ -101,9 +102,12 @@ export function V4PigmentFillText({
 
   return (
     <div ref={ref} className={className} style={style}>
-      <motion.div style={{ clipPath, opacity, willChange: "clip-path, opacity" }}>
+      <ScrollLinkedDiv
+        staticStyle={{ willChange: "clip-path, opacity" }}
+        motionStyle={{ clipPath, opacity }}
+      >
         {children}
-      </motion.div>
+      </ScrollLinkedDiv>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useTransform } from "framer-motion";
+import { useTransform } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
@@ -145,14 +146,14 @@ export function V5FoldMotion({
   if (preset === "line") {
     return (
       <div ref={ref} className={className} style={style}>
-        <motion.div
+        <ScrollLinkedDiv
           className="v5-seam-divider relative h-full w-full"
-          style={{ opacity: seamOpacity }}
+          motionStyle={{ opacity: seamOpacity }}
           aria-hidden
         >
           <div className="absolute inset-y-0 left-0 w-px bg-ink" />
           <div className="absolute inset-y-0 left-[3px] w-px bg-ink/40" />
-        </motion.div>
+        </ScrollLinkedDiv>
       </div>
     );
   }
@@ -170,24 +171,26 @@ export function V5FoldMotion({
       className={`relative ${className ?? ""}`}
       style={{ perspective: 900, ...style }}
     >
-      <motion.div
+      <ScrollLinkedDiv
         className="relative"
-        style={{
-          rotateX,
-          rotateY,
-          opacity,
+        staticStyle={{
           transformOrigin: origin,
           transformStyle: "preserve-3d",
           willChange: "transform, opacity",
         }}
+        motionStyle={{
+          rotateX,
+          rotateY,
+          opacity,
+        }}
       >
         {children}
-        <motion.div
+        <ScrollLinkedDiv
           aria-hidden
           className="v5-fold-crease pointer-events-none absolute inset-x-0 top-0 h-6"
-          style={{ opacity: creaseOpacity }}
+          motionStyle={{ opacity: creaseOpacity }}
         />
-      </motion.div>
+      </ScrollLinkedDiv>
     </div>
   );
 }

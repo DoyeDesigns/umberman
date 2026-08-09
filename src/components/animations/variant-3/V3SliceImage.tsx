@@ -1,10 +1,7 @@
 "use client";
 
-import {
-  motion,
-  useMotionValueEvent,
-  useTransform,
-} from "framer-motion";
+import { useMotionValueEvent, useTransform } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
@@ -223,7 +220,10 @@ export function V3SliceImage({
       ref={containerRef}
       className={`relative overflow-hidden ${className}`}
     >
-      <motion.div className="absolute inset-0" style={{ opacity: imageOpacity }}>
+      <ScrollLinkedDiv
+        className="absolute inset-0"
+        motionStyle={{ opacity: imageOpacity }}
+      >
         <Image
           src={src}
           alt={alt}
@@ -232,7 +232,7 @@ export function V3SliceImage({
           priority={priority}
           className={imageClassName}
         />
-      </motion.div>
+      </ScrollLinkedDiv>
       <div ref={gridRef} className="v3-slice-grid" aria-hidden="true" />
     </div>
   );

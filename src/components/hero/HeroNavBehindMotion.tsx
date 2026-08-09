@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useTransform } from "framer-motion";
+import { useTransform } from "framer-motion";
+import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
@@ -40,7 +41,7 @@ export function HeroNavBehindMotion({
   });
 
   const y = useTransform(hide, (t) => t * (isDesktop ? 200 : 72));
-  const zIndex = useTransform(hide, (t) => (t < 0.04 ? 30 : 1));
+  const zIndex = useTransform(hide, (t): number => (t < 0.04 ? 30 : 1));
   const opacity = useTransform(hide, (t) => 1 - t);
   const scale = useTransform(hide, (t) => 1 - t * (isDesktop ? 0.06 : 0.03));
   const filter = useTransform(hide, (t) => `blur(${t * (isDesktop ? 5 : 3)}px)`);
@@ -58,9 +59,10 @@ export function HeroNavBehindMotion({
   }
 
   return (
-    <motion.div
+    <ScrollLinkedDiv
       className={`relative ${className ?? ""}`}
-      style={{
+      staticStyle={{ willChange: "transform, opacity, filter" }}
+      motionStyle={{
         y,
         opacity,
         scale,
@@ -68,10 +70,9 @@ export function HeroNavBehindMotion({
         zIndex,
         skewX,
         textShadow,
-        willChange: "transform, opacity, filter",
       }}
     >
       {children}
-    </motion.div>
+    </ScrollLinkedDiv>
   );
 }
