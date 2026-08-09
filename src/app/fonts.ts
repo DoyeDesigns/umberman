@@ -3,17 +3,17 @@ import localFont from "next/font/local";
 export const infini = localFont({
   src: [
     {
-      path: "./fonts/infini-romain.otf",
+      path: "./fonts/infini-regular.otf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "./fonts/infini-gras.otf",
+      path: "./fonts/infini-bold.otf",
       weight: "700",
       style: "normal",
     },
     {
-      path: "./fonts/infini-italique.otf",
+      path: "./fonts/infini-italic.otf",
       weight: "400",
       style: "italic",
     },
@@ -29,14 +29,14 @@ export const infiniPicto = localFont({
 });
 
 export const august = localFont({
-  src: "./fonts/august-bold.ttf",
+  src: "./fonts/August-Bold.otf",
   weight: "400",
   variable: "--font-august",
   display: "swap",
 });
 
 export const panthoma = localFont({
-  src: "./fonts/panthoma-trial.otf",
+  src: "./fonts/TC-Panthoma-Regular.otf",
   weight: "400",
   variable: "--font-panthoma",
   display: "swap",
