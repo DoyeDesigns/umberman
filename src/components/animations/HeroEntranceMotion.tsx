@@ -3,14 +3,12 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
-import { useIsIOS } from "@/hooks/useIsIOS";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
   getHeroEntrance,
   v4TitleClipKeyframes,
   type IntroEntranceRole,
 } from "@/lib/animations/hero-entrance";
-import { mobileInViewTransition } from "@/lib/animations/mobile-motion";
 
 type HeroEntranceMotionProps = {
   children: React.ReactNode;
@@ -27,7 +25,6 @@ export function HeroEntranceMotion({
 }: HeroEntranceMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const isIOS = useIsIOS();
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -42,23 +39,6 @@ export function HeroEntranceMotion({
       <div className={`overflow-visible ${className ?? ""}`} style={style}>
         {children}
       </div>
-    );
-  }
-
-  if (isIOS && !reducedMotion) {
-    const delay =
-      typeof frame.transition.delay === "number" ? frame.transition.delay : 0;
-
-    return (
-      <motion.div
-        className={`overflow-visible ${className ?? ""}`}
-        style={style}
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={mobileInViewTransition(delay, 0.5)}
-      >
-        {children}
-      </motion.div>
     );
   }
 

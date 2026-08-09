@@ -1,11 +1,9 @@
 "use client";
 
-import { useIsIOS } from "@/hooks/useIsIOS";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-/** Scroll-linked Framer Motion is disabled on iOS Safari/WebKit where it often fails. */
+/** Scroll-linked motion runs on all platforms when reduced motion is off. */
 export function useScrollMotionEnabled() {
-  const isIOS = useIsIOS();
   const reducedMotion = useReducedMotion();
-  return !isIOS && !reducedMotion;
+  return !reducedMotion;
 }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { MotionInit } from "@/components/animations/MotionInit";
 import { august, infini, panthoma } from "./fonts";
 import "./globals.css";
 
@@ -14,7 +15,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${infini.variable} ${august.variable} ${panthoma.variable} h-full antialiased`}
     >
-      <body className="min-h-full">{children}</body>
+      <body className="min-h-full">
+        <MotionInit>{children}</MotionInit>
+      </body>
     </html>
   );
 }

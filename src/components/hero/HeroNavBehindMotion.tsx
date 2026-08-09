@@ -4,7 +4,6 @@ import { motion, useTransform } from "framer-motion";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
-import { useIsIOS } from "@/hooks/useIsIOS";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { VARIANT_2 } from "@/lib/animations/config";
@@ -24,7 +23,6 @@ export function HeroNavBehindMotion({
 }: HeroNavBehindMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const isIOS = useIsIOS();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
 
   const { scrollYProgress } = useSafeScroll({
@@ -52,7 +50,7 @@ export function HeroNavBehindMotion({
     return `${split}px 0 rgba(215,79,36,0.75), ${-split}px 0 rgba(53,67,150,0.7)`;
   });
 
-  if (reducedMotion || isIOS || (variant !== 2 && variant !== 3)) {
+  if (reducedMotion || (variant !== 2 && variant !== 3)) {
     return (
       <div className={`relative z-20 ${className ?? ""}`}>{children}</div>
     );
