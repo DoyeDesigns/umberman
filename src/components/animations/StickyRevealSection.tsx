@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, motionValue, useScroll, useTransform } from "framer-motion";
+import { motion, motionValue, useTransform } from "framer-motion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useEffect, useMemo, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { ScrollSectionProvider } from "@/components/animations/ScrollSectionContext";
@@ -52,7 +53,7 @@ export function StickyRevealSection({
   const active = variant === 1 && isDesktop && !reducedMotion;
   const tracksScroll = index > 0;
 
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress } = useSafeScroll({
     target: containerRef,
     offset: [...STICKY_REVEAL.scrollOffset],
   });

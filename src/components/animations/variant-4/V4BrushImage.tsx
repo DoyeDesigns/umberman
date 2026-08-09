@@ -1,11 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { MobileRevealImage } from "@/components/animations/MobileRevealImage";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import {
   useRestSettleSignal,
   useSettledImageEnter,
@@ -41,10 +44,11 @@ export function V4BrushImage({
 }: V4BrushImageProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_4.desktopQuery);
   const ref = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress: enterProgress } = useScroll({
+  const { scrollYProgress: enterProgress } = useSafeScroll({
     target: ref,
     offset: [
       ...(isDesktop
@@ -63,15 +67,6 @@ export function V4BrushImage({
   );
 
   const clipPath = useTransform(progress, (p) => brushClipPath(p));
-  const gradientMask = useTransform(
-    progress,
-    [0, 0.15, 1],
-    [
-      "linear-gradient(90deg, transparent 0%, transparent 100%)",
-      "linear-gradient(90deg, transparent 0%, black 18%, black 100%)",
-      "linear-gradient(90deg, black 0%, black 100%)",
-    ],
-  );
   const opacity = useTransform(progress, [0, 0.06, 0.55, 1], [0, 0.85, 1, 1]);
 
   if (variant !== 4 || reducedMotion) {
@@ -89,14 +84,26 @@ export function V4BrushImage({
     );
   }
 
+  if (!scrollMotion) {
+    return (
+      <MobileRevealImage
+        src={src}
+        alt={alt}
+        sizes={sizes}
+        className={className}
+        imageClassName={imageClassName}
+        priority={priority}
+        delay={beat * VARIANT_4.beatGap}
+      />
+    );
+  }
+
   return (
     <div ref={ref} className={`relative overflow-hidden ${className}`}>
       <motion.div
         className="relative h-full min-h-[inherit] w-full"
         style={{
-          clipPath: isDesktop ? clipPath : undefined,
-          WebkitMaskImage: isDesktop ? undefined : gradientMask,
-          maskImage: isDesktop ? undefined : gradientMask,
+          clipPath,
           opacity,
         }}
       >

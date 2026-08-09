@@ -3,8 +3,11 @@
 import { motion, useTransform } from "framer-motion";
 import { useId, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useIntroScroll } from "@/components/animations/IntroScrollContext";
+import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_4 } from "@/lib/animations/config";
 
 export type V4FillDirection = "bottom" | "left" | "right" | "center";
@@ -49,6 +52,8 @@ export function V4PigmentFillText({
 }: V4PigmentFillTextProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const intro = useIntroScroll();
+  const scrollMotion = useScrollMotionEnabled();
   const ref = useRef<HTMLDivElement>(null);
   const maskId = useId();
   const scrollYProgress = useScrollEnterProgress(ref, VARIANT_4);
@@ -73,6 +78,22 @@ export function V4PigmentFillText({
       >
         {children}
       </motion.div>
+    );
+  }
+
+  if (!scrollMotion) {
+    if (intro) {
+      return (
+        <div className={className} style={style}>
+          {children}
+        </div>
+      );
+    }
+
+    return (
+      <MobileInViewReveal className={className} style={style} delay={delay}>
+        {children}
+      </MobileInViewReveal>
     );
   }
 

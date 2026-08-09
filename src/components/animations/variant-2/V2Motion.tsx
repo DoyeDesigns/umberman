@@ -1,13 +1,17 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useIntroScroll } from "@/components/animations/IntroScrollContext";
+import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_2, delayV2Exit } from "@/lib/animations/config";
 import {
   resolveV2Transform,
@@ -37,12 +41,14 @@ export function V2Motion({
 }: V2MotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const intro = useIntroScroll();
+  const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const scrollDirection = useScrollDirection();
   const ref = useRef<HTMLDivElement>(null);
   const enterProgress = useScrollEnterProgress(ref, VARIANT_2);
 
-  const { scrollYProgress: exitProgress } = useScroll({
+  const { scrollYProgress: exitProgress } = useSafeScroll({
     target: ref,
     offset: [...(isDesktop ? VARIANT_2.exitOffset : VARIANT_2.mobileExitOffset)],
   });
@@ -108,6 +114,22 @@ export function V2Motion({
       <div className={className} style={style}>
         {children}
       </div>
+    );
+  }
+
+  if (!scrollMotion) {
+    if (intro) {
+      return (
+        <div className={className} style={style}>
+          {children}
+        </div>
+      );
+    }
+
+    return (
+      <MobileInViewReveal className={className} style={style} delay={delay}>
+        {children}
+      </MobileInViewReveal>
     );
   }
 

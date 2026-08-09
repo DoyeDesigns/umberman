@@ -3,15 +3,17 @@
 import {
   motion,
   useMotionValueEvent,
-  useScroll,
   useTransform,
 } from "framer-motion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { MobileRevealImage } from "@/components/animations/MobileRevealImage";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import {
   useRestSettleSignal,
   useSettledImageEnter,
@@ -63,6 +65,7 @@ export function V3SliceImage({
 }: V3SliceImageProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_3.desktopQuery);
   const scrollDirection = useScrollDirection();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -73,12 +76,12 @@ export function V3SliceImage({
   const settledRef = useRef(false);
   const directionRef = useRef(scrollDirection);
 
-  const { scrollYProgress: enterProgress } = useScroll({
+  const { scrollYProgress: enterProgress } = useSafeScroll({
     target: containerRef,
     offset: [...(isDesktop ? VARIANT_3.enterOffset : VARIANT_3.mobileEnterOffset)],
   });
 
-  const { scrollYProgress: exitProgress } = useScroll({
+  const { scrollYProgress: exitProgress } = useSafeScroll({
     target: containerRef,
     offset: [...(isDesktop ? VARIANT_3.exitOffset : VARIANT_3.mobileExitOffset)],
   });
@@ -198,6 +201,20 @@ export function V3SliceImage({
           className={imageClassName}
         />
       </div>
+    );
+  }
+
+  if (!scrollMotion) {
+    return (
+      <MobileRevealImage
+        src={src}
+        alt={alt}
+        sizes={sizes}
+        className={className}
+        imageClassName={imageClassName}
+        priority={priority}
+        delay={beat * VARIANT_3.beatGap}
+      />
     );
   }
 

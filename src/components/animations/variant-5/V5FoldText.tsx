@@ -1,10 +1,13 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_5 } from "@/lib/animations/config";
 
 type V5FoldTextProps = {
@@ -15,10 +18,11 @@ type V5FoldTextProps = {
 export function V5FoldText({ text, className = "" }: V5FoldTextProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_5.desktopQuery);
   const ref = useRef<HTMLParagraphElement>(null);
 
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress } = useSafeScroll({
     target: ref,
     offset: [...(isDesktop ? VARIANT_5.enterOffset : VARIANT_5.mobileEnterOffset)],
   });
@@ -32,6 +36,14 @@ export function V5FoldText({ text, className = "" }: V5FoldTextProps) {
 
   if (variant !== 5 || reducedMotion) {
     return <p className={className}>{text}</p>;
+  }
+
+  if (!scrollMotion) {
+    return (
+      <MobileInViewReveal className={className}>
+        <p className={className}>{text}</p>
+      </MobileInViewReveal>
+    );
   }
 
   return (

@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 import type { RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -13,7 +14,7 @@ export function V3TransmissionOverlay({ targetRef }: V3TransmissionOverlayProps)
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
 
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress } = useSafeScroll({
     target: targetRef,
     offset: ["start start", "end end"],
   });

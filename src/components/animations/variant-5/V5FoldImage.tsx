@@ -1,11 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { MobileRevealImage } from "@/components/animations/MobileRevealImage";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import {
   useRestSettleSignal,
   useSettledImageEnter,
@@ -72,10 +75,11 @@ export function V5FoldImage({
 }: V5FoldImageProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_5.desktopQuery);
   const ref = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress: enterProgress } = useScroll({
+  const { scrollYProgress: enterProgress } = useSafeScroll({
     target: ref,
     offset: [
       ...(isDesktop
@@ -111,32 +115,17 @@ export function V5FoldImage({
     );
   }
 
-  if (!isDesktop) {
+  if (!scrollMotion) {
     return (
-      <div
-        ref={ref}
-        className={`relative overflow-hidden ${className}`}
-        style={{ perspective: 900 }}
-      >
-        <motion.div
-          className="relative h-full w-full"
-          style={{
-            rotateX: singleRotateX,
-            opacity,
-            transformOrigin: "top center",
-            transformStyle: "preserve-3d",
-          }}
-        >
-          <Image
-            src={src}
-            alt={alt}
-            fill
-            sizes={sizes}
-            priority={priority}
-            className={imageClassName}
-          />
-        </motion.div>
-      </div>
+      <MobileRevealImage
+        src={src}
+        alt={alt}
+        sizes={sizes}
+        className={className}
+        imageClassName={imageClassName}
+        priority={priority}
+        delay={beat * VARIANT_5.beatGap}
+      />
     );
   }
 

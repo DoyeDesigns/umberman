@@ -3,16 +3,18 @@
 import {
   motion,
   useMotionValueEvent,
-  useScroll,
   useTransform,
 } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { MobileRevealImage } from "@/components/animations/MobileRevealImage";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import {
   useRestSettleSignal,
   useSettledImageEnter,
@@ -103,6 +105,7 @@ export function V2PixelImage({
 }: V2PixelImageProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const scrollDirection = useScrollDirection();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -113,14 +116,14 @@ export function V2PixelImage({
   const settledRef = useRef(false);
   const directionRef = useRef(scrollDirection);
 
-  const { scrollYProgress: enterProgress } = useScroll({
+  const { scrollYProgress: enterProgress } = useSafeScroll({
     target: containerRef,
     offset: [
       ...(isDesktop ? VARIANT_2.enterOffset : VARIANT_2.mobileEnterOffset),
     ],
   });
 
-  const { scrollYProgress: exitProgress } = useScroll({
+  const { scrollYProgress: exitProgress } = useSafeScroll({
     target: containerRef,
     offset: [...(isDesktop ? VARIANT_2.exitOffset : VARIANT_2.mobileExitOffset)],
   });
@@ -135,18 +138,27 @@ export function V2PixelImage({
   );
   const settledExit = useSettledImageExit(exitProgress, settle, settleAtRest);
 
-  const imageOpacity = useTransform(settledEnter, (enter) => {
-    if (scrollDirection === "down") return 1;
-    return smooth(Number(enter));
-  });
+  const imageOpacity = useTransform(settledEnter, (enter) =>
+    smooth(Number(enter)),
+  );
 
   const paintCells = useCallback(() => {
     const cells = cellsRef.current;
     if (!cells.length) return;
 
     const scrollingDown = directionRef.current === "down";
+    const enter = enterRef.current;
+    const exit = exitRef.current;
 
-    if (!scrollingDown) {
+    if (settledRef.current || enter >= 0.98) {
+      for (const cell of cells) {
+        cell.el.style.opacity = "0";
+      }
+      if (gridRef.current) gridRef.current.style.visibility = "hidden";
+      return;
+    }
+
+    if (!scrollingDown && enter >= 0.75) {
       for (const cell of cells) {
         cell.el.style.opacity = "0";
       }
@@ -156,24 +168,13 @@ export function V2PixelImage({
 
     if (gridRef.current) gridRef.current.style.visibility = "visible";
 
-    const enter = enterRef.current;
-    const exit = exitRef.current;
-
-    if (settledRef.current) {
-      for (const cell of cells) {
-        cell.el.style.opacity = "0";
-      }
-      if (gridRef.current) gridRef.current.style.visibility = "hidden";
-      return;
-    }
-
     const maxExitRank = Math.max(...cells.map((cell) => cell.exitRankDown), 1);
 
     for (const cell of cells) {
       const enterReveal = smooth((enter - cell.enterRankDown * 0.52) / 0.34);
-      const exitCover = smooth(
-        (exit - (cell.exitRankDown / maxExitRank) * 0.48) / 0.34,
-      );
+      const exitCover = scrollingDown
+        ? smooth((exit - (cell.exitRankDown / maxExitRank) * 0.48) / 0.34)
+        : 0;
       const cover = clamp(1 - enterReveal + exitCover);
       cell.el.style.opacity = String(cover);
     }
@@ -235,6 +236,20 @@ export function V2PixelImage({
           className={imageClassName}
         />
       </div>
+    );
+  }
+
+  if (!scrollMotion) {
+    return (
+      <MobileRevealImage
+        src={src}
+        alt={alt}
+        sizes={sizes}
+        className={className}
+        imageClassName={imageClassName}
+        priority={priority}
+        delay={beat * 0.08}
+      />
     );
   }
 

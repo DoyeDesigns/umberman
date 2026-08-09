@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -24,7 +25,7 @@ export function HeroNavBehindMotion({
   const reducedMotion = useReducedMotion();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
 
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress } = useSafeScroll({
     target: heroRef,
     offset: ["start start", "end start"],
   });

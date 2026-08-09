@@ -20,12 +20,12 @@
 }
 
 html {
-  overflow-x: clip;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
-  overflow-x: clip;
+  overflow-x: hidden;
   background: var(--cream);
   color: var(--ink);
   font-family: var(--font-infini), "Times New Roman", serif;

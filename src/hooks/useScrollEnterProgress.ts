@@ -1,8 +1,10 @@
 "use client";
 
-import { useScroll, useTransform, type MotionValue, type UseScrollOptions } from "framer-motion";
+import { useTransform, type MotionValue, type UseScrollOptions } from "framer-motion";
 import { useIntroScroll, useIntroSectionRef } from "@/components/animations/IntroScrollContext";
+import { useIsIOS } from "@/hooks/useIsIOS";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 
 type VariantScrollConfig = {
   desktopQuery: string;
@@ -17,24 +19,29 @@ export function useScrollEnterProgress(
 ): MotionValue<number> {
   const intro = useIntroScroll();
   const sectionRef = useIntroSectionRef();
+  const isIOS = useIsIOS();
   const isDesktop = useMediaQuery(variantConfig.desktopQuery);
 
   const offset = (isDesktop
     ? [...variantConfig.enterOffset]
     : [...variantConfig.mobileEnterOffset]) as NonNullable<UseScrollOptions["offset"]>;
 
-  const { scrollYProgress: rawEnter } = useScroll({
+  const { scrollYProgress: rawEnter } = useSafeScroll({
     target: targetRef,
     offset,
   });
 
-  const { scrollYProgress: sectionProgress } = useScroll({
+  const { scrollYProgress: sectionProgress } = useSafeScroll({
     target: sectionRef ?? targetRef,
     offset: ["start start", "end start"],
   });
 
   return useTransform([rawEnter, sectionProgress], ([enter, section]) => {
     const enterValue = Number(enter);
+
+    // Hero / LiveAt on iOS: scroll progress often stays at 0 in WebKit.
+    if (intro && isIOS) return 1;
+
     if (!intro) return enterValue;
 
     // When the intro section is back at the top of the viewport, fully restore enter state.

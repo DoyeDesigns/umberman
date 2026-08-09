@@ -1,6 +1,7 @@
 "use client";
 
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { HeroEntranceMotion } from "@/components/animations/HeroEntranceMotion";
 import { Motion } from "@/components/animations/Motion";
 import { V4InkBleedText } from "@/components/animations/variant-4/V4InkBleedText";
@@ -28,11 +29,12 @@ export function LiveAtLineMotion({
   className,
 }: LiveAtLineMotionProps) {
   const variant = useAnimationVariant();
+  const scrollMotion = useScrollMotionEnabled();
   const entranceRole = line === "call" ? "liveAtCall" : "liveAtResponse";
 
   let scrollLayer: React.ReactNode;
 
-  if (variant === 4) {
+  if (variant === 4 && scrollMotion) {
     scrollLayer = (
       <V4InkBleedText text={LINE_TEXT[line]} className={className} inline />
     );

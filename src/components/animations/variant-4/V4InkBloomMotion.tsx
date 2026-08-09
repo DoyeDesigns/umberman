@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -25,7 +26,7 @@ export function V4InkBloomMotion({
   const isDesktop = useMediaQuery(VARIANT_4.desktopQuery);
   const ref = useRef<HTMLDivElement>(null);
 
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress } = useSafeScroll({
     target: ref,
     offset: [...(isDesktop ? VARIANT_4.enterOffset : VARIANT_4.mobileEnterOffset)],
   });

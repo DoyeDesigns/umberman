@@ -1,12 +1,16 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useIntroScroll } from "@/components/animations/IntroScrollContext";
+import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_3, delayV3Exit } from "@/lib/animations/config";
 import {
   resolveV3Transform,
@@ -42,12 +46,14 @@ export function V3Motion({
 }: V3MotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const intro = useIntroScroll();
+  const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_3.desktopQuery);
   const scrollDirection = useScrollDirection();
   const ref = useRef<HTMLDivElement>(null);
   const enterProgress = useScrollEnterProgress(ref, VARIANT_3);
 
-  const { scrollYProgress: exitProgress } = useScroll({
+  const { scrollYProgress: exitProgress } = useSafeScroll({
     target: ref,
     offset: [...(isDesktop ? VARIANT_3.exitOffset : VARIANT_3.mobileExitOffset)],
   });
@@ -81,6 +87,24 @@ export function V3Motion({
       <div className={className} style={style}>
         {children}
       </div>
+    );
+  }
+
+  if (!scrollMotion) {
+    const mobileDelay = Math.max(beat * VARIANT_3.beatGap, delay);
+
+    if (intro) {
+      return (
+        <div className={className} style={style}>
+          {children}
+        </div>
+      );
+    }
+
+    return (
+      <MobileInViewReveal className={className} style={style} delay={mobileDelay}>
+        {children}
+      </MobileInViewReveal>
     );
   }
 

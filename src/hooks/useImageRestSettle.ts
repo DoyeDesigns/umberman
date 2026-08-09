@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { useScroll, useTransform, type MotionValue } from "framer-motion";
+import { useTransform, type MotionValue } from "framer-motion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 
 export function applyImageBeat(progress: number, beat: number, beatGap: number) {
   const offset = beat * beatGap;
@@ -16,12 +17,12 @@ export function useRestSettleSignal(
 ): MotionValue<number> {
   const latchedRef = useRef(false);
 
-  const { scrollYProgress: elementRunway } = useScroll({
+  const { scrollYProgress: elementRunway } = useSafeScroll({
     target: targetRef,
     offset: ["start end", "end end"],
   });
 
-  const { scrollYProgress: pageScroll } = useScroll();
+  const { scrollYProgress: pageScroll } = useSafeScroll();
 
   return useTransform([elementRunway, pageScroll], ([runway, page]) => {
     if (!enabled) return 0;

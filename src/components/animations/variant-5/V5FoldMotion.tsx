@@ -1,11 +1,15 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useTransform } from "framer-motion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useIntroScroll } from "@/components/animations/IntroScrollContext";
+import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_5, delayV5Exit } from "@/lib/animations/config";
 import type { V2Preset } from "@/lib/animations/variant-2/presets";
 
@@ -41,11 +45,13 @@ export function V5FoldMotion({
 }: V5FoldMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const intro = useIntroScroll();
+  const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_5.desktopQuery);
   const ref = useRef<HTMLDivElement>(null);
   const enterProgress = useScrollEnterProgress(ref, VARIANT_5);
 
-  const { scrollYProgress: exitProgress } = useScroll({
+  const { scrollYProgress: exitProgress } = useSafeScroll({
     target: ref,
     offset: [...(isDesktop ? VARIANT_5.exitOffset : VARIANT_5.mobileExitOffset)],
   });
@@ -115,6 +121,24 @@ export function V5FoldMotion({
       <div className={className} style={style}>
         {children}
       </div>
+    );
+  }
+
+  if (!scrollMotion) {
+    const mobileDelay = Math.max(beat * VARIANT_5.beatGap, delay);
+
+    if (intro) {
+      return (
+        <div className={className} style={style}>
+          {children}
+        </div>
+      );
+    }
+
+    return (
+      <MobileInViewReveal className={className} style={style} delay={mobileDelay}>
+        {children}
+      </MobileInViewReveal>
     );
   }
 

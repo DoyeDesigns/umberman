@@ -1,11 +1,14 @@
 "use client";
 
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion, useTransform, type MotionValue } from "framer-motion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useMemo, useRef, type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_3, delayV3Exit } from "@/lib/animations/config";
 
 type V3TransmissionTextProps = {
@@ -137,6 +140,7 @@ export function V3TransmissionText({
 }: V3TransmissionTextProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_3.desktopQuery);
   const scrollDirection = useScrollDirection();
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -147,7 +151,7 @@ export function V3TransmissionText({
     [text],
   );
 
-  const { scrollYProgress: enterProgress } = useScroll({
+  const { scrollYProgress: enterProgress } = useSafeScroll({
     target: wrapperRef,
     offset: [
       ...(isDesktop
@@ -156,7 +160,7 @@ export function V3TransmissionText({
     ],
   });
 
-  const { scrollYProgress: exitProgress } = useScroll({
+  const { scrollYProgress: exitProgress } = useSafeScroll({
     target: wrapperRef,
     offset: [
       ...(isDesktop
@@ -167,6 +171,14 @@ export function V3TransmissionText({
 
   if (variant !== 3 || reducedMotion) {
     return <p className={className}>{text}</p>;
+  }
+
+  if (!scrollMotion) {
+    return (
+      <MobileInViewReveal className={className}>
+        <p className={`break-words ${className}`}>{text}</p>
+      </MobileInViewReveal>
+    );
   }
 
   const count = Math.max(sentences.length, 1);

@@ -1,12 +1,15 @@
 "use client";
 
-import { motion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { motion, useTransform, type MotionValue } from "framer-motion";
+import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useMemo, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_2, delayV2Exit } from "@/lib/animations/config";
 
 type V2LineRevealTextProps = {
@@ -79,13 +82,14 @@ function RevealWord({
 export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const scrollDirection = useScrollDirection();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const words = useMemo(() => text.split(/\s+/).filter(Boolean), [text]);
 
-  const { scrollYProgress: enterProgress } = useScroll({
+  const { scrollYProgress: enterProgress } = useSafeScroll({
     target: wrapperRef,
     offset: [
       ...(isDesktop
@@ -94,7 +98,7 @@ export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps
     ],
   });
 
-  const { scrollYProgress: exitProgress } = useScroll({
+  const { scrollYProgress: exitProgress } = useSafeScroll({
     target: wrapperRef,
     offset: [
       ...(isDesktop
@@ -107,6 +111,14 @@ export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps
     return <p className={className}>{text}</p>;
   }
 
+  if (!scrollMotion) {
+    return (
+      <MobileInViewReveal className={className}>
+        <p className={`break-words ${className}`}>{text}</p>
+      </MobileInViewReveal>
+    );
+  }
+
   const wordCount = Math.max(words.length, 1);
   const stagger = VARIANT_2.lineTextStaggerSpan / wordCount;
   const duration = VARIANT_2.lineTextWordDuration / wordCount;
@@ -117,7 +129,7 @@ export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps
         {words.map((word, index) => (
           <span key={`${index}-${word.slice(0, 8)}`}>
             <RevealWord
-              key={`${scrollDirection}-${index}`}
+              key={`${index}-${word.slice(0, 8)}`}
               word={word}
               wordIndex={index}
               totalWords={words.length}

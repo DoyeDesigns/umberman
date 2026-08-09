@@ -3,8 +3,11 @@
 import { motion, useTransform, type MotionValue } from "framer-motion";
 import { useMemo, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useIntroScroll } from "@/components/animations/IntroScrollContext";
+import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_4 } from "@/lib/animations/config";
 
 type V4InkBleedTextProps = {
@@ -68,6 +71,8 @@ export function V4InkBleedText({
 }: V4InkBleedTextProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const intro = useIntroScroll();
+  const scrollMotion = useScrollMotionEnabled();
   const ref = useRef<HTMLParagraphElement>(null);
 
   const words = useMemo(
@@ -98,6 +103,20 @@ export function V4InkBleedText({
       <span className={className}>{text}</span>
     ) : (
       <p className={className}>{text}</p>
+    );
+  }
+
+  if (!scrollMotion) {
+    const Tag = inline ? "span" : "p";
+
+    if (intro) {
+      return <Tag className={className}>{text}</Tag>;
+    }
+
+    return (
+      <MobileInViewReveal className={className}>
+        <Tag className={className}>{text}</Tag>
+      </MobileInViewReveal>
     );
   }
 

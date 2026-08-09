@@ -2,6 +2,7 @@
 
 import { Children, isValidElement } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { GlitchText } from "@/components/animations/GlitchText";
 import { HeroEntranceMotion } from "@/components/animations/HeroEntranceMotion";
 import { Motion } from "@/components/animations/Motion";
@@ -40,6 +41,7 @@ export function HeroTitleMotion({
   className,
 }: HeroTitleMotionProps) {
   const variant = useAnimationVariant();
+  const scrollMotion = useScrollMotionEnabled();
   const { text, textClassName } = extractTitle(children);
 
   let scrollLayer: React.ReactNode;
@@ -61,18 +63,22 @@ export function HeroTitleMotion({
         />
       </Motion>
     );
-  } else if (variant === 4) {
+  } else if (variant === 4 && scrollMotion) {
     scrollLayer = (
       <V4PigmentFillText direction="bottom" delay={delay} className={className}>
         {children}
       </V4PigmentFillText>
     );
-  } else if (variant === 5) {
+  } else if (variant === 5 && scrollMotion) {
     scrollLayer = (
       <V5FoldMotion preset="orbit" beat={beat} delay={delay} className={className} foldMode="top">
         {children}
       </V5FoldMotion>
     );
+  } else if (variant === 5) {
+    scrollLayer = <div className={className}>{children}</div>;
+  } else if (variant === 4) {
+    scrollLayer = <div className={className}>{children}</div>;
   } else {
     scrollLayer = (
       <Motion preset={preset} beat={beat} delay={delay} className={className}>
