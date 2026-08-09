@@ -3,6 +3,7 @@
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -43,6 +44,7 @@ export function V3Motion({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const isDesktop = useMediaQuery(VARIANT_3.desktopQuery);
+  const isMobile = useIsMobile();
   const scrollDirection = useScrollDirection();
   const ref = useRef<HTMLDivElement>(null);
   const enterProgress = useScrollEnterProgress(ref, VARIANT_3);
@@ -69,7 +71,9 @@ export function V3Motion({
   const skewX = useTransform(transform, (t) => t.skewX);
   const rotate = useTransform(transform, (t) => t.rotate);
   const clipPath = useTransform(transform, (t) => t.clipPath);
-  const filter = useTransform(transform, (t) => t.filter);
+  const filter = useTransform(transform, (t) =>
+    isMobile ? "blur(0px)" : t.filter,
+  );
   const textShadow = useTransform(transform, (t) => {
     const split = t.rgbSplit;
     if (split < 0.5) return "none";

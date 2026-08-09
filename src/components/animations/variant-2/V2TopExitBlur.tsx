@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useTransform, type MotionValue } from "framer-motion";
+import { useRef } from "react";
 import { VARIANT_2, delayV2Exit } from "@/lib/animations/config";
 import type { ScrollDirection } from "@/hooks/useScrollDirection";
 
@@ -13,8 +14,11 @@ export function V2TopExitBlur({
   exitProgress,
   scrollDirection,
 }: V2TopExitBlurProps) {
+  const directionRef = useRef(scrollDirection);
+  directionRef.current = scrollDirection;
+
   const strength = useTransform(exitProgress, (exit) => {
-    if (scrollDirection !== "down") return 0;
+    if (directionRef.current !== "down") return 0;
     return delayV2Exit(exit, VARIANT_2.topExitBlurDelay);
   });
 

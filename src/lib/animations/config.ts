@@ -14,7 +14,7 @@ export const INTRO_SCROLL = {
   desktopQuery: "(min-width: 768px)",
   /** Hero / LiveAt — fully entered once the block reaches the viewport top. */
   enterOffset: ["start end", "start start"],
-  mobileEnterOffset: ["start end", "start 0.88"],
+  mobileEnterOffset: ["start end", "start start"],
 } as const;
 
 export const EASE_OUT = [0.22, 1, 0.36, 1] as const;

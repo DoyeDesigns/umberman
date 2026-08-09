@@ -6,6 +6,7 @@ import { useAnimationVariant } from "@/components/animations/AnimationVariantPro
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { useBoostedScrollProgress } from "@/hooks/useScrollEnterProgress";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
 import { VARIANT_2, delayV2Exit } from "@/lib/animations/config";
@@ -28,6 +29,7 @@ type WordProps = {
   stagger: number;
   duration: number;
   scrollDirection: ScrollDirection;
+  isMobile: boolean;
 };
 
 function RevealWord({
@@ -39,13 +41,15 @@ function RevealWord({
   stagger,
   duration,
   scrollDirection,
+  isMobile,
 }: WordProps) {
+  const directionRef = useRef(scrollDirection);
+  directionRef.current = scrollDirection;
+
   const reveal = useTransform([enterProgress, exitProgress], ([enter, exit]) => {
-    // Reveal first→last; when enter falls (scroll up), last words hide first.
     const wordEnter = clamp((Number(enter) - wordIndex * stagger) / duration);
 
-    // Top-edge exit only while scrolling down — avoids fighting scroll-up hide.
-    const exitValue = scrollDirection === "down" ? Number(exit) : 0;
+    const exitValue = directionRef.current === "down" ? Number(exit) : 0;
     const delayedExit = delayV2Exit(exitValue);
     const exitStagger = stagger * 1.35;
     const exitDuration = duration * 2.6;
@@ -56,14 +60,13 @@ function RevealWord({
     return wordEnter * (1 - wordExit);
   });
 
-  const clipPath = useTransform(
-    reveal,
-    (t) => `inset(0 ${(1 - t) * 100}% 0 0)`,
+  const clipPath = useTransform(reveal, (t) =>
+    isMobile ? "inset(0 0 0 0)" : `inset(0 ${(1 - t) * 100}% 0 0)`,
   );
 
-  const x = useTransform(reveal, (t) => (1 - t) * -14);
+  const x = useTransform(reveal, (t) => (isMobile ? 0 : (1 - t) * -14));
 
-  const opacity = useTransform(reveal, (t) => 0.3 + t * 0.7);
+  const opacity = useTransform(reveal, (t) => (isMobile ? t : 0.3 + t * 0.7));
 
   return (
     <span className="inline-block max-w-full overflow-hidden align-bottom">
@@ -81,6 +84,7 @@ export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
+  const isMobile = useIsMobile();
   const scrollDirection = useScrollDirection();
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -128,15 +132,18 @@ export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps
               stagger={stagger}
               duration={duration}
               scrollDirection={scrollDirection}
+              isMobile={isMobile}
             />
             {index < words.length - 1 ? " " : null}
           </span>
         ))}
       </p>
-      <V2TopExitBlur
-        exitProgress={exitProgress}
-        scrollDirection={scrollDirection}
-      />
+      {!isMobile && (
+        <V2TopExitBlur
+          exitProgress={exitProgress}
+          scrollDirection={scrollDirection}
+        />
+      )}
     </div>
   );
 }
