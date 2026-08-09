@@ -4,8 +4,10 @@ import { motion, useTransform, type MotionValue } from "framer-motion";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useMemo, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { V2CssLineRevealText } from "@/components/animations/css/V2CssLineRevealText";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
+import { useCssScrollReveal } from "@/hooks/useCssScrollReveal";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
@@ -79,9 +81,7 @@ function RevealWord({
   );
 }
 
-export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps) {
-  const variant = useAnimationVariant();
-  const reducedMotion = useReducedMotion();
+function V2LineRevealTextFramer({ text, className = "" }: V2LineRevealTextProps) {
   const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const scrollDirection = useScrollDirection();
@@ -107,10 +107,6 @@ export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps
     ],
   });
 
-  if (variant !== 2 || reducedMotion) {
-    return <p className={className}>{text}</p>;
-  }
-
   if (!scrollMotion) {
     return (
       <MobileInViewReveal>
@@ -129,7 +125,6 @@ export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps
         {words.map((word, index) => (
           <span key={`${index}-${word.slice(0, 8)}`}>
             <RevealWord
-              key={`${index}-${word.slice(0, 8)}`}
               word={word}
               wordIndex={index}
               totalWords={words.length}
@@ -149,4 +144,26 @@ export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps
       />
     </div>
   );
+}
+
+export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps) {
+  const variant = useAnimationVariant();
+  const reducedMotion = useReducedMotion();
+  const { useCssPath, useFallbackVisible } = useCssScrollReveal();
+
+  if (variant !== 2 || reducedMotion) {
+    return <p className={className}>{text}</p>;
+  }
+
+  if (useCssPath || useFallbackVisible) {
+    return (
+      <V2CssLineRevealText
+        text={text}
+        className={className}
+        fallbackVisible={useFallbackVisible}
+      />
+    );
+  }
+
+  return <V2LineRevealTextFramer text={text} className={className} />;
 }

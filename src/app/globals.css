@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "../styles/ios-scroll-reveal.css";
 
 :root {
   --cream: #eedcad;

@@ -1,7 +1,8 @@
 /**
  * Safari/WebKit exposes ScrollTimeline but scroll-linked opacity via Motion's
- * accelerated path is unreliable (motiondivision/motion#3559). Forcing the JS
- * scroll path restores opacity + clip-path scroll reveals on iPhone.
+ * accelerated path is unreliable (motiondivision/motion#3559). Clearing only
+ * ScrollTimeline forces Framer's JS scroll path while leaving native CSS
+ * view() timelines intact for iOS scroll-driven text reveals.
  *
  * Must run before Framer Motion first reads supportsScrollTimeline().
  */
@@ -17,11 +18,9 @@ export function disableBrokenScrollTimelineOnIOS(): void {
 
   const w = window as unknown as {
     ScrollTimeline?: unknown;
-    ViewTimeline?: unknown;
   };
 
   w.ScrollTimeline = undefined;
-  w.ViewTimeline = undefined;
 }
 
 // Run at module evaluation on the client bundle.
