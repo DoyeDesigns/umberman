@@ -5,6 +5,7 @@ import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useId, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useIntroScroll } from "@/components/animations/IntroScrollContext";
+import { useIsIOS } from "@/hooks/useIsIOS";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -54,6 +55,7 @@ export function V4PigmentFillText({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const intro = useIntroScroll();
+  const isIOS = useIsIOS();
   const scrollMotion = useScrollMotionEnabled();
   const ref = useRef<HTMLDivElement>(null);
   const maskId = useId();
@@ -79,6 +81,14 @@ export function V4PigmentFillText({
       >
         {children}
       </motion.div>
+    );
+  }
+
+  if (intro && isIOS) {
+    return (
+      <div ref={ref} className={className} style={style}>
+        {children}
+      </div>
     );
   }
 

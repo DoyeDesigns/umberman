@@ -22,7 +22,7 @@ export function V3CssTransmissionText({
 
   return (
     <div
-      className={`v3-css-block relative w-full min-w-0 max-w-full overflow-x-clip${
+      className={`v3-css-block relative w-full min-w-0 max-w-full overflow-x-hidden${
         fallbackVisible ? " ios-css-fallback-visible" : ""
       }`}
     >

@@ -15,7 +15,7 @@ export function Hero() {
   return (
     <section
       ref={heroRef}
-      className="flex min-h-130 w-full max-w-full flex-col overflow-x-clip overflow-y-visible bg-cream px-[clamp(1.125rem,5.5vw,4.5rem)] pt-7 md:h-screen md:pt-9"
+      className="flex min-h-130 w-full max-w-full flex-col overflow-x-hidden overflow-y-visible bg-cream px-[clamp(1.125rem,5.5vw,4.5rem)] pt-7 md:h-screen md:pt-9"
     >
       <IntroScrollProvider sectionRef={heroRef}>
         <div className="mx-auto flex w-fit min-w-0 max-w-[1305px] flex-1 flex-col">
@@ -50,7 +50,7 @@ export function Hero() {
               </p>
             </HeroItemMotion>
           </HeroNavBehindMotion>
-          <div className="relative z-10 mt-2 flex w-full min-w-0 flex-1 items-start justify-center overflow-x-clip overflow-y-visible bg-cream pb-6 md:pb-10">
+          <div className="relative z-10 mt-2 flex w-full min-w-0 flex-1 items-start justify-center overflow-x-hidden overflow-y-visible bg-cream pb-6 md:pb-10">
             <HeroTitleMotion preset="orbit" beat={2} delay={0.1}>
               <h1 className="relative w-full overflow-visible bg-cream text-center font-display text-[clamp(5rem,34.6vw,497.89px)] font-normal uppercase leading-none tracking-[-0.02em] text-orange">
                 UMBERMAN

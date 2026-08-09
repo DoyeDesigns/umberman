@@ -120,7 +120,7 @@ function V2LineRevealTextFramer({ text, className = "" }: V2LineRevealTextProps)
   const duration = VARIANT_2.lineTextWordDuration / wordCount;
 
   return (
-    <div ref={wrapperRef} className="relative w-full min-w-0 max-w-full overflow-x-clip">
+    <div ref={wrapperRef} className="relative w-full min-w-0 max-w-full overflow-x-hidden">
       <p className={`break-words ${className}`}>
         {words.map((word, index) => (
           <span key={`${index}-${word.slice(0, 8)}`}>

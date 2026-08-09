@@ -32,6 +32,8 @@ type EntranceFrame = {
   transition: Transition;
 };
 
+export type { EntranceFrame };
+
 function baseTransition(delay: number, duration = 0.72): Transition {
   return { duration, delay, ease: EASE_OUT };
 }

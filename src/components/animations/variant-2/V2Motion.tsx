@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useIntroScroll } from "@/components/animations/IntroScrollContext";
+import { useIsIOS } from "@/hooks/useIsIOS";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
@@ -43,6 +44,7 @@ export function V2Motion({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const intro = useIntroScroll();
+  const isIOS = useIsIOS();
   const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const scrollDirection = useScrollDirection();
@@ -118,6 +120,14 @@ export function V2Motion({
     );
   }
 
+  if (intro && isIOS) {
+    return (
+      <div ref={ref} className={`relative max-w-full overflow-x-hidden ${className ?? ""}`} style={style}>
+        {children}
+      </div>
+    );
+  }
+
   if (!scrollMotion) {
     if (intro) {
       return (
@@ -135,7 +145,7 @@ export function V2Motion({
   }
 
   return (
-    <div ref={ref} className={`relative max-w-full overflow-x-clip ${className ?? ""}`} style={style}>
+    <div ref={ref} className={`relative max-w-full overflow-x-hidden ${className ?? ""}`} style={style}>
       <ScrollLinkedDiv
         motionStyle={{
           opacity,

@@ -2,6 +2,8 @@
 
 import { type MotionValue } from "framer-motion";
 import { useCallback, useLayoutEffect, useState, type CSSProperties } from "react";
+import { readIsIOS } from "@/hooks/useIsIOS";
+import { ensureGsapScrollTrigger, ScrollTrigger } from "@/lib/gsap/client";
 
 export type ScrollLinkedMotionStyle = {
   opacity?: MotionValue<number>;
@@ -55,9 +57,10 @@ function readMotionStyle(input: ScrollLinkedMotionStyle): CSSProperties {
   ].filter(Boolean);
 
   const backdrop = input.backdropFilter?.get();
+  const opacity = input.opacity?.get();
 
   return {
-    opacity: input.opacity?.get(),
+    opacity: opacity ?? undefined,
     zIndex: input.zIndex?.get(),
     transform: transforms.length ? transforms.join(" ") : undefined,
     filter: input.filter?.get(),
@@ -99,8 +102,43 @@ function useScrollLinkedStyle(
     );
 
     const unsubs = values.map((value) => value.on("change", sync));
+
+    ensureGsapScrollTrigger();
+    const onScrollTrigger = () => sync();
+    ScrollTrigger.addEventListener("refresh", onScrollTrigger);
+
+    const raf1 = requestAnimationFrame(() => {
+      sync();
+      requestAnimationFrame(sync);
+    });
+
+    const onScroll = () => sync();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.visualViewport?.addEventListener("scroll", onScroll);
+    window.visualViewport?.addEventListener("resize", onScroll);
+
+    let rafLoop = 0;
+    let frames = 0;
+    const iosLoop = () => {
+      sync();
+      frames += 1;
+      if (frames < 90) {
+        rafLoop = requestAnimationFrame(iosLoop);
+      }
+    };
+
+    if (readIsIOS()) {
+      rafLoop = requestAnimationFrame(iosLoop);
+    }
+
     return () => {
       for (const unsub of unsubs) unsub();
+      ScrollTrigger.removeEventListener("refresh", onScrollTrigger);
+      cancelAnimationFrame(raf1);
+      if (rafLoop) cancelAnimationFrame(rafLoop);
+      window.removeEventListener("scroll", onScroll);
+      window.visualViewport?.removeEventListener("scroll", onScroll);
+      window.visualViewport?.removeEventListener("resize", onScroll);
     };
   }, [motionStyle, sync]);
 

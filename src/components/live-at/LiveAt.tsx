@@ -11,7 +11,7 @@ export function LiveAt() {
     <IntroScrollProvider sectionRef={sectionRef}>
       <section
         ref={sectionRef}
-        className="w-full max-w-full overflow-x-clip overflow-y-visible border-y border-ink bg-cream"
+        className="w-full max-w-full overflow-x-hidden overflow-y-visible border-y border-ink bg-cream"
       >
         <div className="border-b border-ink py-7 md:py-9">
           <LiveAtLineMotion line="call" className="text-center font-body text-[clamp(1.25rem,3.97vw,57.18px)] font-normal uppercase leading-none tracking-normal text-ink">

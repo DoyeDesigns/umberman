@@ -38,7 +38,7 @@ export function AnimatedPage({ variant, children }: AnimatedPageProps) {
     return (
       <AnimationVariantProvider variant={variant}>
         <StickyRevealProgressProvider>
-          <main className="w-full max-w-full overflow-x-clip">
+          <main className="w-full max-w-full overflow-x-hidden">
             {sections.map((section, index) => (
               <StickyRevealSection
                 key={(section as ReactElement).key ?? index}
@@ -59,7 +59,7 @@ export function AnimatedPage({ variant, children }: AnimatedPageProps) {
     <AnimationVariantProvider variant={variant}>
       <main
         ref={mainRef}
-        className="relative w-full max-w-full overflow-x-clip"
+        className="relative w-full max-w-full overflow-x-hidden"
       >
         {variant === 3 && <V3TransmissionOverlay targetRef={mainRef} />}
         {variant === 4 && <V4PaperGrain targetRef={mainRef} />}

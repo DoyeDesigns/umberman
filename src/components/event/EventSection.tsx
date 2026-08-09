@@ -7,7 +7,7 @@ import { SectionHeaderMotion } from "@/components/animations/SectionHeaderMotion
 
 export function EventSection() {
   return (
-    <section className="w-full max-w-full overflow-x-clip bg-paper lg:flex lg:min-h-screen lg:flex-col">
+    <section className="w-full max-w-full overflow-x-hidden bg-paper lg:flex lg:min-h-screen lg:flex-col">
       <div className="mx-auto grid min-h-130 w-full min-w-0 max-w-360 flex-1 grid-cols-1 md:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)] md:grid-rows-[auto_auto] md:gap-y-[clamp(70px,4.86vw,100px)] lg:min-h-full lg:[--section-overhead:clamp(16rem,40svh,22.5rem)] lg:gap-y-[clamp(2.5rem,7svh,4.375rem)]">
         <SectionHeaderMotion beat={0} className="min-w-0 md:col-start-1 md:row-start-1">
           <h2 className="break-words px-[clamp(1.125rem,5.5vw,4.5rem)] pt-[clamp(121px,8.4vw,121px)] text-center font-heading text-[clamp(1.5rem,7.73vw,111.34px)] font-normal uppercase leading-[clamp(1.6rem,8.33vw,120px)] tracking-[-0.01em] text-ink lg:pt-[clamp(5rem,13svh,7.5625rem)] lg:text-[clamp(1.5rem,min(7.73vw,7.5svh),111.34px)] lg:leading-[clamp(1.6rem,min(8.33vw,8svh),120px)]">

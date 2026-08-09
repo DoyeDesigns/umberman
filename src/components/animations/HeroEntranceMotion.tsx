@@ -1,7 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
@@ -9,6 +8,8 @@ import {
   v4TitleClipKeyframes,
   type IntroEntranceRole,
 } from "@/lib/animations/hero-entrance";
+import { entranceToGsapTween } from "@/lib/animations/hero-entrance-gsap";
+import { ensureGsapScrollTrigger, gsap } from "@/lib/gsap/client";
 
 type HeroEntranceMotionProps = {
   children: React.ReactNode;
@@ -17,6 +18,10 @@ type HeroEntranceMotionProps = {
   style?: React.CSSProperties;
 };
 
+/**
+ * Hero / LiveAt load sequence. Uses GSAP (not Framer animate) so entrance
+ * reliably runs on iPhone WebKit.
+ */
 export function HeroEntranceMotion({
   children,
   role,
@@ -25,85 +30,77 @@ export function HeroEntranceMotion({
 }: HeroEntranceMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const [ready, setReady] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setReady(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
 
-  const frame = getHeroEntrance(variant, role, reducedMotion);
+    ensureGsapScrollTrigger();
 
-  if (!ready) {
-    return (
-      <div className={`overflow-visible ${className ?? ""}`} style={style}>
-        {children}
-      </div>
-    );
-  }
+    const frame = getHeroEntrance(variant, role, reducedMotion);
+    let failsafeId = 0;
 
-  if (variant === 4 && role === "title" && !reducedMotion) {
-    const clipFrames = v4TitleClipKeyframes();
-    return (
-      <motion.div
-        className={`overflow-visible pt-[0.08em] ${className ?? ""}`}
-        style={style}
-        initial={{ opacity: 0, clipPath: clipFrames[0] }}
-        animate={{ opacity: 1, clipPath: clipFrames }}
-        transition={{
-          opacity: { duration: 0.35, delay: frame.transition.delay },
-          clipPath: {
-            duration: 1.15,
-            delay: Number(frame.transition.delay ?? 0),
-            ease: [0.22, 1, 0.36, 1],
-            times: [0, 0.35, 0.72, 1],
-          },
-        }}
-      >
-        {children}
-      </motion.div>
-    );
-  }
+    const clearFailsafe = () => {
+      if (failsafeId) window.clearTimeout(failsafeId);
+    };
 
-  if (variant === 5 && !reducedMotion) {
-    return (
-      <div
-        className={className}
-        style={{ perspective: 1000, ...style }}
-      >
-        <motion.div
-          className="relative overflow-visible"
-          style={{ transformOrigin: "top center", transformStyle: "preserve-3d" }}
-          initial={frame.initial}
-          animate={frame.animate}
-          transition={frame.transition}
-        >
-          {children}
-          <motion.div
-            aria-hidden
-            className="v5-fold-crease pointer-events-none absolute inset-x-0 top-0 h-8"
-            initial={{ opacity: 0.55 }}
-            animate={{ opacity: 0 }}
-            transition={{
-              duration: 0.65,
-              delay: Number(frame.transition.delay ?? 0) + 0.15,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-          />
-        </motion.div>
-      </div>
-    );
-  }
+    const scheduleFailsafe = (duration: number, delay: number) => {
+      clearFailsafe();
+      failsafeId = window.setTimeout(() => {
+        if (!el.isConnected) return;
+        const opacity = Number(gsap.getProperty(el, "opacity") ?? 1);
+        if (opacity < 0.05) {
+          gsap.set(el, { opacity: 1, clearProps: "filter,clipPath,transform" });
+        }
+      }, (duration + delay) * 1000 + 400);
+    };
+
+    const ctx = gsap.context(() => {
+      if (reducedMotion) {
+        gsap.set(el, { clearProps: "all", opacity: 1 });
+        return;
+      }
+
+      if (variant === 4 && role === "title") {
+        const clipFrames = v4TitleClipKeyframes();
+        const delay = Number(frame.transition.delay ?? 0);
+        const duration = 1.15;
+        gsap.set(el, { opacity: 0, clipPath: clipFrames[0] });
+        gsap.to(el, {
+          opacity: 1,
+          clipPath: clipFrames[clipFrames.length - 1],
+          duration,
+          delay,
+          ease: "power2.out",
+        });
+        scheduleFailsafe(duration, delay);
+        return;
+      }
+
+      const { from, to } = entranceToGsapTween(frame);
+      const duration = Number(to.duration ?? 0.72);
+      const delay = Number(to.delay ?? 0);
+      gsap.fromTo(el, from, {
+        ...to,
+        onComplete: clearFailsafe,
+      });
+      scheduleFailsafe(duration, delay);
+    }, el);
+
+    return () => {
+      clearFailsafe();
+      ctx.revert();
+    };
+  }, [variant, role, reducedMotion]);
 
   return (
-    <motion.div
+    <div
+      ref={ref}
       className={`overflow-visible ${className ?? ""}`}
       style={style}
-      initial={frame.initial}
-      animate={frame.animate}
-      transition={frame.transition}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

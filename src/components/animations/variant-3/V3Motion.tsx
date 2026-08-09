@@ -6,6 +6,7 @@ import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useIntroScroll } from "@/components/animations/IntroScrollContext";
+import { useIsIOS } from "@/hooks/useIsIOS";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -49,6 +50,7 @@ export function V3Motion({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const intro = useIntroScroll();
+  const isIOS = useIsIOS();
   const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_3.desktopQuery);
   const scrollDirection = useScrollDirection();
@@ -92,6 +94,18 @@ export function V3Motion({
     );
   }
 
+  if (intro && isIOS) {
+    return (
+      <div
+        ref={ref}
+        className={`relative max-w-full overflow-x-hidden overflow-y-visible ${className ?? ""}`}
+        style={style}
+      >
+        {children}
+      </div>
+    );
+  }
+
   if (!scrollMotion) {
     const mobileDelay = Math.max(beat * VARIANT_3.beatGap, delay);
 
@@ -113,7 +127,7 @@ export function V3Motion({
   return (
     <div
       ref={ref}
-      className={`relative max-w-full overflow-x-clip overflow-y-visible ${className ?? ""}`}
+      className={`relative max-w-full overflow-x-hidden overflow-y-visible ${className ?? ""}`}
       style={style}
     >
       <ScrollLinkedDiv

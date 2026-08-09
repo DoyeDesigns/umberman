@@ -6,6 +6,7 @@ import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useIntroScroll } from "@/components/animations/IntroScrollContext";
+import { useIsIOS } from "@/hooks/useIsIOS";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -47,6 +48,7 @@ export function V5FoldMotion({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const intro = useIntroScroll();
+  const isIOS = useIsIOS();
   const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_5.desktopQuery);
   const ref = useRef<HTMLDivElement>(null);
@@ -120,6 +122,14 @@ export function V5FoldMotion({
   if (variant !== 5 || reducedMotion) {
     return (
       <div className={className} style={style}>
+        {children}
+      </div>
+    );
+  }
+
+  if (intro && isIOS) {
+    return (
+      <div ref={ref} className={className} style={style}>
         {children}
       </div>
     );

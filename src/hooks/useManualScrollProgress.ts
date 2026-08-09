@@ -62,6 +62,7 @@ export function useManualScrollProgress(
           end,
           invalidateOnRefresh: true,
           onUpdate: (self) => progress.set(self.progress),
+          onRefresh: (self) => progress.set(self.progress),
         });
 
         progress.set(trigger.progress);
@@ -117,6 +118,12 @@ export function useManualScrollProgress(
 
     tryAttach();
 
+    const onScroll = () => {
+      ScrollTrigger.update();
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.visualViewport?.addEventListener("scroll", onScroll);
+
     const onRefresh = () => {
       if (trigger) progress.set(trigger.progress);
       else applyPageProgress();
@@ -132,6 +139,8 @@ export function useManualScrollProgress(
       trigger?.kill();
       ScrollTrigger.removeEventListener("refreshInit", onRefresh);
       window.removeEventListener("load", onRefresh);
+      window.removeEventListener("scroll", onScroll);
+      window.visualViewport?.removeEventListener("scroll", onScroll);
     };
   }, [progress]);
 

@@ -4,7 +4,7 @@ import { SaveWordMotion } from "@/components/animations/SaveWordMotion";
 
 export function SaveTheDate() {
   return (
-    <section className="flex min-h-130 w-full max-w-full overflow-x-clip md:h-screen flex-col justify-between bg-cream px-[clamp(1.125rem,5.5vw,4.5rem)] py-[clamp(1.5rem,4vw,3rem)]">
+    <section className="flex min-h-130 w-full max-w-full overflow-x-hidden md:h-screen flex-col justify-between bg-cream px-[clamp(1.125rem,5.5vw,4.5rem)] py-[clamp(1.5rem,4vw,3rem)]">
       <div className="flex flex-1 flex-col items-center justify-center">
         <SaveWordMotion role="dateLine" preset="settle" beat={0} delay={0}>
           <p className="w-full text-center font-display text-[clamp(1.5rem,12.31vw,177.29px)] font-normal uppercase leading-[1.2] tracking-normal text-ink">

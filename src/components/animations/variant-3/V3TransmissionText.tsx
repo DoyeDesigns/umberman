@@ -185,7 +185,7 @@ function V3TransmissionTextFramer({
   const duration = VARIANT_3.transmissionSentenceDuration / count;
 
   return (
-    <div ref={wrapperRef} className="relative w-full min-w-0 max-w-full overflow-x-clip">
+    <div ref={wrapperRef} className="relative w-full min-w-0 max-w-full overflow-x-hidden">
       <div className={`break-words ${className}`}>
         {sentences.map((sentence, index) => (
           <TransmissionSentence

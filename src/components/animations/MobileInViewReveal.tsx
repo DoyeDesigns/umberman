@@ -16,7 +16,7 @@ type MobileInViewRevealProps = {
 
 /**
  * iOS-safe reveal: never gates readability on opacity 0 + whileInView
- * (broken inside overflow-x-clip on WebKit). Uses IO + scroll checks + timeout.
+ * (broken inside overflow-x-hidden on WebKit). Uses IO + scroll checks + timeout.
  */
 export function MobileInViewReveal({
   children,
