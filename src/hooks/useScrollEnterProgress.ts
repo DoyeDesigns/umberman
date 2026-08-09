@@ -1,0 +1,48 @@
+"use client";
+
+import { useScroll, useTransform, type MotionValue, type UseScrollOptions } from "framer-motion";
+import { useIntroScroll, useIntroSectionRef } from "@/components/animations/IntroScrollContext";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+
+type VariantScrollConfig = {
+  desktopQuery: string;
+  enterOffset: readonly [string, string];
+  mobileEnterOffset: readonly [string, string];
+};
+
+/** Standard variant enter scroll, with a floor at section-top for hero / LiveAt intro blocks. */
+export function useScrollEnterProgress(
+  targetRef: React.RefObject<HTMLElement | null>,
+  variantConfig: VariantScrollConfig,
+): MotionValue<number> {
+  const intro = useIntroScroll();
+  const sectionRef = useIntroSectionRef();
+  const isDesktop = useMediaQuery(variantConfig.desktopQuery);
+
+  const offset = (isDesktop
+    ? [...variantConfig.enterOffset]
+    : [...variantConfig.mobileEnterOffset]) as NonNullable<UseScrollOptions["offset"]>;
+
+  const { scrollYProgress: rawEnter } = useScroll({
+    target: targetRef,
+    offset,
+  });
+
+  const { scrollYProgress: sectionProgress } = useScroll({
+    target: sectionRef ?? targetRef,
+    offset: ["start start", "end start"],
+  });
+
+  return useTransform([rawEnter, sectionProgress], ([enter, section]) => {
+    const enterValue = Number(enter);
+    if (!intro) return enterValue;
+
+    // When the intro section is back at the top of the viewport, fully restore enter state.
+    // Fixes desktop hero text sitting mid-viewport (progress ~0.5 with old intro offsets).
+    if (Number(section) < 0.1) {
+      return Math.max(enterValue, 1);
+    }
+
+    return enterValue;
+  });
+}
