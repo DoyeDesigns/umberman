@@ -12,6 +12,7 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_3, delayV3Exit } from "@/lib/animations/config";
+import { brandRgba } from "@/lib/colors";
 import {
   resolveV3Transform,
   type V3Preset,
@@ -79,7 +80,7 @@ export function V3Motion({
   const textShadow = useTransform(transform, (t) => {
     const split = t.rgbSplit;
     if (split < 0.5) return "none";
-    return `${split}px 0 rgba(215,79,36,0.85), ${-split}px 0 rgba(53,67,150,0.75)`;
+    return `${split}px 0 ${brandRgba("orange", 0.85)}, ${-split}px 0 ${brandRgba("navy", 0.75)}`;
   });
 
   if (variant !== 3 || reducedMotion) {

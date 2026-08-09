@@ -53,8 +53,8 @@
       letter-spacing: 0.055em;
       filter: blur(6px);
       text-shadow:
-        4.5px 0 rgba(215, 79, 36, 0.55),
-        -4.5px 0 rgba(53, 67, 150, 0.5);
+        4.5px 0 rgba(var(--orange-rgb), 0.55),
+        -4.5px 0 rgba(var(--navy-rgb), 0.5);
     }
     to {
       opacity: 1;
@@ -79,8 +79,8 @@
       letter-spacing: 0.03em;
       filter: blur(4px);
       text-shadow:
-        3px 0 rgba(215, 79, 36, 0.45),
-        -3px 0 rgba(53, 67, 150, 0.4);
+        3px 0 rgba(var(--orange-rgb), 0.45),
+        -3px 0 rgba(var(--navy-rgb), 0.4);
     }
   }
 

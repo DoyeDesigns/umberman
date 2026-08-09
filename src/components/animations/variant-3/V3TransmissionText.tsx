@@ -4,14 +4,13 @@ import { motion, useTransform, type MotionValue } from "framer-motion";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useMemo, useRef, type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
-import { V3CssTransmissionText } from "@/components/animations/css/V3CssTransmissionText";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
-import { useCssScrollReveal } from "@/hooks/useCssScrollReveal";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
 import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_3, delayV3Exit } from "@/lib/animations/config";
+import { brandRgba } from "@/lib/colors";
 
 type V3TransmissionTextProps = {
   text: string;
@@ -88,7 +87,7 @@ function TransmissionSentence({
   const textShadow = useTransform(reveal, (t) => {
     if (t >= 0.88) return "none";
     const split = (1 - t) * 4.5;
-    return `${split}px 0 rgba(215,79,36,0.55), ${-split}px 0 rgba(53,67,150,0.5)`;
+    return `${split}px 0 ${brandRgba("orange", 0.55)}, ${-split}px 0 ${brandRgba("navy", 0.5)}`;
   });
 
   const scanLeft = useTransform(reveal, (t) => `${t * 100}%`);
@@ -208,20 +207,9 @@ export function V3TransmissionText({
 }: V3TransmissionTextProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const { useCssPath, useFallbackVisible } = useCssScrollReveal();
 
   if (variant !== 3 || reducedMotion) {
     return <p className={className}>{text}</p>;
-  }
-
-  if (useCssPath || useFallbackVisible) {
-    return (
-      <V3CssTransmissionText
-        text={text}
-        className={className}
-        fallbackVisible={useFallbackVisible}
-      />
-    );
   }
 
   return <V3TransmissionTextFramer text={text} className={className} />;

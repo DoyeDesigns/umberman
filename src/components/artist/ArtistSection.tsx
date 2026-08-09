@@ -22,7 +22,7 @@ export function ArtistSection() {
               href="https://www.babajideolatunji.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-[clamp(1rem,2.5vw,1.75rem)] w-full shrink-0 md:max-w-[42ch] wrap-break-word text-center font-heading text-[clamp(1.125rem,3.5vw,40px)] font-normal leading-snug tracking-[-0.02em] text-[#1C1C1C]/70 underline decoration-2 underline-offset-[0.25em]"
+              className="mt-[clamp(1rem,2.5vw,1.75rem)] w-full shrink-0 md:max-w-[42ch] wrap-break-word text-center font-heading text-[clamp(1.125rem,3.5vw,40px)] font-normal leading-snug tracking-[-0.02em] text-ink/70 underline decoration-2 underline-offset-[0.25em]"
             >
               www.babajideolatunji.com
             </Link>

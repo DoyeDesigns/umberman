@@ -2,7 +2,6 @@
 
 import { useTransform, type MotionValue, type UseScrollOptions } from "framer-motion";
 import { useIntroScroll, useIntroSectionRef } from "@/components/animations/IntroScrollContext";
-import { useIsIOS } from "@/hooks/useIsIOS";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 
@@ -19,7 +18,6 @@ export function useScrollEnterProgress(
 ): MotionValue<number> {
   const intro = useIntroScroll();
   const sectionRef = useIntroSectionRef();
-  const isIOS = useIsIOS();
   const isDesktop = useMediaQuery(variantConfig.desktopQuery);
 
   const offset = (isDesktop
@@ -38,9 +36,6 @@ export function useScrollEnterProgress(
 
   return useTransform([rawEnter, sectionProgress], ([enter, section]) => {
     const enterValue = Number(enter);
-
-    // Hero / LiveAt on iOS: scroll progress often stays at 0 in WebKit.
-    if (intro && isIOS) return 1;
 
     if (!intro) return enterValue;
 

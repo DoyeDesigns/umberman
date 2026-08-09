@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { animate } from "framer-motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { BRAND } from "@/lib/colors";
 
 type GlitchColors = {
   a: string;
@@ -30,9 +31,9 @@ type GlitchTextProps = {
 };
 
 const DEFAULT_COLORS: GlitchColors = {
-  a: "#D74F24",
-  b: "#354396",
-  c: "#1C1C1C",
+  a: BRAND.orange,
+  b: BRAND.navy,
+  c: BRAND.ink,
 };
 
 const BASE_TEXT_STYLE = {
@@ -47,7 +48,7 @@ export function GlitchText({
   text,
   className = "",
   textClassName = "",
-  color = "#1C1C1C",
+  color = BRAND.ink,
   colors = DEFAULT_COLORS,
   trigger = "loop",
   intensity = 6,

@@ -9,6 +9,7 @@ import { Motion } from "@/components/animations/Motion";
 import { V4PigmentFillText } from "@/components/animations/variant-4/V4PigmentFillText";
 import { V5FoldMotion } from "@/components/animations/variant-5/V5FoldMotion";
 import type { V2Preset } from "@/lib/animations/variant-2/presets";
+import { BRAND } from "@/lib/colors";
 
 type HeroTitleMotionProps = {
   children: React.ReactNode;
@@ -52,8 +53,8 @@ export function HeroTitleMotion({
         <GlitchText
           text={text}
           textClassName={textClassName}
-          color="#D74F24"
-          colors={{ a: "#354396", b: "#D74F24", c: "#1C1C1C" }}
+          color={BRAND.orange}
+          colors={{ a: BRAND.navy, b: BRAND.orange, c: BRAND.ink }}
           trigger="loop"
           intensity={5}
           slices={12}

@@ -7,6 +7,7 @@ import { useAnimationVariant } from "@/components/animations/AnimationVariantPro
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { VARIANT_2 } from "@/lib/animations/config";
+import { brandRgba } from "@/lib/colors";
 
 type HeroNavBehindMotionProps = {
   heroRef: RefObject<HTMLElement | null>;
@@ -47,7 +48,7 @@ export function HeroNavBehindMotion({
   const textShadow = useTransform(hide, (t) => {
     if (variant !== 3) return "none";
     const split = t * 14;
-    return `${split}px 0 rgba(215,79,36,0.75), ${-split}px 0 rgba(53,67,150,0.7)`;
+    return `${split}px 0 ${brandRgba("orange", 0.75)}, ${-split}px 0 ${brandRgba("navy", 0.7)}`;
   });
 
   if (reducedMotion || (variant !== 2 && variant !== 3)) {
