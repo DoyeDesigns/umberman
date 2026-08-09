@@ -4,8 +4,10 @@ import { motion, useTransform } from "framer-motion";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
+import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_4 } from "@/lib/animations/config";
 
 type V4InkBloomMotionProps = {
@@ -23,6 +25,7 @@ export function V4InkBloomMotion({
 }: V4InkBloomMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_4.desktopQuery);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -45,6 +48,14 @@ export function V4InkBloomMotion({
       <div className={className} style={style}>
         {children}
       </div>
+    );
+  }
+
+  if (!scrollMotion) {
+    return (
+      <MobileInViewReveal className={className} style={style} delay={delay}>
+        {children}
+      </MobileInViewReveal>
     );
   }
 

@@ -1,10 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  MOBILE_IN_VIEWPORT,
-  mobileInViewTransition,
-} from "@/lib/animations/mobile-motion";
+import { mobileInViewTransition } from "@/lib/animations/mobile-motion";
+import { useInViewReveal } from "@/hooks/useInViewReveal";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 type MobileInViewRevealProps = {
@@ -16,7 +14,10 @@ type MobileInViewRevealProps = {
   y?: number;
 };
 
-/** Reliable reveal for iOS — avoids scroll-linked progress that breaks in WebKit. */
+/**
+ * iOS-safe reveal: never gates readability on opacity 0 + whileInView
+ * (broken inside overflow-x-clip on WebKit). Uses IO + scroll checks + timeout.
+ */
 export function MobileInViewReveal({
   children,
   className,
@@ -26,6 +27,7 @@ export function MobileInViewReveal({
   y = 14,
 }: MobileInViewRevealProps) {
   const reducedMotion = useReducedMotion();
+  const { ref, revealed } = useInViewReveal({ enabled: !reducedMotion });
 
   if (reducedMotion) {
     return (
@@ -37,11 +39,11 @@ export function MobileInViewReveal({
 
   return (
     <motion.div
+      ref={ref}
       className={className}
-      style={style}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={MOBILE_IN_VIEWPORT}
+      style={{ ...style, opacity: 1 }}
+      initial={{ opacity: 1, y }}
+      animate={revealed ? { opacity: 1, y: 0 } : { opacity: 1, y }}
       transition={mobileInViewTransition(delay, duration)}
     >
       {children}

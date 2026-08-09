@@ -113,7 +113,7 @@ export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps
 
   if (!scrollMotion) {
     return (
-      <MobileInViewReveal className={className}>
+      <MobileInViewReveal>
         <p className={`break-words ${className}`}>{text}</p>
       </MobileInViewReveal>
     );

@@ -4,6 +4,7 @@ import { motion, useTransform } from "framer-motion";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import type { RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useIsIOS } from "@/hooks/useIsIOS";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 type V3TransmissionOverlayProps = {
@@ -13,6 +14,7 @@ type V3TransmissionOverlayProps = {
 export function V3TransmissionOverlay({ targetRef }: V3TransmissionOverlayProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const isIOS = useIsIOS();
 
   const { scrollYProgress } = useSafeScroll({
     target: targetRef,
@@ -22,7 +24,7 @@ export function V3TransmissionOverlay({ targetRef }: V3TransmissionOverlayProps)
   const opacity = useTransform(scrollYProgress, [0, 0.12, 0.88, 1], [0, 0.07, 0.07, 0]);
   const y = useTransform(scrollYProgress, (p) => `${(p * 120) % 6}px`);
 
-  if (variant !== 3 || reducedMotion) {
+  if (variant !== 3 || reducedMotion || isIOS) {
     return null;
   }
 
