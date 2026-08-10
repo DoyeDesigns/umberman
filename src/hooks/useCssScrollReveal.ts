@@ -1,19 +1,15 @@
 "use client";
 
-import { useIsIOS } from "@/hooks/useIsIOS";
+import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 
-/**
- * iPhone scroll text + motion: always GSAP → element.style (direct DOM).
- * CSS view() reports supported on WebKit but often leaves text clipped/invisible.
- */
+/** @deprecated Prefer useIOSAnimationPath */
 export function useCssScrollReveal() {
-  const isIOS = useIsIOS();
+  const { isIOS, useNativeScroll } = useIOSAnimationPath();
 
   return {
     isIOS,
-    /** Never use CSS view() on iOS — unreliable in this layout. */
+    viewSupported: false,
     useCssPath: false,
-    /** GSAP writes clip-path/opacity directly on word spans. */
-    useDirectPath: isIOS,
+    useDirectPath: useNativeScroll,
   };
 }

@@ -7,15 +7,19 @@ import Image from "next/image";
 import { useCallback, useEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { MobileRevealImage } from "@/components/animations/MobileRevealImage";
+import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
+import { useManualScrollRefs } from "@/hooks/useManualScrollRefs";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import {
+  applyImageBeat,
   useRestSettleSignal,
   useSettledImageEnter,
   useSettledImageExit,
 } from "@/hooks/useImageRestSettle";
+import { computeElementScrollProgress, computePageScrollProgress } from "@/lib/animations/scroll-progress";
 import { VARIANT_3 } from "@/lib/animations/config";
 
 type SliceMeta = {
@@ -63,37 +67,26 @@ export function V3SliceImage({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const scrollMotion = useScrollMotionEnabled();
+  const { useNativeScroll, useStaticFallback } = useIOSAnimationPath();
   const isDesktop = useMediaQuery(VARIANT_3.desktopQuery);
   const scrollDirection = useScrollDirection();
   const containerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const imageLayerRef = useRef<HTMLDivElement>(null);
   const slicesRef = useRef<SliceMeta[]>([]);
   const enterRef = useRef(0);
   const exitRef = useRef(0);
   const settledRef = useRef(false);
   const directionRef = useRef(scrollDirection);
 
-  const { scrollYProgress: enterProgress } = useSafeScroll({
-    target: containerRef,
-    offset: [...(isDesktop ? VARIANT_3.enterOffset : VARIANT_3.mobileEnterOffset)],
-  });
+  const enterOffset = isDesktop
+    ? VARIANT_3.enterOffset
+    : VARIANT_3.mobileEnterOffset;
+  const exitOffset = isDesktop
+    ? VARIANT_3.exitOffset
+    : VARIANT_3.mobileExitOffset;
 
-  const { scrollYProgress: exitProgress } = useSafeScroll({
-    target: containerRef,
-    offset: [...(isDesktop ? VARIANT_3.exitOffset : VARIANT_3.mobileExitOffset)],
-  });
-
-  const settle = useRestSettleSignal(containerRef, settleAtRest);
-  const settledEnter = useSettledImageEnter(
-    enterProgress,
-    settle,
-    settleAtRest,
-    beat,
-    VARIANT_3.beatGap,
-  );
-  const settledExit = useSettledImageExit(exitProgress, settle, settleAtRest);
-
-  const imageOpacity = useTransform(settledEnter, (enter) => smooth(Number(enter)));
+  const iosPath = useNativeScroll && scrollMotion && variant === 3 && !reducedMotion;
 
   const paintSlices = useCallback(() => {
     const slices = slicesRef.current;
@@ -102,6 +95,10 @@ export function V3SliceImage({
     const scrollingDown = directionRef.current === "down";
     const enter = enterRef.current;
     const exit = exitRef.current;
+
+    if (imageLayerRef.current) {
+      imageLayerRef.current.style.opacity = String(smooth(enter));
+    }
 
     if (settledRef.current) {
       for (const slice of slices) {
@@ -130,22 +127,83 @@ export function V3SliceImage({
     }
   }, []);
 
+  useManualScrollRefs(containerRef, {
+    enterOffset,
+    exitOffset,
+    enabled: iosPath,
+    onUpdate: ({ enter, exit }) => {
+      directionRef.current = scrollDirection;
+      let beaten = applyImageBeat(enter, beat, VARIANT_3.beatGap);
+
+      if (settleAtRest) {
+        const rect = containerRef.current?.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        if (rect) {
+          const runway = computeElementScrollProgress(
+            rect,
+            vh,
+            "start end",
+            "end end",
+          );
+          if (runway > 0.78 || computePageScrollProgress() > 0.94) {
+            settledRef.current = true;
+          }
+        }
+      }
+
+      if (settledRef.current) {
+        beaten = Math.max(beaten, 1);
+        exitRef.current = 0;
+      } else {
+        exitRef.current = exit;
+      }
+
+      enterRef.current = beaten;
+      paintSlices();
+    },
+  });
+
+  const { scrollYProgress: enterProgress } = useSafeScroll({
+    target: containerRef,
+    offset: [...enterOffset],
+  });
+
+  const { scrollYProgress: exitProgress } = useSafeScroll({
+    target: containerRef,
+    offset: [...exitOffset],
+  });
+
+  const settle = useRestSettleSignal(containerRef, settleAtRest);
+  const settledEnter = useSettledImageEnter(
+    enterProgress,
+    settle,
+    settleAtRest,
+    beat,
+    VARIANT_3.beatGap,
+  );
+  const settledExit = useSettledImageExit(exitProgress, settle, settleAtRest);
+
+  const imageOpacity = useTransform(settledEnter, (enter) => smooth(Number(enter)));
+
   useEffect(() => {
     directionRef.current = scrollDirection;
     paintSlices();
   }, [scrollDirection, paintSlices]);
 
   useMotionValueEvent(settledEnter, "change", (value) => {
+    if (iosPath) return;
     enterRef.current = value;
     paintSlices();
   });
 
   useMotionValueEvent(settledExit, "change", (value) => {
+    if (iosPath) return;
     exitRef.current = value;
     paintSlices();
   });
 
   useMotionValueEvent(settle, "change", (value) => {
+    if (iosPath) return;
     settledRef.current = Number(value) > 0.5;
     paintSlices();
   });
@@ -184,7 +242,7 @@ export function V3SliceImage({
     const observer = new ResizeObserver(mountGrid);
     observer.observe(container);
     return () => observer.disconnect();
-  }, [variant, reducedMotion, src, paintSlices]);
+  }, [variant, reducedMotion, src, paintSlices, iosPath]);
 
   if (variant !== 3 || reducedMotion) {
     return (
@@ -212,6 +270,42 @@ export function V3SliceImage({
         priority={priority}
         delay={beat * VARIANT_3.beatGap}
       />
+    );
+  }
+
+  if (iosPath) {
+    return (
+      <div
+        ref={containerRef}
+        className={`relative overflow-hidden ${className}`}
+      >
+        <div ref={imageLayerRef} className="absolute inset-0">
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes={sizes}
+            priority={priority}
+            className={imageClassName}
+          />
+        </div>
+        <div ref={gridRef} className="v3-slice-grid" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  if (useStaticFallback) {
+    return (
+      <div className={`relative overflow-hidden ${className}`}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes={sizes}
+          priority={priority}
+          className={imageClassName}
+        />
+      </div>
     );
   }
 

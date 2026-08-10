@@ -6,8 +6,7 @@ import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useCallback, useRef, type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useDirectElementScroll } from "@/hooks/useDirectElementScroll";
-import { useClientReady } from "@/hooks/useClientReady";
-import { useIsIOS } from "@/hooks/useIsIOS";
+import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { applySimpleStyle } from "@/lib/animations/apply-transform-style";
@@ -37,8 +36,7 @@ export function HeroNavBehindMotion({
 }: HeroNavBehindMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const isIOS = useIsIOS();
-  const ready = useClientReady();
+  const { useNativeScroll, useStaticFallback } = useIOSAnimationPath();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const layerRef = useRef<HTMLDivElement>(null);
 
@@ -75,8 +73,7 @@ export function HeroNavBehindMotion({
     enterOffset: ["start start", "end start"],
     intro: false,
     enabled:
-      ready &&
-      isIOS &&
+      useNativeScroll &&
       !reducedMotion &&
       (variant === 2 || variant === 3),
     onUpdate: paintDirect,
@@ -104,7 +101,13 @@ export function HeroNavBehindMotion({
     );
   }
 
-  if (isIOS && ready) {
+  if (useStaticFallback) {
+    return (
+      <div className={`relative z-20 ${className ?? ""}`}>{children}</div>
+    );
+  }
+
+  if (useNativeScroll) {
     return (
       <div
         ref={layerRef}

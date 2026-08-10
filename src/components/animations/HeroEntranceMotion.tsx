@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useClientReady } from "@/hooks/useClientReady";
+import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { useIsIOS } from "@/hooks/useIsIOS";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
@@ -21,11 +22,6 @@ type HeroEntranceMotionProps = {
   style?: React.CSSProperties;
 };
 
-/**
- * Hero / LiveAt load sequence.
- * iPhone: CSS @keyframes applied in useLayoutEffect (hydration-safe).
- * Desktop: GSAP fromTo.
- */
 export function HeroEntranceMotion({
   children,
   role,
@@ -34,21 +30,19 @@ export function HeroEntranceMotion({
 }: HeroEntranceMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const isIOS = useIsIOS();
+  const { useNativeScroll } = useIOSAnimationPath();
   const ready = useClientReady();
+  const isIOS = useIsIOS();
   const ref = useRef<HTMLDivElement>(null);
+
+  const iosAnimStyle =
+    useNativeScroll && !reducedMotion
+      ? getIOSHeroEntranceStyle(variant, role)
+      : undefined;
 
   useLayoutEffect(() => {
     const el = ref.current;
-    if (!el || !ready) return;
-
-    if (isIOS && !reducedMotion) {
-      const animStyle = getIOSHeroEntranceStyle(variant, role);
-      Object.assign(el.style, animStyle);
-      return;
-    }
-
-    if (isIOS || reducedMotion) return;
+    if (!el || !ready || isIOS || reducedMotion) return;
 
     ensureGsapScrollTrigger();
 
@@ -71,11 +65,6 @@ export function HeroEntranceMotion({
     };
 
     const ctx = gsap.context(() => {
-      if (reducedMotion) {
-        gsap.set(el, { clearProps: "all", opacity: 1 });
-        return;
-      }
-
       if (variant === 4 && role === "title") {
         const clipFrames = v4TitleClipKeyframes();
         const delay = Number(frame.transition.delay ?? 0);
@@ -112,7 +101,7 @@ export function HeroEntranceMotion({
     <div
       ref={ref}
       className={`overflow-visible ${className ?? ""}`}
-      style={style}
+      style={{ ...iosAnimStyle, ...style }}
     >
       {children}
     </div>

@@ -3,35 +3,32 @@
 import { useLayoutEffect, useRef, type RefObject } from "react";
 import { computeElementScrollProgress } from "@/lib/animations/scroll-progress";
 
-type DirectScrollValues = {
+type ScrollProgressRefs = {
   enter: number;
   exit: number;
 };
 
-type UseDirectElementScrollOptions = {
+type UseManualScrollRefsOptions = {
   enterOffset: readonly [string, string];
-  exitOffset?: readonly [string, string];
-  introSectionRef?: RefObject<HTMLElement | null> | null;
-  intro?: boolean;
+  exitOffset: readonly [string, string];
   enabled?: boolean;
-  onUpdate: (values: DirectScrollValues) => void;
+  onUpdate?: (values: ScrollProgressRefs) => void;
 };
 
 /**
- * Scroll progress via getBoundingClientRect — reliable on iPhone WebKit.
- * No Framer MotionValues, no GSAP ScrollTrigger.
+ * iPhone-safe scroll progress into plain refs — no Framer MotionValues.
  */
-export function useDirectElementScroll(
+export function useManualScrollRefs(
   targetRef: RefObject<HTMLElement | null>,
   {
     enterOffset,
     exitOffset,
-    introSectionRef,
-    intro = false,
     enabled = true,
     onUpdate,
-  }: UseDirectElementScrollOptions,
+  }: UseManualScrollRefsOptions,
 ) {
+  const enterRef = useRef(0);
+  const exitRef = useRef(0);
   const onUpdateRef = useRef(onUpdate);
   onUpdateRef.current = onUpdate;
 
@@ -42,47 +39,35 @@ export function useDirectElementScroll(
     let attempts = 0;
     let cancelled = false;
 
-    const measure = () => {
+    const measure = (): ScrollProgressRefs | null => {
       const target = targetRef.current;
       if (!target) return null;
 
       const vh = window.innerHeight || document.documentElement.clientHeight;
-      const enter = computeElementScrollProgress(
-        target.getBoundingClientRect(),
-        vh,
-        enterOffset[0],
-        enterOffset[1],
-      );
+      const rect = target.getBoundingClientRect();
 
-      let exit = 0;
-      if (exitOffset) {
-        exit = computeElementScrollProgress(
-          target.getBoundingClientRect(),
+      return {
+        enter: computeElementScrollProgress(
+          rect,
+          vh,
+          enterOffset[0],
+          enterOffset[1],
+        ),
+        exit: computeElementScrollProgress(
+          rect,
           vh,
           exitOffset[0],
           exitOffset[1],
-        );
-      }
-
-      let adjustedEnter = enter;
-      if (intro && introSectionRef?.current) {
-        const section = computeElementScrollProgress(
-          introSectionRef.current.getBoundingClientRect(),
-          vh,
-          "start start",
-          "end start",
-        );
-        if (section < 0.1) {
-          adjustedEnter = Math.max(enter, 1);
-        }
-      }
-
-      return { enter: adjustedEnter, exit };
+        ),
+      };
     };
 
     const paint = () => {
       const values = measure();
-      if (values) onUpdateRef.current(values);
+      if (!values) return;
+      enterRef.current = values.enter;
+      exitRef.current = values.exit;
+      onUpdateRef.current?.(values);
     };
 
     const schedulePaint = () => {
@@ -111,6 +96,7 @@ export function useDirectElementScroll(
     window.addEventListener("scroll", onMove, { passive: true });
     window.addEventListener("resize", onMove);
     window.addEventListener("touchmove", onMove, { passive: true });
+    window.addEventListener("touchmove", onMove, { passive: true });
     window.visualViewport?.addEventListener("scroll", onMove);
     window.visualViewport?.addEventListener("resize", onMove);
     window.addEventListener("load", schedulePaint);
@@ -125,5 +111,7 @@ export function useDirectElementScroll(
       window.visualViewport?.removeEventListener("resize", onMove);
       window.removeEventListener("load", schedulePaint);
     };
-  }, [enabled, intro, enterOffset, exitOffset, introSectionRef, targetRef]);
+  }, [enabled, enterOffset, exitOffset, targetRef]);
+
+  return { enterRef, exitRef };
 }

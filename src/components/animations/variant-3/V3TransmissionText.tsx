@@ -7,8 +7,7 @@ import { useMemo, useRef, type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { V3TransmissionTextDirect } from "@/components/animations/variant-3/V3TransmissionTextDirect";
-import { useClientReady } from "@/hooks/useClientReady";
-import { useCssScrollReveal } from "@/hooks/useCssScrollReveal";
+import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
@@ -214,18 +213,17 @@ export function V3TransmissionText({
 }: V3TransmissionTextProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const ready = useClientReady();
-  const { useDirectPath } = useCssScrollReveal();
+  const { useStaticFallback, useNativeScroll } = useIOSAnimationPath();
 
   if (variant !== 3 || reducedMotion) {
     return <p className={className}>{text}</p>;
   }
 
-  if (!ready) {
+  if (useStaticFallback) {
     return <p className={`break-words ${className}`}>{text}</p>;
   }
 
-  if (useDirectPath) {
+  if (useNativeScroll) {
     return <V3TransmissionTextDirect text={text} className={className} mobile />;
   }
 

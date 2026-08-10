@@ -8,8 +8,7 @@ import { useAnimationVariant } from "@/components/animations/AnimationVariantPro
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { V2LineRevealTextDirect } from "@/components/animations/variant-2/V2LineRevealTextDirect";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
-import { useClientReady } from "@/hooks/useClientReady";
-import { useCssScrollReveal } from "@/hooks/useCssScrollReveal";
+import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
@@ -152,18 +151,17 @@ function V2LineRevealTextFramer({ text, className = "" }: V2LineRevealTextProps)
 export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const ready = useClientReady();
-  const { useDirectPath } = useCssScrollReveal();
+  const { useStaticFallback, useNativeScroll } = useIOSAnimationPath();
 
   if (variant !== 2 || reducedMotion) {
     return <p className={className}>{text}</p>;
   }
 
-  if (!ready) {
+  if (useStaticFallback) {
     return <p className={`break-words ${className}`}>{text}</p>;
   }
 
-  if (useDirectPath) {
+  if (useNativeScroll) {
     return <V2LineRevealTextDirect text={text} className={className} mobile />;
   }
 

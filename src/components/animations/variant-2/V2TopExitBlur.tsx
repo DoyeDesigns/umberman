@@ -2,6 +2,7 @@
 
 import { useTransform, type MotionValue } from "framer-motion";
 import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
+import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { VARIANT_2, delayV2Exit } from "@/lib/animations/config";
 import type { ScrollDirection } from "@/hooks/useScrollDirection";
 
@@ -10,10 +11,15 @@ type V2TopExitBlurProps = {
   scrollDirection: ScrollDirection;
 };
 
+/**
+ * Top-edge scroll blur — desktop only. Uses Framer MotionValues (broken on iPhone).
+ */
 export function V2TopExitBlur({
   exitProgress,
   scrollDirection,
 }: V2TopExitBlurProps) {
+  const { useNativeScroll } = useIOSAnimationPath();
+
   const strength = useTransform(exitProgress, (exit) => {
     if (scrollDirection !== "down") return 0;
     return delayV2Exit(exit, VARIANT_2.topExitBlurDelay);
@@ -23,6 +29,10 @@ export function V2TopExitBlur({
     strength,
     (value) => `blur(${value * VARIANT_2.topExitBlurAmount}px)`,
   );
+
+  if (useNativeScroll) {
+    return null;
+  }
 
   return (
     <ScrollLinkedDiv

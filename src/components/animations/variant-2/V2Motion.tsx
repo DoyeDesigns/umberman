@@ -6,11 +6,10 @@ import { useCallback, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useIntroScroll, useIntroSectionRef } from "@/components/animations/IntroScrollContext";
-import { useIsIOS } from "@/hooks/useIsIOS";
+import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
 import { useDirectElementScroll } from "@/hooks/useDirectElementScroll";
-import { useClientReady } from "@/hooks/useClientReady";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -46,8 +45,7 @@ export function V2Motion({
   const reducedMotion = useReducedMotion();
   const intro = useIntroScroll();
   const sectionRef = useIntroSectionRef();
-  const isIOS = useIsIOS();
-  const ready = useClientReady();
+  const { useNativeScroll, useStaticFallback } = useIOSAnimationPath();
   const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const scrollDirection = useScrollDirection();
@@ -99,7 +97,7 @@ export function V2Motion({
     exitOffset,
     introSectionRef: sectionRef,
     intro,
-    enabled: ready && isIOS && scrollMotion && variant === 2 && !reducedMotion,
+    enabled: useNativeScroll && scrollMotion && variant === 2 && !reducedMotion,
     onUpdate: paintDirect,
   });
 
@@ -194,7 +192,15 @@ export function V2Motion({
     );
   }
 
-  if (intro && isIOS && ready) {
+  if (useStaticFallback) {
+    return (
+      <div className={`relative max-w-full overflow-x-hidden ${className ?? ""}`} style={style}>
+        {children}
+      </div>
+    );
+  }
+
+  if (intro && useNativeScroll) {
     return (
       <div
         ref={ref}
@@ -206,7 +212,7 @@ export function V2Motion({
     );
   }
 
-  if (isIOS && ready && scrollMotion) {
+  if (useNativeScroll && scrollMotion) {
     return (
       <div
         ref={ref}

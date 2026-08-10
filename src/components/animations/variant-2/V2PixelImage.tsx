@@ -7,16 +7,20 @@ import { useCallback, useEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { MobileRevealImage } from "@/components/animations/MobileRevealImage";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
+import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
+import { useManualScrollRefs } from "@/hooks/useManualScrollRefs";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
 import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import {
+  applyImageBeat,
   useRestSettleSignal,
   useSettledImageEnter,
   useSettledImageExit,
 } from "@/hooks/useImageRestSettle";
+import { computeElementScrollProgress, computePageScrollProgress } from "@/lib/animations/scroll-progress";
 import { VARIANT_2 } from "@/lib/animations/config";
 
 type CellMeta = {
@@ -103,41 +107,26 @@ export function V2PixelImage({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const scrollMotion = useScrollMotionEnabled();
+  const { useNativeScroll, useStaticFallback } = useIOSAnimationPath();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const scrollDirection = useScrollDirection();
   const containerRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const imageLayerRef = useRef<HTMLDivElement>(null);
   const cellsRef = useRef<CellMeta[]>([]);
   const enterRef = useRef(0);
   const exitRef = useRef(0);
   const settledRef = useRef(false);
   const directionRef = useRef(scrollDirection);
 
-  const { scrollYProgress: enterProgress } = useSafeScroll({
-    target: containerRef,
-    offset: [
-      ...(isDesktop ? VARIANT_2.enterOffset : VARIANT_2.mobileEnterOffset),
-    ],
-  });
+  const enterOffset = isDesktop
+    ? VARIANT_2.enterOffset
+    : VARIANT_2.mobileEnterOffset;
+  const exitOffset = isDesktop
+    ? VARIANT_2.exitOffset
+    : VARIANT_2.mobileExitOffset;
 
-  const { scrollYProgress: exitProgress } = useSafeScroll({
-    target: containerRef,
-    offset: [...(isDesktop ? VARIANT_2.exitOffset : VARIANT_2.mobileExitOffset)],
-  });
-
-  const settle = useRestSettleSignal(containerRef, settleAtRest);
-  const settledEnter = useSettledImageEnter(
-    enterProgress,
-    settle,
-    settleAtRest,
-    beat,
-    0.11,
-  );
-  const settledExit = useSettledImageExit(exitProgress, settle, settleAtRest);
-
-  const imageOpacity = useTransform(settledEnter, (enter) =>
-    smooth(Number(enter)),
-  );
+  const iosPath = useNativeScroll && scrollMotion && variant === 2 && !reducedMotion;
 
   const paintCells = useCallback(() => {
     const cells = cellsRef.current;
@@ -146,6 +135,10 @@ export function V2PixelImage({
     const scrollingDown = directionRef.current === "down";
     const enter = enterRef.current;
     const exit = exitRef.current;
+
+    if (imageLayerRef.current) {
+      imageLayerRef.current.style.opacity = String(smooth(enter));
+    }
 
     if (settledRef.current || enter >= 0.98) {
       for (const cell of cells) {
@@ -177,25 +170,70 @@ export function V2PixelImage({
     }
   }, []);
 
+  useManualScrollRefs(containerRef, {
+    enterOffset,
+    exitOffset,
+    enabled: iosPath,
+    onUpdate: ({ enter, exit }) => {
+      directionRef.current = scrollDirection;
+      let beaten = applyImageBeat(enter, beat, 0.11);
+
+      if (settleAtRest) {
+        const rect = containerRef.current?.getBoundingClientRect();
+        const vh = window.innerHeight || document.documentElement.clientHeight;
+        if (rect) {
+          const runway = computeElementScrollProgress(
+            rect,
+            vh,
+            "start end",
+            "end end",
+          );
+          if (runway > 0.78 || computePageScrollProgress() > 0.94) {
+            settledRef.current = true;
+          }
+        }
+      }
+
+      if (settledRef.current) {
+        beaten = Math.max(beaten, 1);
+        exitRef.current = 0;
+      } else {
+        exitRef.current = exit;
+      }
+
+      enterRef.current = beaten;
+      paintCells();
+    },
+  });
+
+  const { scrollYProgress: enterProgress } = useSafeScroll({
+    target: containerRef,
+    offset: [...enterOffset],
+  });
+
+  const { scrollYProgress: exitProgress } = useSafeScroll({
+    target: containerRef,
+    offset: [...exitOffset],
+  });
+
+  const settle = useRestSettleSignal(containerRef, settleAtRest);
+  const settledEnter = useSettledImageEnter(
+    enterProgress,
+    settle,
+    settleAtRest,
+    beat,
+    0.11,
+  );
+  const settledExit = useSettledImageExit(exitProgress, settle, settleAtRest);
+
+  const imageOpacity = useTransform(settledEnter, (enter) =>
+    smooth(Number(enter)),
+  );
+
   useEffect(() => {
     directionRef.current = scrollDirection;
     paintCells();
   }, [scrollDirection, paintCells]);
-
-  useMotionValueEvent(settledEnter, "change", (value) => {
-    enterRef.current = value;
-    paintCells();
-  });
-
-  useMotionValueEvent(settledExit, "change", (value) => {
-    exitRef.current = value;
-    paintCells();
-  });
-
-  useMotionValueEvent(settle, "change", (value) => {
-    settledRef.current = Number(value) > 0.5;
-    paintCells();
-  });
 
   useEffect(() => {
     if (variant !== 2 || reducedMotion) return;
@@ -219,7 +257,25 @@ export function V2PixelImage({
     const observer = new ResizeObserver(mountGrid);
     observer.observe(container);
     return () => observer.disconnect();
-  }, [variant, reducedMotion, maskColor, paintCells]);
+  }, [variant, reducedMotion, maskColor, paintCells, iosPath]);
+
+  useMotionValueEvent(settledEnter, "change", (value) => {
+    if (iosPath) return;
+    enterRef.current = value;
+    paintCells();
+  });
+
+  useMotionValueEvent(settledExit, "change", (value) => {
+    if (iosPath) return;
+    exitRef.current = value;
+    paintCells();
+  });
+
+  useMotionValueEvent(settle, "change", (value) => {
+    if (iosPath) return;
+    settledRef.current = Number(value) > 0.5;
+    paintCells();
+  });
 
   if (variant !== 2 || reducedMotion) {
     return (
@@ -247,6 +303,39 @@ export function V2PixelImage({
         priority={priority}
         delay={beat * 0.08}
       />
+    );
+  }
+
+  if (iosPath) {
+    return (
+      <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
+        <div ref={imageLayerRef} className="absolute inset-0">
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            sizes={sizes}
+            priority={priority}
+            className={imageClassName}
+          />
+        </div>
+        <div ref={gridRef} className="v2-pixel-grid" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  if (useStaticFallback) {
+    return (
+      <div className={`relative overflow-hidden ${className}`}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes={sizes}
+          priority={priority}
+          className={imageClassName}
+        />
+      </div>
     );
   }
 

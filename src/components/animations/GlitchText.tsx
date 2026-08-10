@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { animate } from "framer-motion";
+import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { BRAND } from "@/lib/colors";
 
@@ -59,6 +60,7 @@ export function GlitchText({
   initialDelayMs = 2800,
 }: GlitchTextProps) {
   const reducedMotion = useReducedMotion();
+  const { useNativeScroll } = useIOSAnimationPath();
   const titleRef = useRef<HTMLSpanElement>(null);
   const shadowRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const sliceRefs = useRef<(HTMLSpanElement | null)[]>([]);
@@ -90,6 +92,7 @@ export function GlitchText({
   }, [slices, colors]);
 
   const burst = useCallback(() => {
+    if (useNativeScroll) return;
     const power = (0.5 + Math.random() * 0.8) * intensity;
     const dir = Math.random() > 0.5 ? 1 : -1;
 
@@ -128,10 +131,10 @@ export function GlitchText({
         { duration: 0.16, ease: "easeOut" },
       );
     });
-  }, [intensity, sliceData]);
+  }, [intensity, sliceData, useNativeScroll]);
 
   useEffect(() => {
-    if (reducedMotion || trigger === "hover") return;
+    if (useNativeScroll || reducedMotion || trigger === "hover") return;
 
     if (trigger === "once") {
       burst();
@@ -157,13 +160,24 @@ export function GlitchText({
       cancelled = true;
       window.clearTimeout(timeoutId);
     };
-  }, [trigger, speed, burst, reducedMotion, gapMinMs, gapMaxMs, initialDelayMs]);
+  }, [trigger, speed, burst, reducedMotion, gapMinMs, gapMaxMs, initialDelayMs, useNativeScroll]);
 
   const handleHoverBurst = useCallback(() => {
     if (trigger !== "hover" || reducedMotion) return;
     burst();
     window.setTimeout(burst, 90);
   }, [trigger, burst, reducedMotion]);
+
+  if (useNativeScroll) {
+    return (
+      <span
+        className={`${className} ${textClassName}`.trim()}
+        style={{ ...BASE_TEXT_STYLE, color }}
+      >
+        {text}
+      </span>
+    );
+  }
 
   return (
     <div

@@ -90,7 +90,7 @@ export function V2LineRevealTextDirect({
       });
     };
 
-    const onScroll = () => {
+    const onMove = () => {
       const y = window.scrollY;
       if (Math.abs(y - lastY) >= 6) {
         scrollDirection = y > lastY ? "down" : "up";
@@ -102,18 +102,20 @@ export function V2LineRevealTextDirect({
     paint();
     schedulePaint();
 
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    window.visualViewport?.addEventListener("scroll", onScroll);
-    window.visualViewport?.addEventListener("resize", onScroll);
+    window.addEventListener("scroll", onMove, { passive: true });
+    window.addEventListener("resize", onMove);
+    window.addEventListener("touchmove", onMove, { passive: true });
+    window.visualViewport?.addEventListener("scroll", onMove);
+    window.visualViewport?.addEventListener("resize", onMove);
     window.addEventListener("load", schedulePaint);
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      window.visualViewport?.removeEventListener("scroll", onScroll);
-      window.visualViewport?.removeEventListener("resize", onScroll);
+      window.removeEventListener("scroll", onMove);
+      window.removeEventListener("resize", onMove);
+      window.removeEventListener("touchmove", onMove);
+      window.visualViewport?.removeEventListener("scroll", onMove);
+      window.visualViewport?.removeEventListener("resize", onMove);
       window.removeEventListener("load", schedulePaint);
     };
   }, [mobile, words]);
