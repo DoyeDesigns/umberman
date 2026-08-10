@@ -20,9 +20,9 @@ export function useCssScrollReveal() {
   return {
     isIOS,
     viewSupported,
-    /** Prefer CSS path on iOS when view timelines are available. */
+    /** iOS + view() — CSS scroll-driven text (no Framer/GSAP MotionValues). */
     useCssPath: isIOS && viewSupported,
-    /** iOS without view() — render markup with static visible fallback. */
-    useFallbackVisible: isIOS && !viewSupported,
+    /** iOS without view() — GSAP writes styles directly on DOM nodes. */
+    useDirectPath: isIOS && !viewSupported,
   };
 }

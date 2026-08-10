@@ -44,6 +44,10 @@
     animation-timing-function: linear, linear;
     animation-fill-mode: both, both;
     animation-timeline: --v2-reveal, --v2-reveal;
+    -webkit-animation-name: v2-word-wipe-in, v2-word-wipe-out;
+    -webkit-animation-timing-function: linear, linear;
+    -webkit-animation-fill-mode: both, both;
+    -webkit-animation-timeline: --v2-reveal, --v2-reveal;
   }
 
   @keyframes v3-transmission-in {
@@ -92,6 +96,10 @@
     animation-timing-function: linear, linear;
     animation-fill-mode: both, both;
     animation-timeline: --v3-reveal, --v3-reveal;
+    -webkit-animation-name: v3-transmission-in, v3-transmission-out;
+    -webkit-animation-timing-function: linear, linear;
+    -webkit-animation-fill-mode: both, both;
+    -webkit-animation-timeline: --v3-reveal, --v3-reveal;
   }
 
   @keyframes v3-scan-sweep {

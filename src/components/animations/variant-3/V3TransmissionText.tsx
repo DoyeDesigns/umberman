@@ -5,7 +5,10 @@ import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useMemo, useRef, type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { V3CssTransmissionText } from "@/components/animations/css/V3CssTransmissionText";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
+import { V3TransmissionTextDirect } from "@/components/animations/variant-3/V3TransmissionTextDirect";
+import { useCssScrollReveal } from "@/hooks/useCssScrollReveal";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
@@ -211,9 +214,18 @@ export function V3TransmissionText({
 }: V3TransmissionTextProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const { useCssPath, useDirectPath } = useCssScrollReveal();
 
   if (variant !== 3 || reducedMotion) {
     return <p className={className}>{text}</p>;
+  }
+
+  if (useCssPath) {
+    return <V3CssTransmissionText text={text} className={className} />;
+  }
+
+  if (useDirectPath) {
+    return <V3TransmissionTextDirect text={text} className={className} mobile />;
   }
 
   return <V3TransmissionTextFramer text={text} className={className} />;

@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useIsIOS } from "@/hooks/useIsIOS";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
   getHeroEntrance,
@@ -19,10 +20,41 @@ type HeroEntranceMotionProps = {
 };
 
 /**
- * Hero / LiveAt load sequence. Uses GSAP (not Framer animate) so entrance
- * reliably runs on iPhone WebKit.
+ * Hero / LiveAt load sequence.
+ * iPhone: pure CSS @keyframes (WebKit-native, no JS animation libs).
+ * Desktop: GSAP fromTo.
  */
 export function HeroEntranceMotion({
+  children,
+  role,
+  className,
+  style,
+}: HeroEntranceMotionProps) {
+  const variant = useAnimationVariant();
+  const reducedMotion = useReducedMotion();
+  const isIOS = useIsIOS();
+
+  if (isIOS && !reducedMotion) {
+    return (
+      <div
+        className={`ios-hero-entrance overflow-visible ${className ?? ""}`}
+        data-variant={variant}
+        data-role={role}
+        style={style}
+      >
+        {children}
+      </div>
+    );
+  }
+
+  return (
+    <HeroEntranceMotionDesktop role={role} className={className} style={style}>
+      {children}
+    </HeroEntranceMotionDesktop>
+  );
+}
+
+function HeroEntranceMotionDesktop({
   children,
   role,
   className,

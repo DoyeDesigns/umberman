@@ -5,8 +5,11 @@ import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useMemo, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { V2CssLineRevealText } from "@/components/animations/css/V2CssLineRevealText";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
+import { V2LineRevealTextDirect } from "@/components/animations/variant-2/V2LineRevealTextDirect";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
+import { useCssScrollReveal } from "@/hooks/useCssScrollReveal";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
@@ -149,9 +152,18 @@ function V2LineRevealTextFramer({ text, className = "" }: V2LineRevealTextProps)
 export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const { useCssPath, useDirectPath } = useCssScrollReveal();
 
   if (variant !== 2 || reducedMotion) {
     return <p className={className}>{text}</p>;
+  }
+
+  if (useCssPath) {
+    return <V2CssLineRevealText text={text} className={className} />;
+  }
+
+  if (useDirectPath) {
+    return <V2LineRevealTextDirect text={text} className={className} mobile />;
   }
 
   return <V2LineRevealTextFramer text={text} className={className} />;
