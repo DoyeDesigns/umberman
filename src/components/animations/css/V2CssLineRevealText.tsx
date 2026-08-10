@@ -19,7 +19,7 @@ export function V2CssLineRevealText({
 
   return (
     <div
-      className={`v2-css-block relative w-full min-w-0 max-w-full overflow-x-hidden${
+      className={`v2-css-block relative w-full min-w-0 max-w-full${
         fallbackVisible ? " ios-css-fallback-visible" : ""
       }`}
     >
@@ -35,7 +35,7 @@ export function V2CssLineRevealText({
 
           return (
             <span key={`${index}-${word.slice(0, 8)}`}>
-              <span className="inline-block max-w-full overflow-hidden align-bottom">
+              <span className="inline-block max-w-full align-bottom">
                 <span className="v2-css-word" style={style}>
                   {word}
                 </span>

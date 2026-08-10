@@ -26,80 +26,11 @@
   }
 }
 
-@keyframes ios-hero-decode {
-  from {
-    opacity: 0;
-    transform: translate3d(12px, 36px, 0) skewX(3deg);
-    filter: blur(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) skewX(0deg);
-    filter: blur(0);
-  }
-}
-
-@keyframes ios-hero-decode-sm {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 22px, 0) skewX(1.5deg);
-    filter: blur(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0) skewX(0deg);
-    filter: blur(0);
-  }
-}
-
-@keyframes ios-hero-pigment {
-  from {
-    opacity: 0;
-    filter: blur(12px);
-  }
-  to {
-    opacity: 1;
-    filter: blur(0);
-  }
-}
-
-@keyframes ios-hero-pigment-clip {
-  from {
-    opacity: 0;
-    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
-  }
-  to {
-    opacity: 1;
-    clip-path: polygon(0 100%, 100% 100%, 100% 0%, 0 0%);
-  }
-}
-
-@keyframes ios-hero-fold {
-  from {
-    opacity: 0;
-    transform: perspective(900px) rotateX(-22deg);
-  }
-  to {
-    opacity: 1;
-    transform: perspective(900px) rotateX(0deg);
-  }
-}
-
-@keyframes ios-hero-fold-sm {
-  from {
-    opacity: 0;
-    transform: perspective(900px) rotateX(-16deg);
-  }
-  to {
-    opacity: 1;
-    transform: perspective(900px) rotateX(0deg);
-  }
-}
-
 html.ios .ios-hero-entrance {
   animation-fill-mode: both;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform, opacity, filter;
+  transform: translate3d(0, 0, 0);
 }
 
 html.ios .ios-hero-entrance[data-variant="2"][data-role="logo"] {
@@ -126,80 +57,6 @@ html.ios .ios-hero-entrance[data-variant="2"][data-role="title"] {
   animation-delay: 0.58s;
 }
 
-html.ios .ios-hero-entrance[data-variant="3"][data-role="logo"] {
-  animation-name: ios-hero-decode-sm;
-  animation-duration: 0.78s;
-  animation-delay: 0.08s;
-}
-
-html.ios .ios-hero-entrance[data-variant="3"][data-role="name"] {
-  animation-name: ios-hero-decode-sm;
-  animation-duration: 0.78s;
-  animation-delay: 0.22s;
-}
-
-html.ios .ios-hero-entrance[data-variant="3"][data-role="presents"] {
-  animation-name: ios-hero-decode-sm;
-  animation-duration: 0.78s;
-  animation-delay: 0.34s;
-}
-
-html.ios .ios-hero-entrance[data-variant="3"][data-role="title"] {
-  animation-name: ios-hero-decode;
-  animation-duration: 0.95s;
-  animation-delay: 0.58s;
-}
-
-html.ios .ios-hero-entrance[data-variant="4"][data-role="logo"],
-html.ios .ios-hero-entrance[data-variant="4"][data-role="name"],
-html.ios .ios-hero-entrance[data-variant="4"][data-role="presents"] {
-  animation-name: ios-hero-pigment;
-  animation-duration: 0.85s;
-}
-
-html.ios .ios-hero-entrance[data-variant="4"][data-role="logo"] {
-  animation-delay: 0.08s;
-}
-
-html.ios .ios-hero-entrance[data-variant="4"][data-role="name"] {
-  animation-delay: 0.22s;
-}
-
-html.ios .ios-hero-entrance[data-variant="4"][data-role="presents"] {
-  animation-delay: 0.34s;
-}
-
-html.ios .ios-hero-entrance[data-variant="4"][data-role="title"] {
-  animation-name: ios-hero-pigment-clip;
-  animation-duration: 1.15s;
-  animation-delay: 0.58s;
-}
-
-html.ios .ios-hero-entrance[data-variant="5"][data-role="logo"],
-html.ios .ios-hero-entrance[data-variant="5"][data-role="name"],
-html.ios .ios-hero-entrance[data-variant="5"][data-role="presents"] {
-  animation-name: ios-hero-fold-sm;
-  animation-duration: 0.78s;
-}
-
-html.ios .ios-hero-entrance[data-variant="5"][data-role="logo"] {
-  animation-delay: 0.08s;
-}
-
-html.ios .ios-hero-entrance[data-variant="5"][data-role="name"] {
-  animation-delay: 0.22s;
-}
-
-html.ios .ios-hero-entrance[data-variant="5"][data-role="presents"] {
-  animation-delay: 0.34s;
-}
-
-html.ios .ios-hero-entrance[data-variant="5"][data-role="title"] {
-  animation-name: ios-hero-fold;
-  animation-duration: 0.78s;
-  animation-delay: 0.58s;
-}
-
 html.ios .ios-hero-entrance[data-role="liveAtCall"] {
   animation-name: ios-hero-rise;
   animation-duration: 0.78s;
@@ -210,14 +67,6 @@ html.ios .ios-hero-entrance[data-role="liveAtResponse"] {
   animation-name: ios-hero-rise-lg;
   animation-duration: 0.95s;
   animation-delay: 1.05s;
-}
-
-html.ios .ios-hero-entrance[data-variant="3"][data-role="liveAtCall"] {
-  animation-name: ios-hero-decode-sm;
-}
-
-html.ios .ios-hero-entrance[data-variant="3"][data-role="liveAtResponse"] {
-  animation-name: ios-hero-decode;
 }
 
 @media (prefers-reduced-motion: reduce) {

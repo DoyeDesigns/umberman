@@ -14,6 +14,14 @@ function clamp(value: number, min = 0, max = 1) {
   return Math.min(max, Math.max(min, value));
 }
 
+function boostEnterIfPeeking(rect: DOMRect, vh: number, enter: number) {
+  if (enter > 0.02) return enter;
+  const visible = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
+  if (visible <= 0) return enter;
+  const ratio = visible / Math.max(rect.height, 1);
+  return Math.max(enter, ratio * 0.85);
+}
+
 /**
  * iPhone scroll word-wipe — pure scroll listener + getBoundingClientRect.
  * No Framer, no GSAP, no CSS view() timelines.
@@ -46,15 +54,18 @@ export function V2LineRevealTextDirect({
     let lastY = window.scrollY;
     let rafId = 0;
 
+    let armed = false;
+
     const paint = () => {
       const rect = wrapper.getBoundingClientRect();
       const vh = window.innerHeight || document.documentElement.clientHeight;
-      const enter = computeElementScrollProgress(
+      let enter = computeElementScrollProgress(
         rect,
         vh,
         enterOffset[0],
         enterOffset[1],
       );
+      enter = boostEnterIfPeeking(rect, vh, enter);
       const exit = computeElementScrollProgress(
         rect,
         vh,
@@ -75,6 +86,8 @@ export function V2LineRevealTextDirect({
           (delayedExit - i * exitStagger * 0.75) / exitDuration,
         );
         const t = wordEnter * (1 - wordExit);
+
+        if (!armed) continue;
 
         span.style.clipPath = `inset(0 ${(1 - t) * 100}% 0 0)`;
         span.style.transform = `translate3d(${(1 - t) * -14}px, 0, 0)`;
@@ -100,7 +113,11 @@ export function V2LineRevealTextDirect({
     };
 
     paint();
-    schedulePaint();
+    requestAnimationFrame(() => {
+      armed = true;
+      paint();
+      schedulePaint();
+    });
 
     window.addEventListener("scroll", onMove, { passive: true });
     window.addEventListener("resize", onMove);
@@ -121,11 +138,11 @@ export function V2LineRevealTextDirect({
   }, [mobile, words]);
 
   return (
-    <div ref={wrapperRef} className="relative w-full min-w-0 max-w-full overflow-x-hidden">
+    <div ref={wrapperRef} className="relative w-full min-w-0 max-w-full">
       <p className={`break-words ${className}`}>
         {words.map((word, index) => (
           <span key={`${index}-${word.slice(0, 8)}`}>
-            <span className="inline-block max-w-full overflow-hidden align-bottom">
+            <span className="inline-block max-w-full align-bottom">
               <span
                 ref={(node) => {
                   wordRefs.current[index] = node;

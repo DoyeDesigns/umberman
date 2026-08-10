@@ -2,8 +2,6 @@
 
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { Motion } from "@/components/animations/Motion";
-import { V4PigmentFillText } from "@/components/animations/variant-4/V4PigmentFillText";
-import { V5FoldMotion } from "@/components/animations/variant-5/V5FoldMotion";
 import type { V2Preset } from "@/lib/animations/variant-2/presets";
 
 export type SaveWordRole = "dateLine" | "save" | "the" | "date" | "buttons";
@@ -36,33 +34,8 @@ export function SaveWordMotion({
   const variant = useAnimationVariant();
   const resolvedBeat = beat ?? ROLE_BEATS[role];
 
-  if (variant === 4) {
-    const direction =
-      role === "save" ? "left" : role === "date" ? "right" : role === "the" ? "center" : "bottom";
-    if (role === "buttons") {
-      return <div className={className}>{children}</div>;
-    }
-    return (
-      <V4PigmentFillText direction={direction} delay={resolvedBeat * 0.06} className={className}>
-        {children}
-      </V4PigmentFillText>
-    );
-  }
-
-  if (variant === 5) {
-    const foldMode =
-      role === "save" ? "left" : role === "date" ? "right" : "top";
-    return (
-      <V5FoldMotion
-        preset={preset}
-        beat={resolvedBeat}
-        delay={delay}
-        className={className}
-        foldMode={foldMode}
-      >
-        {children}
-      </V5FoldMotion>
-    );
+  if (variant !== 2) {
+    return <div className={className}>{children}</div>;
   }
 
   return (

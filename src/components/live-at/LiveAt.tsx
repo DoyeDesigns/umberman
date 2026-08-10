@@ -11,7 +11,7 @@ export function LiveAt() {
     <IntroScrollProvider sectionRef={sectionRef}>
       <section
         ref={sectionRef}
-        className="w-full max-w-full overflow-x-hidden overflow-y-visible border-y border-ink bg-cream"
+        className="w-full max-w-full border-y border-ink bg-cream"
       >
         <div className="border-b border-ink py-7 md:py-9">
           <LiveAtLineMotion line="call" className="text-center font-body text-[clamp(1.25rem,3.97vw,57.18px)] font-normal uppercase leading-none tracking-normal text-ink">
@@ -22,8 +22,8 @@ export function LiveAt() {
         </div>
 
         <div className="py-7 md:py-9">
-          <LiveAtLineMotion line="response" className="overflow-visible break-words px-[clamp(1.125rem,5.5vw,4.5rem)] text-center font-heading text-[clamp(1.5rem,min(6.52vw,calc((100vw-2.25rem)/10)),93.95px)] font-normal leading-[1.06] tracking-[-0.01em] text-ink">
-            <p className="overflow-visible break-words px-[clamp(1.125rem,5.5vw,4.5rem)] text-center font-heading text-[clamp(1.5rem,min(6.52vw,calc((100vw-2.25rem)/10)),93.95px)] font-normal leading-[1.06] tracking-[-0.01em] text-ink">
+          <LiveAtLineMotion line="response" className="break-words px-[clamp(1.125rem,5.5vw,4.5rem)] text-center font-heading text-[clamp(1.5rem,min(6.52vw,calc((100vw-2.25rem)/10)),93.95px)] font-normal leading-[1.06] tracking-[-0.01em] text-ink">
+            <p className="break-words px-[clamp(1.125rem,5.5vw,4.5rem)] text-center font-heading text-[clamp(1.5rem,min(6.52vw,calc((100vw-2.25rem)/10)),93.95px)] font-normal leading-[1.06] tracking-[-0.01em] text-ink">
               Fitzrovia Chapel, London.
             </p>
           </LiveAtLineMotion>

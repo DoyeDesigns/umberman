@@ -3,16 +3,15 @@
 import { useLayoutEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useClientReady } from "@/hooks/useClientReady";
-import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { useIsIOS } from "@/hooks/useIsIOS";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
   getHeroEntrance,
-  v4TitleClipKeyframes,
+  HERO_ENTRANCE_DELAY,
+  LIVE_AT_ENTRANCE_DELAY,
   type IntroEntranceRole,
 } from "@/lib/animations/hero-entrance";
 import { entranceToGsapTween } from "@/lib/animations/hero-entrance-gsap";
-import { getIOSHeroEntranceStyle } from "@/lib/animations/ios-hero-entrance-inline";
 import { ensureGsapScrollTrigger, gsap } from "@/lib/gsap/client";
 
 type HeroEntranceMotionProps = {
@@ -22,6 +21,17 @@ type HeroEntranceMotionProps = {
   style?: React.CSSProperties;
 };
 
+function roleDelayMs(role: IntroEntranceRole): number {
+  if (role === "liveAtCall") return LIVE_AT_ENTRANCE_DELAY.liveAtCall * 1000;
+  if (role === "liveAtResponse") return LIVE_AT_ENTRANCE_DELAY.liveAtResponse * 1000;
+  return HERO_ENTRANCE_DELAY[role] * 1000;
+}
+
+function roleDurationMs(role: IntroEntranceRole): number {
+  const isTitle = role === "title" || role === "liveAtResponse";
+  return (isTitle ? 0.95 : 0.78) * 1000;
+}
+
 export function HeroEntranceMotion({
   children,
   role,
@@ -30,15 +40,28 @@ export function HeroEntranceMotion({
 }: HeroEntranceMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const { useNativeScroll } = useIOSAnimationPath();
   const ready = useClientReady();
   const isIOS = useIsIOS();
   const ref = useRef<HTMLDivElement>(null);
 
-  const iosAnimStyle =
-    useNativeScroll && !reducedMotion
-      ? getIOSHeroEntranceStyle(variant, role)
-      : undefined;
+  const useIosCssHero = ready && isIOS && !reducedMotion;
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || !ready || !isIOS || reducedMotion) return;
+
+    const delayMs = roleDelayMs(role);
+    const durationMs = roleDurationMs(role);
+    const failsafeId = window.setTimeout(() => {
+      if (!el.isConnected) return;
+      el.style.opacity = "1";
+      el.style.transform = "none";
+      el.style.filter = "none";
+      el.style.clipPath = "none";
+    }, delayMs + durationMs + 250);
+
+    return () => window.clearTimeout(failsafeId);
+  }, [variant, role, reducedMotion, isIOS, ready]);
 
   useLayoutEffect(() => {
     const el = ref.current;
@@ -65,22 +88,6 @@ export function HeroEntranceMotion({
     };
 
     const ctx = gsap.context(() => {
-      if (variant === 4 && role === "title") {
-        const clipFrames = v4TitleClipKeyframes();
-        const delay = Number(frame.transition.delay ?? 0);
-        const duration = 1.15;
-        gsap.set(el, { opacity: 0, clipPath: clipFrames[0] });
-        gsap.to(el, {
-          opacity: 1,
-          clipPath: clipFrames[clipFrames.length - 1],
-          duration,
-          delay,
-          ease: "power2.out",
-        });
-        scheduleFailsafe(duration, delay);
-        return;
-      }
-
       const { from, to } = entranceToGsapTween(frame);
       const duration = Number(to.duration ?? 0.72);
       const delay = Number(to.delay ?? 0);
@@ -100,8 +107,10 @@ export function HeroEntranceMotion({
   return (
     <div
       ref={ref}
-      className={`overflow-visible ${className ?? ""}`}
-      style={{ ...iosAnimStyle, ...style }}
+      className={`${useIosCssHero ? "ios-hero-entrance" : ""} ${className ?? ""}`.trim()}
+      data-variant={useIosCssHero ? variant : undefined}
+      data-role={useIosCssHero ? role : undefined}
+      style={style}
     >
       {children}
     </div>

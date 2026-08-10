@@ -3,17 +3,16 @@
 import { useMotionValueEvent, useTransform } from "framer-motion";
 import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import Image from "next/image";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
-import { MobileRevealImage } from "@/components/animations/MobileRevealImage";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
+import { useClientReady } from "@/hooks/useClientReady";
 import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { useManualScrollRefs } from "@/hooks/useManualScrollRefs";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
-import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import {
   applyImageBeat,
   useRestSettleSignal,
@@ -106,8 +105,8 @@ export function V2PixelImage({
 }: V2PixelImageProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const scrollMotion = useScrollMotionEnabled();
-  const { useNativeScroll, useStaticFallback } = useIOSAnimationPath();
+  const ready = useClientReady();
+  const { useNativeScroll } = useIOSAnimationPath();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const scrollDirection = useScrollDirection();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -126,7 +125,7 @@ export function V2PixelImage({
     ? VARIANT_2.exitOffset
     : VARIANT_2.mobileExitOffset;
 
-  const iosPath = useNativeScroll && scrollMotion && variant === 2 && !reducedMotion;
+  const iosPath = useNativeScroll && ready && variant === 2 && !reducedMotion;
 
   const paintCells = useCallback(() => {
     const cells = cellsRef.current;
@@ -236,7 +235,7 @@ export function V2PixelImage({
   }, [scrollDirection, paintCells]);
 
   useEffect(() => {
-    if (variant !== 2 || reducedMotion) return;
+    if (!ready || variant !== 2 || reducedMotion) return;
 
     const container = containerRef.current;
     const grid = gridRef.current;
@@ -257,7 +256,24 @@ export function V2PixelImage({
     const observer = new ResizeObserver(mountGrid);
     observer.observe(container);
     return () => observer.disconnect();
-  }, [variant, reducedMotion, maskColor, paintCells, iosPath]);
+  }, [ready, variant, reducedMotion, maskColor, paintCells]);
+
+  useLayoutEffect(() => {
+    if (!ready || iosPath || variant !== 2 || reducedMotion) return;
+    enterRef.current = settledEnter.get();
+    exitRef.current = settledExit.get();
+    settledRef.current = settle.get() > 0.5;
+    paintCells();
+  }, [
+    ready,
+    iosPath,
+    variant,
+    reducedMotion,
+    paintCells,
+    settledEnter,
+    settledExit,
+    settle,
+  ]);
 
   useMotionValueEvent(settledEnter, "change", (value) => {
     if (iosPath) return;
@@ -292,17 +308,18 @@ export function V2PixelImage({
     );
   }
 
-  if (!scrollMotion) {
+  if (!ready) {
     return (
-      <MobileRevealImage
-        src={src}
-        alt={alt}
-        sizes={sizes}
-        className={className}
-        imageClassName={imageClassName}
-        priority={priority}
-        delay={beat * 0.08}
-      />
+      <div className={`relative overflow-hidden ${className}`}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          sizes={sizes}
+          priority={priority}
+          className={imageClassName}
+        />
+      </div>
     );
   }
 
@@ -320,21 +337,6 @@ export function V2PixelImage({
           />
         </div>
         <div ref={gridRef} className="v2-pixel-grid" aria-hidden="true" />
-      </div>
-    );
-  }
-
-  if (useStaticFallback) {
-    return (
-      <div className={`relative overflow-hidden ${className}`}>
-        <Image
-          src={src}
-          alt={alt}
-          fill
-          sizes={sizes}
-          priority={priority}
-          className={imageClassName}
-        />
       </div>
     );
   }

@@ -9,7 +9,7 @@ import { SectionHeaderMotion } from "@/components/animations/SectionHeaderMotion
 
 export function ArtistSection() {
   return (
-    <section className="w-full max-w-full overflow-x-hidden border-y border-ink bg-paper lg:flex lg:min-h-screen lg:flex-col">
+    <section className="w-full max-w-full border-y border-ink bg-paper lg:flex lg:min-h-screen lg:flex-col">
       <div className="mx-auto grid min-h-130 w-full min-w-0 max-w-360 flex-1 grid-cols-1 md:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)] md:grid-rows-[auto_auto] md:gap-y-[clamp(70px,4.86vw,100px)] lg:min-h-full lg:[--section-overhead:clamp(16rem,40svh,22.5rem)] lg:gap-y-[clamp(2.5rem,7svh,4.375rem)]">
         <div className="order-2 mt-[clamp(70px,4.86vw,100px)] flex min-w-0 flex-col items-center justify-start px-[clamp(1.125rem,5.5vw,4.5rem)] pb-[clamp(1.5rem,4vw,3rem)] md:order-0 md:col-start-1 md:row-start-2 md:mt-0 md:self-stretch md:py-0 md:pb-[clamp(1.5rem,4vw,3rem)] lg:mt-0">
           <RevealText

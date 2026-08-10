@@ -2,7 +2,13 @@
 
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-/** Scroll-linked motion runs on all platforms when reduced motion is off. */
+/**
+ * Alias for `!useReducedMotion()`.
+ *
+ * iPhone scroll routing uses `useIOSAnimationPath().useNativeScroll` — not this hook.
+ * Call sites that already return static markup when `reducedMotion` is true do not
+ * need an additional `if (!scrollMotion)` branch; it is unreachable there.
+ */
 export function useScrollMotionEnabled() {
   const reducedMotion = useReducedMotion();
   return !reducedMotion;

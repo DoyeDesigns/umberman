@@ -5,14 +5,13 @@ import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useMemo, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
-import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { V2LineRevealTextDirect } from "@/components/animations/variant-2/V2LineRevealTextDirect";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
-import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
+import { useClientReady } from "@/hooks/useClientReady";
+import { useIsIOS } from "@/hooks/useIsIOS";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection, type ScrollDirection } from "@/hooks/useScrollDirection";
-import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_2, delayV2Exit } from "@/lib/animations/config";
 
 type V2LineRevealTextProps = {
@@ -71,7 +70,7 @@ function RevealWord({
   const opacity = useTransform(reveal, (t) => 0.3 + t * 0.7);
 
   return (
-    <span className="inline-block max-w-full overflow-hidden align-bottom">
+    <span className="inline-block max-w-full align-bottom">
       <ScrollLinkedDiv
         as="span"
         className="inline-block will-change-[transform,opacity]"
@@ -84,7 +83,6 @@ function RevealWord({
 }
 
 function V2LineRevealTextFramer({ text, className = "" }: V2LineRevealTextProps) {
-  const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const scrollDirection = useScrollDirection();
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -109,20 +107,12 @@ function V2LineRevealTextFramer({ text, className = "" }: V2LineRevealTextProps)
     ],
   });
 
-  if (!scrollMotion) {
-    return (
-      <MobileInViewReveal>
-        <p className={`break-words ${className}`}>{text}</p>
-      </MobileInViewReveal>
-    );
-  }
-
   const wordCount = Math.max(words.length, 1);
   const stagger = VARIANT_2.lineTextStaggerSpan / wordCount;
   const duration = VARIANT_2.lineTextWordDuration / wordCount;
 
   return (
-    <div ref={wrapperRef} className="relative w-full min-w-0 max-w-full overflow-x-hidden">
+    <div ref={wrapperRef} className="relative w-full min-w-0 max-w-full">
       <p className={`break-words ${className}`}>
         {words.map((word, index) => (
           <span key={`${index}-${word.slice(0, 8)}`}>
@@ -151,17 +141,18 @@ function V2LineRevealTextFramer({ text, className = "" }: V2LineRevealTextProps)
 export function V2LineRevealText({ text, className = "" }: V2LineRevealTextProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const { useStaticFallback, useNativeScroll } = useIOSAnimationPath();
+  const ready = useClientReady();
+  const isIOS = useIsIOS();
 
   if (variant !== 2 || reducedMotion) {
     return <p className={className}>{text}</p>;
   }
 
-  if (useStaticFallback) {
+  if (!ready) {
     return <p className={`break-words ${className}`}>{text}</p>;
   }
 
-  if (useNativeScroll) {
+  if (isIOS) {
     return <V2LineRevealTextDirect text={text} className={className} mobile />;
   }
 

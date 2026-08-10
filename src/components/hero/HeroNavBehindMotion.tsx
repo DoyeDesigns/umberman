@@ -6,12 +6,12 @@ import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useCallback, useRef, type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useDirectElementScroll } from "@/hooks/useDirectElementScroll";
+import { useClientReady } from "@/hooks/useClientReady";
 import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { applySimpleStyle } from "@/lib/animations/apply-transform-style";
 import { VARIANT_2 } from "@/lib/animations/config";
-import { brandRgba } from "@/lib/colors";
 
 type HeroNavBehindMotionProps = {
   heroRef: RefObject<HTMLElement | null>;
@@ -36,7 +36,8 @@ export function HeroNavBehindMotion({
 }: HeroNavBehindMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const { useNativeScroll, useStaticFallback } = useIOSAnimationPath();
+  const ready = useClientReady();
+  const { useNativeScroll } = useIOSAnimationPath();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const layerRef = useRef<HTMLDivElement>(null);
 
@@ -51,7 +52,6 @@ export function HeroNavBehindMotion({
       if (!layer) return;
 
       const hide = computeHide(enter, lag);
-      const split = hide * 14;
 
       applySimpleStyle(layer, {
         y: hide * (isDesktop ? 200 : 72),
@@ -59,23 +59,15 @@ export function HeroNavBehindMotion({
         scale: 1 - hide * (isDesktop ? 0.06 : 0.03),
         filter: `blur(${hide * (isDesktop ? 5 : 3)}px)`,
         zIndex: hide < 0.04 ? 30 : 1,
-        skewX: variant === 3 ? hide * 6 : 0,
-        textShadow:
-          variant === 3
-            ? `${split}px 0 ${brandRgba("orange", 0.75)}, ${-split}px 0 ${brandRgba("navy", 0.7)}`
-            : "none",
       });
     },
-    [isDesktop, lag, variant],
+    [isDesktop, lag],
   );
 
   useDirectElementScroll(heroRef, {
     enterOffset: ["start start", "end start"],
     intro: false,
-    enabled:
-      useNativeScroll &&
-      !reducedMotion &&
-      (variant === 2 || variant === 3),
+    enabled: ready && useNativeScroll && variant === 2 && !reducedMotion,
     onUpdate: paintDirect,
   });
 
@@ -88,20 +80,14 @@ export function HeroNavBehindMotion({
   const opacity = useTransform(hide, (t) => 1 - t);
   const scale = useTransform(hide, (t) => 1 - t * (isDesktop ? 0.06 : 0.03));
   const filter = useTransform(hide, (t) => `blur(${t * (isDesktop ? 5 : 3)}px)`);
-  const skewX = useTransform(hide, (t) => t * (variant === 3 ? 6 : 0));
-  const textShadow = useTransform(hide, (t) => {
-    if (variant !== 3) return "none";
-    const split = t * 14;
-    return `${split}px 0 ${brandRgba("orange", 0.75)}, ${-split}px 0 ${brandRgba("navy", 0.7)}`;
-  });
 
-  if (reducedMotion || (variant !== 2 && variant !== 3)) {
+  if (reducedMotion || variant !== 2) {
     return (
       <div className={`relative z-20 ${className ?? ""}`}>{children}</div>
     );
   }
 
-  if (useStaticFallback) {
+  if (!ready) {
     return (
       <div className={`relative z-20 ${className ?? ""}`}>{children}</div>
     );
@@ -129,8 +115,6 @@ export function HeroNavBehindMotion({
         scale,
         filter,
         zIndex,
-        skewX,
-        textShadow,
       }}
     >
       {children}

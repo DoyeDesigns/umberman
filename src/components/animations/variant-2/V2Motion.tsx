@@ -6,15 +6,14 @@ import { useCallback, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { ScrollLinkedDiv } from "@/components/animations/ScrollLinkedDiv";
 import { useIntroScroll, useIntroSectionRef } from "@/components/animations/IntroScrollContext";
+import { useClientReady } from "@/hooks/useClientReady";
 import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
-import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
 import { useDirectElementScroll } from "@/hooks/useDirectElementScroll";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
-import { useScrollMotionEnabled } from "@/hooks/useScrollMotionEnabled";
 import { VARIANT_2, delayV2Exit } from "@/lib/animations/config";
 import { applyTransformStyle } from "@/lib/animations/apply-transform-style";
 import {
@@ -45,8 +44,8 @@ export function V2Motion({
   const reducedMotion = useReducedMotion();
   const intro = useIntroScroll();
   const sectionRef = useIntroSectionRef();
-  const { useNativeScroll, useStaticFallback } = useIOSAnimationPath();
-  const scrollMotion = useScrollMotionEnabled();
+  const ready = useClientReady();
+  const { useNativeScroll } = useIOSAnimationPath();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const scrollDirection = useScrollDirection();
   const ref = useRef<HTMLDivElement>(null);
@@ -97,7 +96,7 @@ export function V2Motion({
     exitOffset,
     introSectionRef: sectionRef,
     intro,
-    enabled: useNativeScroll && scrollMotion && variant === 2 && !reducedMotion,
+    enabled: useNativeScroll && variant === 2 && !reducedMotion,
     onUpdate: paintDirect,
   });
 
@@ -192,9 +191,9 @@ export function V2Motion({
     );
   }
 
-  if (useStaticFallback) {
+  if (!ready) {
     return (
-      <div className={`relative max-w-full overflow-x-hidden ${className ?? ""}`} style={style}>
+      <div className={`relative max-w-full ${className ?? ""}`} style={style}>
         {children}
       </div>
     );
@@ -204,7 +203,7 @@ export function V2Motion({
     return (
       <div
         ref={ref}
-        className={`relative max-w-full overflow-x-hidden ${className ?? ""}`}
+        className={`relative max-w-full ${className ?? ""}`}
         style={style}
       >
         {children}
@@ -212,11 +211,11 @@ export function V2Motion({
     );
   }
 
-  if (useNativeScroll && scrollMotion) {
+  if (useNativeScroll) {
     return (
       <div
         ref={ref}
-        className={`relative max-w-full overflow-x-hidden ${className ?? ""}`}
+        className={`relative max-w-full ${className ?? ""}`}
         style={style}
       >
         <div ref={layerRef} className="will-change-[transform,opacity,filter]">
@@ -232,26 +231,10 @@ export function V2Motion({
     );
   }
 
-  if (!scrollMotion) {
-    if (intro) {
-      return (
-        <div className={className} style={style}>
-          {children}
-        </div>
-      );
-    }
-
-    return (
-      <MobileInViewReveal className={className} style={style} delay={delay}>
-        {children}
-      </MobileInViewReveal>
-    );
-  }
-
   return (
     <div
       ref={ref}
-      className={`relative max-w-full overflow-x-hidden ${className ?? ""}`}
+      className={`relative max-w-full ${className ?? ""}`}
       style={style}
     >
       <ScrollLinkedDiv

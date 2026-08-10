@@ -96,7 +96,6 @@ export function useManualScrollRefs(
     window.addEventListener("scroll", onMove, { passive: true });
     window.addEventListener("resize", onMove);
     window.addEventListener("touchmove", onMove, { passive: true });
-    window.addEventListener("touchmove", onMove, { passive: true });
     window.visualViewport?.addEventListener("scroll", onMove);
     window.visualViewport?.addEventListener("resize", onMove);
     window.addEventListener("load", schedulePaint);
