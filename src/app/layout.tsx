@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { MotionInit } from "@/components/animations/MotionInit";
 import { august, infini, panthoma } from "./fonts";
 import "./globals.css";
@@ -16,6 +17,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${infini.variable} ${august.variable} ${panthoma.variable} h-full antialiased`}
     >
       <body className="min-h-full">
+        <Script
+          id="ios-detect"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var ua=navigator.userAgent;var ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);if(ios)document.documentElement.classList.add('ios');}catch(e){}})();`,
+          }}
+        />
         <MotionInit>{children}</MotionInit>
       </body>
     </html>

@@ -68,12 +68,14 @@ export function delayV2Exit(
 }
 
 export function parseAnimationVariant(param?: string): AnimationVariant {
+  if (param === "0") return 0;
   if (param === "1") return 1;
   if (param === "2") return 2;
   if (param === "3") return 3;
   if (param === "4") return 4;
   if (param === "5") return 5;
-  return 0;
+  /** Default to editorial scroll variant — variant 0 is static (no motion). */
+  return 2;
 }
 
 export const VARIANT_3 = {

@@ -3,8 +3,7 @@
 import { useLayoutEffect, useMemo, useRef } from "react";
 import { VARIANT_3, delayV3Exit } from "@/lib/animations/config";
 import { brandRgba } from "@/lib/colors";
-import { framerOffsetToScrollTrigger } from "@/lib/animations/offset-to-scroll-trigger";
-import { ensureGsapScrollTrigger, ScrollTrigger } from "@/lib/gsap/client";
+import { computeElementScrollProgress } from "@/lib/animations/scroll-progress";
 
 type V3TransmissionTextDirectProps = {
   text: string;
@@ -23,7 +22,7 @@ type SentenceNode = {
 };
 
 /**
- * iPhone fallback: GSAP scroll → direct DOM styles per sentence.
+ * iPhone transmission text — pure scroll listener + getBoundingClientRect.
  */
 export function V3TransmissionTextDirect({
   text,
@@ -43,7 +42,6 @@ export function V3TransmissionTextDirect({
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    ensureGsapScrollTrigger();
     peaksRef.current = [];
 
     const count = Math.max(sentences.length, 1);
@@ -57,21 +55,26 @@ export function V3TransmissionTextDirect({
       ? VARIANT_3.mobileDecodeTextExitOffset
       : VARIANT_3.decodeTextExitOffset;
 
-    const { start: enterStart, end: enterEnd } = framerOffsetToScrollTrigger(
-      enterOffset[0],
-      enterOffset[1],
-    );
-    const { start: exitStart, end: exitEnd } = framerOffsetToScrollTrigger(
-      exitOffset[0],
-      exitOffset[1],
-    );
-
-    let enter = 0;
-    let exit = 0;
     let scrollDirection: "up" | "down" = "down";
     let lastY = window.scrollY;
+    let rafId = 0;
 
     const paint = () => {
+      const rect = wrapper.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const enter = computeElementScrollProgress(
+        rect,
+        vh,
+        enterOffset[0],
+        enterOffset[1],
+      );
+      const exit = computeElementScrollProgress(
+        rect,
+        vh,
+        exitOffset[0],
+        exitOffset[1],
+      );
+
       for (let index = 0; index < sentences.length; index += 1) {
         const nodes = sentenceRefs.current[index];
         if (!nodes?.text) continue;
@@ -124,27 +127,13 @@ export function V3TransmissionTextDirect({
       }
     };
 
-    const enterTrigger = ScrollTrigger.create({
-      trigger: wrapper,
-      start: enterStart,
-      end: enterEnd,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        enter = self.progress;
+    const schedulePaint = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
         paint();
-      },
-    });
-
-    const exitTrigger = ScrollTrigger.create({
-      trigger: wrapper,
-      start: exitStart,
-      end: exitEnd,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        exit = self.progress;
-        paint();
-      },
-    });
+      });
+    };
 
     const onScroll = () => {
       const y = window.scrollY;
@@ -152,24 +141,27 @@ export function V3TransmissionTextDirect({
         scrollDirection = y > lastY ? "down" : "up";
         lastY = y;
       }
-      ScrollTrigger.update();
+      schedulePaint();
     };
 
-    enter = enterTrigger.progress;
-    exit = exitTrigger.progress;
     paint();
-    ScrollTrigger.refresh();
+    schedulePaint();
 
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     window.visualViewport?.addEventListener("scroll", onScroll);
+    window.visualViewport?.addEventListener("resize", onScroll);
+    window.addEventListener("load", schedulePaint);
 
     return () => {
-      enterTrigger.kill();
-      exitTrigger.kill();
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       window.visualViewport?.removeEventListener("scroll", onScroll);
+      window.visualViewport?.removeEventListener("resize", onScroll);
+      window.removeEventListener("load", schedulePaint);
     };
-  }, [mobile, sentences, text]);
+  }, [mobile, sentences]);
 
   return (
     <div ref={wrapperRef} className="relative w-full min-w-0 max-w-full overflow-x-hidden">

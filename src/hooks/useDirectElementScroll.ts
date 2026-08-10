@@ -1,8 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, type RefObject } from "react";
-import { framerOffsetToScrollTrigger } from "@/lib/animations/offset-to-scroll-trigger";
-import { ensureGsapScrollTrigger, ScrollTrigger } from "@/lib/gsap/client";
+import { computeElementScrollProgress } from "@/lib/animations/scroll-progress";
 
 type DirectScrollValues = {
   enter: number;
@@ -19,8 +18,8 @@ type UseDirectElementScrollOptions = {
 };
 
 /**
- * GSAP ScrollTrigger → callback. Writes styles in the callback — never touches
- * Framer MotionValues (broken update path on iPhone WebKit).
+ * Scroll progress via getBoundingClientRect — reliable on iPhone WebKit.
+ * No Framer MotionValues, no GSAP ScrollTrigger.
  */
 export function useDirectElementScroll(
   targetRef: RefObject<HTMLElement | null>,
@@ -39,118 +38,90 @@ export function useDirectElementScroll(
   useLayoutEffect(() => {
     if (!enabled) return;
 
-    let cancelled = false;
-    let enterTrigger: ScrollTrigger | undefined;
-    let exitTrigger: ScrollTrigger | undefined;
-    let sectionTrigger: ScrollTrigger | undefined;
     let rafId = 0;
     let attempts = 0;
+    let cancelled = false;
 
-    let enter = 0;
-    let exit = 0;
-    let section = 0;
-
-    const sync = () => {
-      let adjustedEnter = enter;
-      if (intro && section < 0.1) {
-        adjustedEnter = Math.max(enter, 1);
-      }
-      onUpdateRef.current({ enter: adjustedEnter, exit });
-    };
-
-    const attach = () => {
-      if (cancelled) return;
-
+    const measure = () => {
       const target = targetRef.current;
-      if (!target) {
-        if (attempts < 120) {
-          attempts += 1;
-          rafId = requestAnimationFrame(attach);
-        }
-        return;
-      }
+      if (!target) return null;
 
-      enterTrigger?.kill();
-      exitTrigger?.kill();
-      sectionTrigger?.kill();
-
-      const { start: enterStart, end: enterEnd } = framerOffsetToScrollTrigger(
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const enter = computeElementScrollProgress(
+        target.getBoundingClientRect(),
+        vh,
         enterOffset[0],
         enterOffset[1],
       );
 
-      enterTrigger = ScrollTrigger.create({
-        trigger: target,
-        start: enterStart,
-        end: enterEnd,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          enter = self.progress;
-          sync();
-        },
-      });
-
+      let exit = 0;
       if (exitOffset) {
-        const { start: exitStart, end: exitEnd } = framerOffsetToScrollTrigger(
+        exit = computeElementScrollProgress(
+          target.getBoundingClientRect(),
+          vh,
           exitOffset[0],
           exitOffset[1],
         );
-
-        exitTrigger = ScrollTrigger.create({
-          trigger: target,
-          start: exitStart,
-          end: exitEnd,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            exit = self.progress;
-            sync();
-          },
-        });
       }
 
-      const sectionEl = introSectionRef?.current;
-      if (intro && sectionEl) {
-        sectionTrigger = ScrollTrigger.create({
-          trigger: sectionEl,
-          start: "top top",
-          end: "bottom top",
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            section = self.progress;
-            sync();
-          },
-        });
+      let adjustedEnter = enter;
+      if (intro && introSectionRef?.current) {
+        const section = computeElementScrollProgress(
+          introSectionRef.current.getBoundingClientRect(),
+          vh,
+          "start start",
+          "end start",
+        );
+        if (section < 0.1) {
+          adjustedEnter = Math.max(enter, 1);
+        }
       }
 
-      enter = enterTrigger.progress;
-      exit = exitTrigger?.progress ?? 0;
-      section = sectionTrigger?.progress ?? 0;
-      sync();
-      ScrollTrigger.refresh();
+      return { enter: adjustedEnter, exit };
     };
 
-    ensureGsapScrollTrigger();
-    attach();
+    const paint = () => {
+      const values = measure();
+      if (values) onUpdateRef.current(values);
+    };
 
-    const onScroll = () => ScrollTrigger.update();
+    const schedulePaint = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
+        paint();
+      });
+    };
+
+    const tryAttach = () => {
+      if (cancelled) return;
+      if (!targetRef.current) {
+        if (attempts < 120) {
+          attempts += 1;
+          rafId = requestAnimationFrame(tryAttach);
+        }
+        return;
+      }
+      paint();
+    };
+
+    const onScroll = () => schedulePaint();
+
+    tryAttach();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     window.visualViewport?.addEventListener("scroll", onScroll);
+    window.visualViewport?.addEventListener("resize", onScroll);
+    window.addEventListener("load", schedulePaint);
 
     return () => {
       cancelled = true;
       if (rafId) cancelAnimationFrame(rafId);
-      enterTrigger?.kill();
-      exitTrigger?.kill();
-      sectionTrigger?.kill();
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       window.visualViewport?.removeEventListener("scroll", onScroll);
+      window.visualViewport?.removeEventListener("resize", onScroll);
+      window.removeEventListener("load", schedulePaint);
     };
-  }, [
-    enabled,
-    intro,
-    enterOffset,
-    exitOffset,
-    introSectionRef,
-    targetRef,
-  ]);
+  }, [enabled, intro, enterOffset, exitOffset, introSectionRef, targetRef]);
 }

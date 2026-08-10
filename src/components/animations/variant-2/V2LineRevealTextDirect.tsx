@@ -2,8 +2,7 @@
 
 import { useLayoutEffect, useMemo, useRef } from "react";
 import { VARIANT_2, delayV2Exit } from "@/lib/animations/config";
-import { framerOffsetToScrollTrigger } from "@/lib/animations/offset-to-scroll-trigger";
-import { ensureGsapScrollTrigger, ScrollTrigger } from "@/lib/gsap/client";
+import { computeElementScrollProgress } from "@/lib/animations/scroll-progress";
 
 type V2LineRevealTextDirectProps = {
   text: string;
@@ -16,8 +15,8 @@ function clamp(value: number, min = 0, max = 1) {
 }
 
 /**
- * iPhone fallback when CSS view() timelines are unavailable.
- * GSAP writes clip-path / transform / opacity directly on word spans.
+ * iPhone scroll word-wipe — pure scroll listener + getBoundingClientRect.
+ * No Framer, no GSAP, no CSS view() timelines.
  */
 export function V2LineRevealTextDirect({
   text,
@@ -32,8 +31,6 @@ export function V2LineRevealTextDirect({
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    ensureGsapScrollTrigger();
-
     const wordCount = Math.max(words.length, 1);
     const stagger = VARIANT_2.lineTextStaggerSpan / wordCount;
     const duration = VARIANT_2.lineTextWordDuration / wordCount;
@@ -45,21 +42,26 @@ export function V2LineRevealTextDirect({
       ? VARIANT_2.mobileLineTextExitOffset
       : VARIANT_2.lineTextExitOffset;
 
-    const { start: enterStart, end: enterEnd } = framerOffsetToScrollTrigger(
-      enterOffset[0],
-      enterOffset[1],
-    );
-    const { start: exitStart, end: exitEnd } = framerOffsetToScrollTrigger(
-      exitOffset[0],
-      exitOffset[1],
-    );
-
-    let enter = 0;
-    let exit = 0;
     let scrollDirection: "up" | "down" = "down";
     let lastY = window.scrollY;
+    let rafId = 0;
 
     const paint = () => {
+      const rect = wrapper.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      const enter = computeElementScrollProgress(
+        rect,
+        vh,
+        enterOffset[0],
+        enterOffset[1],
+      );
+      const exit = computeElementScrollProgress(
+        rect,
+        vh,
+        exitOffset[0],
+        exitOffset[1],
+      );
+
       for (let i = 0; i < words.length; i += 1) {
         const span = wordRefs.current[i];
         if (!span) continue;
@@ -80,27 +82,13 @@ export function V2LineRevealTextDirect({
       }
     };
 
-    const enterTrigger = ScrollTrigger.create({
-      trigger: wrapper,
-      start: enterStart,
-      end: enterEnd,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        enter = self.progress;
+    const schedulePaint = () => {
+      if (rafId) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = 0;
         paint();
-      },
-    });
-
-    const exitTrigger = ScrollTrigger.create({
-      trigger: wrapper,
-      start: exitStart,
-      end: exitEnd,
-      invalidateOnRefresh: true,
-      onUpdate: (self) => {
-        exit = self.progress;
-        paint();
-      },
-    });
+      });
+    };
 
     const onScroll = () => {
       const y = window.scrollY;
@@ -108,24 +96,27 @@ export function V2LineRevealTextDirect({
         scrollDirection = y > lastY ? "down" : "up";
         lastY = y;
       }
-      ScrollTrigger.update();
+      schedulePaint();
     };
 
-    enter = enterTrigger.progress;
-    exit = exitTrigger.progress;
     paint();
-    ScrollTrigger.refresh();
+    schedulePaint();
 
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
     window.visualViewport?.addEventListener("scroll", onScroll);
+    window.visualViewport?.addEventListener("resize", onScroll);
+    window.addEventListener("load", schedulePaint);
 
     return () => {
-      enterTrigger.kill();
-      exitTrigger.kill();
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
       window.visualViewport?.removeEventListener("scroll", onScroll);
+      window.visualViewport?.removeEventListener("resize", onScroll);
+      window.removeEventListener("load", schedulePaint);
     };
-  }, [mobile, text, words]);
+  }, [mobile, words]);
 
   return (
     <div ref={wrapperRef} className="relative w-full min-w-0 max-w-full overflow-x-hidden">

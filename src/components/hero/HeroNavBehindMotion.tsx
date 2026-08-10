@@ -6,6 +6,7 @@ import { useSafeScroll } from "@/hooks/useSafeScroll";
 import { useCallback, useRef, type RefObject } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useDirectElementScroll } from "@/hooks/useDirectElementScroll";
+import { useClientReady } from "@/hooks/useClientReady";
 import { useIsIOS } from "@/hooks/useIsIOS";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -37,6 +38,7 @@ export function HeroNavBehindMotion({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const isIOS = useIsIOS();
+  const ready = useClientReady();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const layerRef = useRef<HTMLDivElement>(null);
 
@@ -73,6 +75,7 @@ export function HeroNavBehindMotion({
     enterOffset: ["start start", "end start"],
     intro: false,
     enabled:
+      ready &&
       isIOS &&
       !reducedMotion &&
       (variant === 2 || variant === 3),
@@ -101,7 +104,7 @@ export function HeroNavBehindMotion({
     );
   }
 
-  if (isIOS) {
+  if (isIOS && ready) {
     return (
       <div
         ref={layerRef}

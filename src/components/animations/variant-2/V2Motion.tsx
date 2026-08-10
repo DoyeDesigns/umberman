@@ -10,6 +10,7 @@ import { useIsIOS } from "@/hooks/useIsIOS";
 import { MobileInViewReveal } from "@/components/animations/MobileInViewReveal";
 import { V2TopExitBlur } from "@/components/animations/variant-2/V2TopExitBlur";
 import { useDirectElementScroll } from "@/hooks/useDirectElementScroll";
+import { useClientReady } from "@/hooks/useClientReady";
 import { useScrollEnterProgress } from "@/hooks/useScrollEnterProgress";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -46,6 +47,7 @@ export function V2Motion({
   const intro = useIntroScroll();
   const sectionRef = useIntroSectionRef();
   const isIOS = useIsIOS();
+  const ready = useClientReady();
   const scrollMotion = useScrollMotionEnabled();
   const isDesktop = useMediaQuery(VARIANT_2.desktopQuery);
   const scrollDirection = useScrollDirection();
@@ -97,7 +99,7 @@ export function V2Motion({
     exitOffset,
     introSectionRef: sectionRef,
     intro,
-    enabled: isIOS && scrollMotion && variant === 2 && !reducedMotion,
+    enabled: ready && isIOS && scrollMotion && variant === 2 && !reducedMotion,
     onUpdate: paintDirect,
   });
 
@@ -192,7 +194,7 @@ export function V2Motion({
     );
   }
 
-  if (intro && isIOS) {
+  if (intro && isIOS && ready) {
     return (
       <div
         ref={ref}
@@ -204,7 +206,7 @@ export function V2Motion({
     );
   }
 
-  if (isIOS && scrollMotion) {
+  if (isIOS && ready && scrollMotion) {
     return (
       <div
         ref={ref}

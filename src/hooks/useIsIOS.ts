@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 /** Detect iPhone, iPod, and iPad (incl. iPadOS desktop UA). */
 export function readIsIOS(): boolean {
   if (typeof window === "undefined") return false;
+
+  if (document.documentElement.classList.contains("ios")) {
+    return true;
+  }
 
   const ua = window.navigator.userAgent;
   const classicIOS = /iPad|iPhone|iPod/.test(ua);
@@ -14,12 +18,18 @@ export function readIsIOS(): boolean {
   return classicIOS || iPadOS;
 }
 
+function subscribe() {
+  return () => {};
+}
+
+function getServerSnapshot() {
+  return false;
+}
+
+/**
+ * Sync iOS detection — must match the inline script in layout that sets html.ios
+ * before React hydrates, so we never mount the broken Framer path on iPhone.
+ */
 export function useIsIOS() {
-  const [isIOS, setIsIOS] = useState(() => readIsIOS());
-
-  useEffect(() => {
-    setIsIOS(readIsIOS());
-  }, []);
-
-  return isIOS;
+  return useSyncExternalStore(subscribe, readIsIOS, getServerSnapshot);
 }

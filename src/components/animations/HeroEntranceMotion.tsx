@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useClientReady } from "@/hooks/useClientReady";
 import { useIsIOS } from "@/hooks/useIsIOS";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
@@ -10,6 +11,7 @@ import {
   type IntroEntranceRole,
 } from "@/lib/animations/hero-entrance";
 import { entranceToGsapTween } from "@/lib/animations/hero-entrance-gsap";
+import { getIOSHeroEntranceStyle } from "@/lib/animations/ios-hero-entrance-inline";
 import { ensureGsapScrollTrigger, gsap } from "@/lib/gsap/client";
 
 type HeroEntranceMotionProps = {
@@ -21,7 +23,7 @@ type HeroEntranceMotionProps = {
 
 /**
  * Hero / LiveAt load sequence.
- * iPhone: pure CSS @keyframes (WebKit-native, no JS animation libs).
+ * iPhone: CSS @keyframes applied in useLayoutEffect (hydration-safe).
  * Desktop: GSAP fromTo.
  */
 export function HeroEntranceMotion({
@@ -33,40 +35,20 @@ export function HeroEntranceMotion({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const isIOS = useIsIOS();
-
-  if (isIOS && !reducedMotion) {
-    return (
-      <div
-        className={`ios-hero-entrance overflow-visible ${className ?? ""}`}
-        data-variant={variant}
-        data-role={role}
-        style={style}
-      >
-        {children}
-      </div>
-    );
-  }
-
-  return (
-    <HeroEntranceMotionDesktop role={role} className={className} style={style}>
-      {children}
-    </HeroEntranceMotionDesktop>
-  );
-}
-
-function HeroEntranceMotionDesktop({
-  children,
-  role,
-  className,
-  style,
-}: HeroEntranceMotionProps) {
-  const variant = useAnimationVariant();
-  const reducedMotion = useReducedMotion();
+  const ready = useClientReady();
   const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !ready) return;
+
+    if (isIOS && !reducedMotion) {
+      const animStyle = getIOSHeroEntranceStyle(variant, role);
+      Object.assign(el.style, animStyle);
+      return;
+    }
+
+    if (isIOS || reducedMotion) return;
 
     ensureGsapScrollTrigger();
 
@@ -124,7 +106,7 @@ function HeroEntranceMotionDesktop({
       clearFailsafe();
       ctx.revert();
     };
-  }, [variant, role, reducedMotion]);
+  }, [variant, role, reducedMotion, isIOS, ready]);
 
   return (
     <div
