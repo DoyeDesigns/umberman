@@ -1,6 +1,7 @@
 "use client";
 
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { V1EnterMotion } from "@/components/animations/V1EnterMotion";
 import { V2Motion } from "@/components/animations/variant-2/V2Motion";
 import type { V2Preset } from "@/lib/animations/variant-2/presets";
 
@@ -28,6 +29,20 @@ export function Motion({
   noExit = false,
 }: MotionProps) {
   const variant = useAnimationVariant();
+
+  if (variant === 1) {
+    return (
+      <V1EnterMotion
+        preset={preset}
+        beat={beat}
+        delay={delay}
+        className={className}
+        style={style}
+      >
+        {children}
+      </V1EnterMotion>
+    );
+  }
 
   if (variant === 2) {
     return (

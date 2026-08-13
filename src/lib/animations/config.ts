@@ -1,8 +1,9 @@
-export type AnimationVariant = 0 | 2;
+export type AnimationVariant = 0 | 1 | 2;
 
-/** 0 = static (default). 2 = editorial scroll motion. */
+/** 0 = static (default). 1 = sticky stack reveal. 2 = editorial scroll motion. */
 export const ANIMATION_VARIANTS = {
   static: 0,
+  stickyReveal: 1,
   editorial: 2,
 } as const;
 
@@ -14,6 +15,10 @@ export const INTRO_SCROLL = {
 } as const;
 
 export const EASE_OUT = [0.22, 1, 0.36, 1] as const;
+
+export const STICKY_REVEAL = {
+  desktopQuery: "(min-width: 768px)",
+} as const;
 
 export const VARIANT_2 = {
   desktopQuery: "(min-width: 768px)",
@@ -51,6 +56,7 @@ export function delayV2Exit(
 }
 
 export function parseAnimationVariant(param?: string): AnimationVariant {
+  if (param === "1") return 1;
   if (param === "2") return 2;
   return 0;
 }

@@ -13,7 +13,7 @@ export function ArtistSection() {
       <div className="section-screen-inner section-split-grid">
         <div className="order-2 mt-[clamp(3rem,8vw,4.375rem)] flex min-h-0 min-w-0 flex-col items-center justify-start px-[clamp(1.125rem,5.5vw,4.5rem)] pb-[clamp(1.5rem,4vw,3rem)] md:order-0 md:col-start-1 md:row-start-2 md:mt-0 md:self-stretch md:py-0 md:pb-4 lg:pb-6">
           <RevealText
-            className="text-section-body mb-6 w-full min-w-0 md:mb-8 md:max-w-[42ch] lg:mb-10 text-center font-body font-normal tracking-normal text-ink"
+            className="text-section-body mb-6 w-full min-w-0 md:mb-4 md:max-w-[42ch] lg:mb-6 text-center font-body font-normal tracking-normal text-ink"
             text={`Babajide Olatunji (born October 8, 1989) is a self-taught Nigerian contemporary expressionist artist whose practice is deeply rooted in Yoruba culture and socio-cultural storytelling. Renowned for his mastery of hyperrealism and trompe-l'oeil techniques, his works often serve as visual commentaries on cultural identity, heritage, and the evolving narratives of African society. Through meticulous detail and compelling imagery, Babajide creates works that bridge tradition and contemporary artistic discourse.`}
           />
 

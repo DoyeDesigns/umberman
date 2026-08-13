@@ -1,0 +1,35 @@
+/* Alt hero / LiveAt — hidden until GSAP entrance runs (pre-hydration safe). */
+
+.alt-load-entrance {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.alt-load-entrance[data-role="logo"] {
+  transform: translate3d(0, -48px, 0);
+}
+
+.alt-load-entrance[data-role="name"] {
+  transform: translate3d(-56px, 0, 0);
+}
+
+.alt-load-entrance[data-role="presents"] {
+  transform: translate3d(56px, 0, 0);
+}
+
+.alt-load-entrance[data-role="title"] {
+  transform: translate3d(0, 56px, 0);
+}
+
+.alt-load-entrance[data-role="liveAtCall"],
+.alt-load-entrance[data-role="liveAtResponse"] {
+  transform: translate3d(0, 40px, 0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alt-load-entrance {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+}

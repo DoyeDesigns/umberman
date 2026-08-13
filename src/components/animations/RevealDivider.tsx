@@ -1,6 +1,7 @@
 "use client";
 
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { V1EnterMotion } from "@/components/animations/V1EnterMotion";
 import { V2Motion } from "@/components/animations/variant-2/V2Motion";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
@@ -20,6 +21,14 @@ export function RevealDivider({ id, className = "" }: RevealDividerProps) {
       <V2Motion preset="line" delay={0.06} className={baseClassName}>
         <div id={id} className="h-full w-full bg-ink" aria-hidden="true" />
       </V2Motion>
+    );
+  }
+
+  if (variant === 1 && !reducedMotion) {
+    return (
+      <V1EnterMotion animation="scale-up" delay={0.06} className={baseClassName}>
+        <div id={id} className="h-full w-full bg-ink" aria-hidden="true" />
+      </V1EnterMotion>
     );
   }
 

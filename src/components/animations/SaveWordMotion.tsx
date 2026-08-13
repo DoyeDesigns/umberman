@@ -34,7 +34,7 @@ export function SaveWordMotion({
   const variant = useAnimationVariant();
   const resolvedBeat = beat ?? ROLE_BEATS[role];
 
-  if (variant !== 2) {
+  if (variant === 0) {
     return <div className={className}>{children}</div>;
   }
 

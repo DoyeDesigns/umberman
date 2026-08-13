@@ -1,5 +1,6 @@
 "use client";
 
+import { Motion } from "@/components/animations/Motion";
 import { SaveWordMotion } from "@/components/animations/SaveWordMotion";
 
 export function SaveTheDate() {
@@ -34,19 +35,23 @@ export function SaveTheDate() {
       </div>
 
       <div className="relative z-50 grid w-full grid-cols-2 gap-4 md:mt-20 md:gap-40!">
-        <button
-          type="button"
-          className="w-full rounded-full bg-ink py-[clamp(0.75rem,2.5vw,1.5rem)] text-center font-body text-[clamp(0.875rem,4.86vw,70px)] font-normal leading-none tracking-normal text-white"
-        >
-          RSVP
-        </button>
+        <Motion preset="settle" beat={4} delay={0.08}>
+          <button
+            type="button"
+            className="w-full rounded-full bg-ink py-[clamp(0.75rem,2.5vw,1.5rem)] text-center font-body text-[clamp(0.875rem,4.86vw,70px)] font-normal leading-none tracking-normal text-white"
+          >
+            RSVP
+          </button>
+        </Motion>
 
-        <a
-          href="#"
-          className="flex w-full items-center justify-center rounded-full bg-ink py-[clamp(0.75rem,2.5vw,1.5rem)] text-center font-body text-[clamp(0.875rem,4.86vw,70px)] font-normal leading-none tracking-normal text-white"
-        >
-          Press Kit
-        </a>
+        <Motion preset="settle" beat={4} delay={0.16}>
+          <a
+            href="#"
+            className="flex w-full items-center justify-center rounded-full bg-ink py-[clamp(0.75rem,2.5vw,1.5rem)] text-center font-body text-[clamp(0.875rem,4.86vw,70px)] font-normal leading-none tracking-normal text-white"
+          >
+            Press Kit
+          </a>
+        </Motion>
       </div>
     </section>
   );

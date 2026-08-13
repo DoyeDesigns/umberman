@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { V1EnterMotion } from "@/components/animations/V1EnterMotion";
 import { V2PixelImage } from "@/components/animations/variant-2/V2PixelImage";
 
 type RevealImageProps = {
@@ -12,7 +13,6 @@ type RevealImageProps = {
   imageClassName?: string;
   priority?: boolean;
   beat?: number;
-  /** Lock the image fully revealed once its scroll runway completes or the page reaches the bottom. */
   settleAtRest?: boolean;
 };
 
@@ -43,16 +43,28 @@ export function RevealImage({
     );
   }
 
-  return (
-    <div className={`relative ${className}`}>
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        sizes={sizes}
-        priority={priority}
-        className={imageClassName}
-      />
-    </div>
+  const image = (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      sizes={sizes}
+      priority={priority}
+      className={imageClassName}
+    />
   );
+
+  if (variant === 1) {
+    return (
+      <V1EnterMotion
+        animation="scale-in"
+        beat={beat}
+        className={`relative ${className}`.trim()}
+      >
+        {image}
+      </V1EnterMotion>
+    );
+  }
+
+  return <div className={`relative ${className}`}>{image}</div>;
 }

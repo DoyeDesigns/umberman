@@ -2,6 +2,7 @@
 
 import { useLayoutEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { V1EnterMotion } from "@/components/animations/V1EnterMotion";
 import { useClientReady } from "@/hooks/useClientReady";
 import { useIsIOS } from "@/hooks/useIsIOS";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -12,6 +13,7 @@ import {
   type IntroEntranceRole,
 } from "@/lib/animations/hero-entrance";
 import { entranceToGsapTween } from "@/lib/animations/hero-entrance-gsap";
+import { roleToAnimista } from "@/lib/animations/v1-animista";
 import { ensureGsapScrollTrigger, gsap } from "@/lib/gsap/client";
 
 type HeroEntranceMotionProps = {
@@ -21,10 +23,15 @@ type HeroEntranceMotionProps = {
   style?: React.CSSProperties;
 };
 
+function roleDelay(role: IntroEntranceRole): number {
+  if (role === "liveAtCall" || role === "liveAtResponse") {
+    return LIVE_AT_ENTRANCE_DELAY[role];
+  }
+  return HERO_ENTRANCE_DELAY[role];
+}
+
 function roleDelayMs(role: IntroEntranceRole): number {
-  if (role === "liveAtCall") return LIVE_AT_ENTRANCE_DELAY.liveAtCall * 1000;
-  if (role === "liveAtResponse") return LIVE_AT_ENTRANCE_DELAY.liveAtResponse * 1000;
-  return HERO_ENTRANCE_DELAY[role] * 1000;
+  return roleDelay(role) * 1000;
 }
 
 function roleDurationMs(role: IntroEntranceRole): number {
@@ -44,9 +51,10 @@ export function HeroEntranceMotion({
   const isIOS = useIsIOS();
   const ref = useRef<HTMLDivElement>(null);
 
-  const useIosCssHero = ready && isIOS && !reducedMotion;
+  const useIosCssHero = ready && isIOS && !reducedMotion && variant !== 1;
 
   useLayoutEffect(() => {
+    if (variant === 1) return;
     const el = ref.current;
     if (!el || !ready || !isIOS || reducedMotion) return;
 
@@ -64,6 +72,7 @@ export function HeroEntranceMotion({
   }, [variant, role, reducedMotion, isIOS, ready]);
 
   useLayoutEffect(() => {
+    if (variant === 1) return;
     const el = ref.current;
     if (!el || !ready || isIOS || reducedMotion) return;
 
@@ -103,6 +112,19 @@ export function HeroEntranceMotion({
       ctx.revert();
     };
   }, [variant, role, reducedMotion, isIOS, ready]);
+
+  if (variant === 1) {
+    return (
+      <V1EnterMotion
+        animation={roleToAnimista(role)}
+        delay={roleDelay(role)}
+        className={className}
+        style={style}
+      >
+        {children}
+      </V1EnterMotion>
+    );
+  }
 
   return (
     <div

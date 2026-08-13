@@ -24,6 +24,14 @@ export function LiveAtLineMotion({
   const variant = useAnimationVariant();
   const entranceRole = line === "call" ? "liveAtCall" : "liveAtResponse";
 
+  if (variant === 1) {
+    return (
+      <HeroEntranceMotion role={entranceRole} className={className}>
+        {children}
+      </HeroEntranceMotion>
+    );
+  }
+
   const scrollLayer =
     variant === 2 ? (
       <Motion preset={preset} beat={beat} delay={delay} className={className}>

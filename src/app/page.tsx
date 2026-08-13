@@ -17,7 +17,7 @@ export default async function Home({
   return (
     <AnimatedPage variant={variant}>
       <Hero />
-      <LiveAt />
+      {variant !== 1 ? <LiveAt /> : null}
       <EventSection />
       <ArtistSection />
       <SaveTheDate />

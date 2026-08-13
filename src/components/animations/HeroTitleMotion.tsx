@@ -22,6 +22,14 @@ export function HeroTitleMotion({
 }: HeroTitleMotionProps) {
   const variant = useAnimationVariant();
 
+  if (variant === 1) {
+    return (
+      <HeroEntranceMotion role="title" className={className}>
+        {children}
+      </HeroEntranceMotion>
+    );
+  }
+
   const scrollLayer =
     variant === 2 ? (
       <Motion preset={preset} beat={beat} delay={delay} className={className}>

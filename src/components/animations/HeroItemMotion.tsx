@@ -1,5 +1,6 @@
 "use client";
 
+import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { HeroEntranceMotion } from "@/components/animations/HeroEntranceMotion";
 import { Motion } from "@/components/animations/Motion";
 
@@ -15,8 +16,18 @@ const BEATS = {
 } as const;
 
 export function HeroItemMotion({ children, item, className }: HeroItemMotionProps) {
+  const variant = useAnimationVariant();
   const beat = BEATS[item];
-  const preset = item === "presents" ? "snap" : "orbit";
+  const preset = item === "presents" ? "drift-right" : "drift-left";
+
+  // V1: Animista via HeroEntranceMotion only (avoid double wrap with Motion).
+  if (variant === 1) {
+    return (
+      <HeroEntranceMotion role={item} className={className}>
+        {children}
+      </HeroEntranceMotion>
+    );
+  }
 
   return (
     <HeroEntranceMotion role={item} className={className}>
