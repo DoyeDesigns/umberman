@@ -1,8 +1,11 @@
 "use client";
 
 import { useLayoutEffect, useRef } from "react";
+import { useClientReady } from "@/hooks/useClientReady";
+import { useIsIOS } from "@/hooks/useIsIOS";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
+  ALT_ENTRANCE_DELAY,
   getAltEntrance,
   getAltEntranceInitialTransform,
   type AltEntranceRole,
@@ -17,8 +20,27 @@ type AltLoadEntranceMotionProps = {
   style?: React.CSSProperties;
 };
 
+function roleDurationMs(role: AltEntranceRole): number {
+  switch (role) {
+    case "logo":
+      return 680;
+    case "name":
+    case "presents":
+    case "liveAtCall":
+      return 720;
+    case "title":
+    case "liveAtResponse":
+      return 780;
+  }
+}
+
+function roleDelayMs(role: AltEntranceRole): number {
+  return ALT_ENTRANCE_DELAY[role] * 1000;
+}
+
 /**
  * Alt hero / LiveAt load entrance — directional slide-in, runs once on mount.
+ * On iPhone uses pure CSS keyframes (GSAP unreliable in WebKit).
  */
 export function AltLoadEntranceMotion({
   children,
@@ -27,10 +49,31 @@ export function AltLoadEntranceMotion({
   style,
 }: AltLoadEntranceMotionProps) {
   const reducedMotion = useReducedMotion();
+  const ready = useClientReady();
+  const isIOS = useIsIOS();
   const ref = useRef<HTMLDivElement>(null);
-  const animate = !reducedMotion;
+
+  const useIosCss = ready && isIOS && !reducedMotion;
+  const useGsap = ready && !isIOS && !reducedMotion;
 
   useLayoutEffect(() => {
+    if (!useIosCss) return;
+    const el = ref.current;
+    if (!el) return;
+
+    const delayMs = roleDelayMs(role);
+    const durationMs = roleDurationMs(role);
+    const failsafeId = window.setTimeout(() => {
+      if (!el.isConnected) return;
+      el.style.opacity = "1";
+      el.style.transform = "none";
+    }, delayMs + durationMs + 250);
+
+    return () => window.clearTimeout(failsafeId);
+  }, [role, useIosCss]);
+
+  useLayoutEffect(() => {
+    if (!useGsap) return;
     const el = ref.current;
     if (!el) return;
 
@@ -64,22 +107,47 @@ export function AltLoadEntranceMotion({
       window.clearTimeout(failsafeId);
       ctx.revert();
     };
-  }, [role, reducedMotion]);
+  }, [role, reducedMotion, useGsap]);
+
+  if (reducedMotion) {
+    return (
+      <div className={className} style={style}>
+        {children}
+      </div>
+    );
+  }
+
+  if (!ready) {
+    return (
+      <div className={className} style={style}>
+        {children}
+      </div>
+    );
+  }
+
+  if (useIosCss) {
+    return (
+      <div
+        ref={ref}
+        className={`ios-alt-entrance ${className ?? ""}`.trim()}
+        data-role={role}
+        style={style}
+      >
+        {children}
+      </div>
+    );
+  }
 
   return (
     <div
       ref={ref}
       className={`alt-load-entrance ${className ?? ""}`.trim()}
       data-role={role}
-      style={
-        animate
-          ? {
-              ...style,
-              opacity: 0,
-              transform: getAltEntranceInitialTransform(role),
-            }
-          : style
-      }
+      style={{
+        ...style,
+        opacity: 0,
+        transform: getAltEntranceInitialTransform(role),
+      }}
     >
       {children}
     </div>

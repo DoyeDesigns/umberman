@@ -1,6 +1,6 @@
 "use client";
 
-import { SaveWordMotion } from "@/components/animations/SaveWordMotion";
+import { AltFadeUpReveal } from "@/components/animations/AltFadeUpReveal";
 import { getAltTheme, type PageDesign } from "@/lib/design";
 
 const btnClassName =
@@ -24,85 +24,95 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
       style={{ backgroundColor: theme.bg }}
     >
       <div className="flex flex-1 flex-col items-center justify-center">
-        <SaveWordMotion role="dateLine" preset="settle" beat={0} delay={0}>
+        <AltFadeUpReveal>
           <p className="w-full text-center font-display text-[clamp(1.5rem,12.31vw,177.29px)] font-normal uppercase leading-[1.2] tracking-normal text-[#F1F1F1]">
             OCT. 15 – 18, 2026
           </p>
-        </SaveWordMotion>
+        </AltFadeUpReveal>
 
         <div className="mt-[clamp(1.5rem,5vw,3rem)] flex w-full max-w-[min(100%,1400px)] items-end justify-between gap-[clamp(0.25rem,1vw,1rem)]">
-          <SaveWordMotion role="save" preset="drift-left" beat={1} delay={0.04}>
+          <AltFadeUpReveal delay={0.04}>
             <span
               className="font-display text-[clamp(2.5rem,30.29vw,436.2px)] font-normal uppercase leading-none tracking-[-0.02em]"
               style={{ color: theme.orange }}
             >
               SAVE
             </span>
-          </SaveWordMotion>
+          </AltFadeUpReveal>
 
-          <SaveWordMotion role="the" preset="snap" beat={2} delay={0.1}>
+          <AltFadeUpReveal delay={0.1}>
             <span
               className="mb-10 shrink-0 font-display text-[clamp(1.25rem,14.875vw,214.2px)] font-normal uppercase leading-none tracking-[-0.02em]"
               style={{ color: theme.orange }}
             >
               THE
             </span>
-          </SaveWordMotion>
+          </AltFadeUpReveal>
 
-          <SaveWordMotion role="date" preset="drift-right" beat={3} delay={0.04}>
+          <AltFadeUpReveal delay={0.04}>
             <span
               className="font-display text-[clamp(2.5rem,30.29vw,436.2px)] font-normal uppercase leading-none tracking-[-0.02em]"
               style={{ color: theme.orange }}
             >
               DATE
             </span>
-          </SaveWordMotion>
+          </AltFadeUpReveal>
         </div>
       </div>
 
       {isPairCta ? (
         <div className="relative z-50 grid w-full grid-cols-2 gap-4 md:mt-20 md:gap-40!">
-          <button
-            type="button"
-            className={btnClassName}
-            style={{ backgroundColor: theme.ctaRsvp }}
-          >
-            RSVP
-          </button>
+          <AltFadeUpReveal delay={0.08}>
+            <button
+              type="button"
+              className={btnClassName}
+              style={{ backgroundColor: theme.ctaRsvp }}
+            >
+              RSVP
+            </button>
+          </AltFadeUpReveal>
 
-          <a
-            href="#"
-            className={`${btnClassName} flex items-center justify-center`}
-            style={{ backgroundColor: theme.ctaPressKit }}
-          >
-            Press Kit
-          </a>
+          <AltFadeUpReveal delay={0.16}>
+            <a
+              href="#"
+              className={`${btnClassName} flex items-center justify-center`}
+              style={{ backgroundColor: theme.ctaPressKit }}
+            >
+              Press Kit
+            </a>
+          </AltFadeUpReveal>
         </div>
       ) : (
         <div className="relative z-50 mt-8 flex w-full flex-col items-center gap-4 md:mt-20 md:flex-row md:gap-6 lg:gap-10">
-          <button
-            type="button"
-            className={mobileBtnClassName}
-            style={{ backgroundColor: theme.ctaRegister }}
-          >
-            Register
-          </button>
+          <AltFadeUpReveal delay={0.08}>
+            <button
+              type="button"
+              className={mobileBtnClassName}
+              style={{ backgroundColor: theme.ctaRegister }}
+            >
+              Register
+            </button>
+          </AltFadeUpReveal>
 
-          <a
-            href="#"
-            className={`${mobileBtnClassName} flex items-center justify-center`}
-            style={{ backgroundColor: theme.ctaPressKit }}
-          >
-            Press Kit
-          </a>
+          <AltFadeUpReveal delay={0.12}>
+            <a
+              href="#"
+              className={`${mobileBtnClassName} flex items-center justify-center`}
+              style={{ backgroundColor: theme.ctaPressKit }}
+            >
+              Press Kit
+            </a>
+          </AltFadeUpReveal>
 
-          <button
-            type="button"
-            className={mobileBtnClassName}
-            style={{ backgroundColor: theme.ctaRsvp }}
-          >
-            RSVP
-          </button>
+          <AltFadeUpReveal delay={0.16}>
+            <button
+              type="button"
+              className={mobileBtnClassName}
+              style={{ backgroundColor: theme.ctaRsvp }}
+            >
+              RSVP
+            </button>
+          </AltFadeUpReveal>
         </div>
       )}
     </section>

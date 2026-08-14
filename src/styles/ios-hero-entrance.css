@@ -33,24 +33,28 @@ html.ios .ios-hero-entrance {
   transform: translate3d(0, 0, 0);
 }
 
+html.ios .ios-hero-entrance[data-variant="1"][data-role="logo"],
 html.ios .ios-hero-entrance[data-variant="2"][data-role="logo"] {
   animation-name: ios-hero-rise;
   animation-duration: 0.78s;
   animation-delay: 0.08s;
 }
 
+html.ios .ios-hero-entrance[data-variant="1"][data-role="name"],
 html.ios .ios-hero-entrance[data-variant="2"][data-role="name"] {
   animation-name: ios-hero-rise;
   animation-duration: 0.78s;
   animation-delay: 0.22s;
 }
 
+html.ios .ios-hero-entrance[data-variant="1"][data-role="presents"],
 html.ios .ios-hero-entrance[data-variant="2"][data-role="presents"] {
   animation-name: ios-hero-rise;
   animation-duration: 0.78s;
   animation-delay: 0.34s;
 }
 
+html.ios .ios-hero-entrance[data-variant="1"][data-role="title"],
 html.ios .ios-hero-entrance[data-variant="2"][data-role="title"] {
   animation-name: ios-hero-rise-lg;
   animation-duration: 0.95s;

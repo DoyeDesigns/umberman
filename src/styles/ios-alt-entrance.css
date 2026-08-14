@@ -1,0 +1,106 @@
+/* Alt hero / LiveAt load sequence — pure CSS on iPhone (no GSAP). */
+
+@keyframes ios-alt-drop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -48px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes ios-alt-left {
+  from {
+    opacity: 0;
+    transform: translate3d(-56px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes ios-alt-right {
+  from {
+    opacity: 0;
+    transform: translate3d(56px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes ios-alt-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 56px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes ios-alt-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+html.ios .ios-alt-entrance {
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+html.ios .ios-alt-entrance[data-role="logo"] {
+  animation-name: ios-alt-drop;
+  animation-duration: 0.68s;
+  animation-delay: 0.06s;
+}
+
+html.ios .ios-alt-entrance[data-role="name"] {
+  animation-name: ios-alt-left;
+  animation-duration: 0.72s;
+  animation-delay: 0.22s;
+}
+
+html.ios .ios-alt-entrance[data-role="presents"] {
+  animation-name: ios-alt-right;
+  animation-duration: 0.72s;
+  animation-delay: 0.34s;
+}
+
+html.ios .ios-alt-entrance[data-role="title"] {
+  animation-name: ios-alt-up;
+  animation-duration: 0.78s;
+  animation-delay: 0.5s;
+}
+
+html.ios .ios-alt-entrance[data-role="liveAtCall"] {
+  animation-name: ios-alt-rise;
+  animation-duration: 0.72s;
+  animation-delay: 0.72s;
+}
+
+html.ios .ios-alt-entrance[data-role="liveAtResponse"] {
+  animation-name: ios-alt-rise;
+  animation-duration: 0.78s;
+  animation-delay: 0.92s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.ios .ios-alt-entrance {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

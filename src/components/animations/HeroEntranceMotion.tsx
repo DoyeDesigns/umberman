@@ -51,12 +51,12 @@ export function HeroEntranceMotion({
   const isIOS = useIsIOS();
   const ref = useRef<HTMLDivElement>(null);
 
-  const useIosCssHero = ready && isIOS && !reducedMotion && variant !== 1;
+  const useIosCssHero = ready && isIOS && !reducedMotion;
 
   useLayoutEffect(() => {
-    if (variant === 1) return;
+    if (!useIosCssHero) return;
     const el = ref.current;
-    if (!el || !ready || !isIOS || reducedMotion) return;
+    if (!el) return;
 
     const delayMs = roleDelayMs(role);
     const durationMs = roleDurationMs(role);
@@ -69,7 +69,7 @@ export function HeroEntranceMotion({
     }, delayMs + durationMs + 250);
 
     return () => window.clearTimeout(failsafeId);
-  }, [variant, role, reducedMotion, isIOS, ready]);
+  }, [role, useIosCssHero]);
 
   useLayoutEffect(() => {
     if (variant === 1) return;
@@ -114,6 +114,20 @@ export function HeroEntranceMotion({
   }, [variant, role, reducedMotion, isIOS, ready]);
 
   if (variant === 1) {
+    if (useIosCssHero) {
+      return (
+        <div
+          ref={ref}
+          className={`ios-hero-entrance ${className ?? ""}`.trim()}
+          data-variant={1}
+          data-role={role}
+          style={style}
+        >
+          {children}
+        </div>
+      );
+    }
+
     return (
       <V1EnterMotion
         animation={roleToAnimista(role)}

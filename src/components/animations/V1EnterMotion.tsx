@@ -1,9 +1,11 @@
 "use client";
 
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { useInViewReveal } from "@/hooks/useInViewReveal";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
+  animistaToIosOffset,
   presetToAnimista,
   V1_BEAT_STAGGER,
   type AnimistaEnter,
@@ -20,8 +22,11 @@ type V1EnterMotionProps = {
   style?: React.CSSProperties;
 };
 
+const IOS_REVEAL_DURATION = 0.55;
+
 /**
  * Variant 1 — Animista enter when element scrolls into view (once).
+ * On iPhone uses plain transform transitions (Animista/GSAP unreliable in WebKit).
  */
 export function V1EnterMotion({
   children,
@@ -34,6 +39,7 @@ export function V1EnterMotion({
 }: V1EnterMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
+  const { useNativeScroll, useStaticFallback } = useIOSAnimationPath();
   const enabled = variant === 1 && !reducedMotion;
   const { ref, revealed } = useInViewReveal({ enabled });
 
@@ -43,6 +49,37 @@ export function V1EnterMotion({
   if (!enabled) {
     return (
       <div className={className} style={style}>
+        {children}
+      </div>
+    );
+  }
+
+  if (useStaticFallback) {
+    return (
+      <div className={className} style={style}>
+        {children}
+      </div>
+    );
+  }
+
+  if (useNativeScroll) {
+    const offset = animistaToIosOffset(anim);
+    const transform = revealed
+      ? "translate3d(0, 0, 0) scale(1)"
+      : `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${offset.scale})`;
+
+    return (
+      <div
+        ref={ref}
+        className={className}
+        style={{
+          ...style,
+          opacity: 1,
+          transform,
+          transition: `transform ${IOS_REVEAL_DURATION}s cubic-bezier(0.22, 1, 0.36, 1) ${totalDelay}s`,
+          willChange: revealed ? "auto" : "transform",
+        }}
+      >
         {children}
       </div>
     );

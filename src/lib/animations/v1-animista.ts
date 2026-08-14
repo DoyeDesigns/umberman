@@ -54,3 +54,31 @@ export function roleToAnimista(role: IntroEntranceRole): AnimistaEnter {
 }
 
 export const V1_BEAT_STAGGER = 0.1;
+
+export type IosV1Offset = {
+  x: number;
+  y: number;
+  scale: number;
+};
+
+/** CSS transform offsets for iPhone in-view reveals (no Animista). */
+export function animistaToIosOffset(anim: AnimistaEnter): IosV1Offset {
+  switch (anim) {
+    case "slide-in-bottom":
+      return { x: 0, y: 14, scale: 1 };
+    case "slide-in-top":
+      return { x: 0, y: -14, scale: 1 };
+    case "slide-in-left":
+      return { x: -14, y: 0, scale: 1 };
+    case "slide-in-right":
+      return { x: 14, y: 0, scale: 1 };
+    case "scale-up-center":
+      return { x: 0, y: 0, scale: 0.92 };
+    case "scale-in":
+      return { x: 0, y: 0, scale: 0.88 };
+    case "scale-up":
+      return { x: 0, y: 8, scale: 0.94 };
+    case "scale-down":
+      return { x: 0, y: 0, scale: 1.06 };
+  }
+}
