@@ -28,13 +28,17 @@ export function Hero({ design = "default" }: HeroProps) {
   return (
     <section
       ref={heroRef}
-      className={`section-screen section-px relative isolate flex min-h-130 w-full max-w-full flex-col pt-7 md:pt-9 ${
-        isAlt ? "" : "bg-cream"
-      }`}
+      className={`section-screen relative isolate flex min-h-130 w-full max-w-full flex-col pt-7 md:pt-9 ${
+        liveAtInHero ? "" : "section-px"
+      } ${isAlt ? "" : "bg-cream"}`}
       style={isAlt && altTheme ? { backgroundColor: altTheme.bg } : undefined}
     >
       <IntroScrollProvider sectionRef={heroRef}>
-        <div className="relative mx-auto flex w-fit min-w-0 max-w-[1305px] flex-1 flex-col md:min-h-0">
+        <div
+          className={`relative mx-auto flex min-w-0 max-w-[1305px] flex-1 flex-col md:min-h-0 ${
+            liveAtInHero ? "section-px w-full" : "w-fit"
+          }`}
+        >
           <header className="shrink-0">
             {isAlt && altTheme ? (
               <AltLoadEntranceMotion role="logo">
@@ -106,7 +110,7 @@ export function Hero({ design = "default" }: HeroProps) {
               </HeroItemMotion>
             )}
           </HeroNavBehindMotion>
-          <div className="relative z-10 mt-[clamp(0.75rem,2vw,2.5rem)] flex w-full min-w-0 shrink-0 pb-4 md:pb-3 lg:pb-6">
+          <div className="relative z-10 mt-[clamp(0.75rem,2vw,2.5rem)] flex w-full min-w-0 shrink-0 justify-center pb-4 md:pb-3 lg:pb-6">
             {isAlt && altTheme ? (
               <AltLoadEntranceMotion role="title" className="w-full">
                 <h1
@@ -117,17 +121,17 @@ export function Hero({ design = "default" }: HeroProps) {
                 </h1>
               </AltLoadEntranceMotion>
             ) : (
-              <HeroTitleMotion preset="orbit" beat={2} delay={0.1}>
+              <HeroTitleMotion preset="orbit" beat={2} delay={0.1} className="w-full">
                 <h1 className="text-hero-title relative w-full text-center font-display font-normal uppercase tracking-[-0.02em] text-orange">
                   UMBERMAN
                 </h1>
               </HeroTitleMotion>
             )}
           </div>
-          {liveAtInHero ? (
-            <LiveAt embedded fullBleed design={design} className="mt-auto shrink-0" />
-          ) : null}
         </div>
+        {liveAtInHero ? (
+          <LiveAt embedded design={design} className="mt-auto w-full shrink-0" />
+        ) : null}
       </IntroScrollProvider>
     </section>
   );

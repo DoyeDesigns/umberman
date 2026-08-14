@@ -16,7 +16,7 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
 
   const mobileBtnClassName = isPairCta
     ? btnClassName
-    : `${btnClassName} max-md:mx-auto max-md:max-w-[546px] md:max-w-none md:flex-1`;
+    : `${btnClassName} md:flex-1`;
 
   return (
     <section
@@ -83,8 +83,8 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
           </AltFadeUpReveal>
         </div>
       ) : (
-        <div className="relative z-50 mt-8 flex w-full flex-col items-center gap-4 md:mt-20 md:flex-row md:gap-6 lg:gap-10">
-          <AltFadeUpReveal delay={0.08}>
+        <div className="relative z-50 mt-8 flex w-full flex-col items-stretch gap-4 md:mt-20 md:flex-row md:gap-6 lg:gap-10">
+          <AltFadeUpReveal delay={0.08} className="w-full md:flex-1">
             <button
               type="button"
               className={mobileBtnClassName}
@@ -94,7 +94,7 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
             </button>
           </AltFadeUpReveal>
 
-          <AltFadeUpReveal delay={0.12}>
+          <AltFadeUpReveal delay={0.12} className="w-full md:flex-1">
             <a
               href="#"
               className={`${mobileBtnClassName} flex items-center justify-center`}
@@ -104,7 +104,7 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
             </a>
           </AltFadeUpReveal>
 
-          <AltFadeUpReveal delay={0.16}>
+          <AltFadeUpReveal delay={0.16} className="w-full md:flex-1">
             <button
               type="button"
               className={mobileBtnClassName}
