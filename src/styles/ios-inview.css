@@ -1,0 +1,134 @@
+/* iPhone in-view reveals — CSS keyframes with opacity 0→1 (no static fallback). */
+
+@keyframes ios-inview-bottom {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes ios-inview-top {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes ios-inview-left {
+  from {
+    opacity: 0;
+    transform: translate3d(-18px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes ios-inview-right {
+  from {
+    opacity: 0;
+    transform: translate3d(18px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes ios-inview-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes ios-inview-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes ios-inview-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--ios-inview-y, 28px), 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.ios-inview {
+  /* Visible by default — same as variant 2 iOS scroll layers.
+     Animation only applies when .is-inview is added. If the animation
+     never runs, content stays on screen as a static page. */
+  will-change: transform, opacity;
+}
+
+.ios-inview.is-inview {
+  pointer-events: auto;
+  animation-duration: 0.55s;
+  animation-delay: var(--ios-inview-delay, 0s);
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ios-inview.is-inview[data-anim="slide-in-bottom"] {
+  animation-name: ios-inview-bottom;
+}
+
+.ios-inview.is-inview[data-anim="slide-in-top"] {
+  animation-name: ios-inview-top;
+}
+
+.ios-inview.is-inview[data-anim="slide-in-left"] {
+  animation-name: ios-inview-left;
+}
+
+.ios-inview.is-inview[data-anim="slide-in-right"] {
+  animation-name: ios-inview-right;
+}
+
+.ios-inview.is-inview[data-anim="scale-up-center"],
+.ios-inview.is-inview[data-anim="scale-up"],
+.ios-inview.is-inview[data-anim="scale-down"] {
+  animation-name: ios-inview-scale;
+}
+
+.ios-inview.is-inview[data-anim="scale-in"] {
+  animation-name: ios-inview-scale-in;
+}
+
+.ios-inview.is-inview[data-anim="fade-up"] {
+  animation-name: ios-inview-fade-up;
+  animation-duration: 0.65s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ios-inview,
+  .ios-inview.is-inview {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: auto;
+  }
+}

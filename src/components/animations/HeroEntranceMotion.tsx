@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { V1EnterMotion } from "@/components/animations/V1EnterMotion";
 import { useClientReady } from "@/hooks/useClientReady";
-import { useIsIOS } from "@/hooks/useIsIOS";
+import { readIsIOS, useIsIOS } from "@/hooks/useIsIOS";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
   getHeroEntrance,
@@ -74,7 +74,7 @@ export function HeroEntranceMotion({
   useLayoutEffect(() => {
     if (variant === 1) return;
     const el = ref.current;
-    if (!el || !ready || isIOS || reducedMotion) return;
+    if (!el || !ready || reducedMotion || readIsIOS()) return;
 
     ensureGsapScrollTrigger();
 
@@ -111,23 +111,9 @@ export function HeroEntranceMotion({
       clearFailsafe();
       ctx.revert();
     };
-  }, [variant, role, reducedMotion, isIOS, ready]);
+  }, [variant, role, reducedMotion, ready]);
 
-  if (variant === 1) {
-    if (useIosCssHero) {
-      return (
-        <div
-          ref={ref}
-          className={`ios-hero-entrance ${className ?? ""}`.trim()}
-          data-variant={1}
-          data-role={role}
-          style={style}
-        >
-          {children}
-        </div>
-      );
-    }
-
+  if (variant === 1 && !useIosCssHero) {
     return (
       <V1EnterMotion
         animation={roleToAnimista(role)}

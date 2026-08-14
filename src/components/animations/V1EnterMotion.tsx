@@ -1,11 +1,11 @@
 "use client";
 
+import { useLayoutEffect } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { useInViewReveal } from "@/hooks/useInViewReveal";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
-  animistaToIosOffset,
   presetToAnimista,
   V1_BEAT_STAGGER,
   type AnimistaEnter,
@@ -22,11 +22,10 @@ type V1EnterMotionProps = {
   style?: React.CSSProperties;
 };
 
-const IOS_REVEAL_DURATION = 0.55;
-
 /**
  * Variant 1 — Animista enter when element scrolls into view (once).
- * On iPhone uses plain transform transitions (Animista/GSAP unreliable in WebKit).
+ * iPhone matches variant 2: try CSS motion, but start visible so unsupported
+ * browsers get a complete static page.
  */
 export function V1EnterMotion({
   children,
@@ -40,11 +39,25 @@ export function V1EnterMotion({
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
   const { useNativeScroll, useStaticFallback } = useIOSAnimationPath();
-  const enabled = variant === 1 && !reducedMotion;
+  const enabled = variant === 1 && !reducedMotion && !useStaticFallback;
   const { ref, revealed } = useInViewReveal({ enabled });
 
   const anim = animation ?? presetToAnimista(preset);
   const totalDelay = delay + beat * V1_BEAT_STAGGER;
+
+  useLayoutEffect(() => {
+    if (!useNativeScroll || !enabled || !revealed) return;
+    const el = ref.current;
+    if (!el) return;
+
+    const failsafeId = window.setTimeout(() => {
+      if (!el.isConnected) return;
+      el.style.opacity = "1";
+      el.style.transform = "none";
+    }, totalDelay * 1000 + 800);
+
+    return () => window.clearTimeout(failsafeId);
+  }, [useNativeScroll, enabled, revealed, totalDelay, ref]);
 
   if (!enabled) {
     return (
@@ -54,30 +67,15 @@ export function V1EnterMotion({
     );
   }
 
-  if (useStaticFallback) {
-    return (
-      <div className={className} style={style}>
-        {children}
-      </div>
-    );
-  }
-
   if (useNativeScroll) {
-    const offset = animistaToIosOffset(anim);
-    const transform = revealed
-      ? "translate3d(0, 0, 0) scale(1)"
-      : `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${offset.scale})`;
-
     return (
       <div
         ref={ref}
-        className={className}
+        className={`ios-inview ${revealed ? "is-inview" : ""} ${className ?? ""}`.trim()}
+        data-anim={anim}
         style={{
           ...style,
-          opacity: 1,
-          transform,
-          transition: `transform ${IOS_REVEAL_DURATION}s cubic-bezier(0.22, 1, 0.36, 1) ${totalDelay}s`,
-          willChange: revealed ? "auto" : "transform",
+          ["--ios-inview-delay" as string]: `${totalDelay}s`,
         }}
       >
         {children}

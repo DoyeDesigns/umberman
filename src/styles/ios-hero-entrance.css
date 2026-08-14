@@ -27,6 +27,7 @@
 }
 
 html.ios .ios-hero-entrance {
+  opacity: 0;
   animation-fill-mode: both;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform, opacity, filter;

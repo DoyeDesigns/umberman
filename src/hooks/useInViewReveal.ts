@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 type UseInViewRevealOptions = {
   enabled?: boolean;
-  /** Show content if the observer never fires (common on iOS WebKit). */
+  /** If an in-view element is missed by IntersectionObserver, reveal it after this delay. Off-screen elements stay hidden. */
   fallbackMs?: number;
 };
 
@@ -20,6 +20,8 @@ export function useInViewReveal({
       setRevealed(true);
       return;
     }
+
+    setRevealed(false);
 
     const el = ref.current;
     if (!el) return;
@@ -41,7 +43,9 @@ export function useInViewReveal({
       if (isInViewport()) reveal();
     };
 
-    const fallback = window.setTimeout(reveal, fallbackMs);
+    const fallback = window.setTimeout(() => {
+      if (isInViewport()) reveal();
+    }, fallbackMs);
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -60,12 +64,18 @@ export function useInViewReveal({
 
     window.addEventListener("scroll", check, { passive: true });
     window.addEventListener("resize", check);
+    window.addEventListener("touchmove", check, { passive: true });
+    window.visualViewport?.addEventListener("scroll", check);
+    window.visualViewport?.addEventListener("resize", check);
 
     return () => {
       window.clearTimeout(fallback);
       observer.disconnect();
       window.removeEventListener("scroll", check);
       window.removeEventListener("resize", check);
+      window.removeEventListener("touchmove", check);
+      window.visualViewport?.removeEventListener("scroll", check);
+      window.visualViewport?.removeEventListener("resize", check);
     };
   }, [enabled, fallbackMs]);
 
