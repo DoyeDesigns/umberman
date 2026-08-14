@@ -1,7 +1,7 @@
 "use client";
 
-import { useLayoutEffect } from "react";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
+import { useClientReady } from "@/hooks/useClientReady";
 import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
 import { useInViewReveal } from "@/hooks/useInViewReveal";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
@@ -23,9 +23,8 @@ type V1EnterMotionProps = {
 };
 
 /**
- * Variant 1 — Animista enter when element scrolls into view (once).
- * iPhone matches variant 2: try CSS motion, but start visible so unsupported
- * browsers get a complete static page.
+ * Variant 1 in-view enter. iPhone path matches V2Motion: visible markup,
+ * never opacity 0. Desktop keeps Animista.
  */
 export function V1EnterMotion({
   children,
@@ -38,46 +37,17 @@ export function V1EnterMotion({
 }: V1EnterMotionProps) {
   const variant = useAnimationVariant();
   const reducedMotion = useReducedMotion();
-  const { useNativeScroll, useStaticFallback } = useIOSAnimationPath();
-  const enabled = variant === 1 && !reducedMotion && !useStaticFallback;
+  const ready = useClientReady();
+  const { useNativeScroll } = useIOSAnimationPath();
+  const enabled = variant === 1 && !reducedMotion && ready && !useNativeScroll;
   const { ref, revealed } = useInViewReveal({ enabled });
 
   const anim = animation ?? presetToAnimista(preset);
   const totalDelay = delay + beat * V1_BEAT_STAGGER;
 
-  useLayoutEffect(() => {
-    if (!useNativeScroll || !enabled || !revealed) return;
-    const el = ref.current;
-    if (!el) return;
-
-    const failsafeId = window.setTimeout(() => {
-      if (!el.isConnected) return;
-      el.style.opacity = "1";
-      el.style.transform = "none";
-    }, totalDelay * 1000 + 800);
-
-    return () => window.clearTimeout(failsafeId);
-  }, [useNativeScroll, enabled, revealed, totalDelay, ref]);
-
-  if (!enabled) {
+  if (variant !== 1 || reducedMotion || !ready || useNativeScroll) {
     return (
       <div className={className} style={style}>
-        {children}
-      </div>
-    );
-  }
-
-  if (useNativeScroll) {
-    return (
-      <div
-        ref={ref}
-        className={`ios-inview ${revealed ? "is-inview" : ""} ${className ?? ""}`.trim()}
-        data-anim={anim}
-        style={{
-          ...style,
-          ["--ios-inview-delay" as string]: `${totalDelay}s`,
-        }}
-      >
         {children}
       </div>
     );

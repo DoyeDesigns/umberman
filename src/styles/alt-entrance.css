@@ -5,6 +5,12 @@
   will-change: transform, opacity;
 }
 
+html.ios .alt-load-entrance {
+  opacity: 1 !important;
+  transform: none !important;
+  will-change: auto;
+}
+
 .alt-load-entrance[data-role="logo"] {
   transform: translate3d(0, -48px, 0);
 }

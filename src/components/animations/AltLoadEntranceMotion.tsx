@@ -5,7 +5,6 @@ import { useClientReady } from "@/hooks/useClientReady";
 import { readIsIOS, useIsIOS } from "@/hooks/useIsIOS";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import {
-  ALT_ENTRANCE_DELAY,
   getAltEntrance,
   getAltEntranceInitialTransform,
   type AltEntranceRole,
@@ -20,27 +19,9 @@ type AltLoadEntranceMotionProps = {
   style?: React.CSSProperties;
 };
 
-function roleDurationMs(role: AltEntranceRole): number {
-  switch (role) {
-    case "logo":
-      return 680;
-    case "name":
-    case "presents":
-    case "liveAtCall":
-      return 720;
-    case "title":
-    case "liveAtResponse":
-      return 780;
-  }
-}
-
-function roleDelayMs(role: AltEntranceRole): number {
-  return ALT_ENTRANCE_DELAY[role] * 1000;
-}
-
 /**
- * Alt hero / LiveAt load entrance.
- * iPhone matches variant 2 hero: CSS keyframes + failsafe to visible.
+ * Alt load entrance. iPhone path matches V2Motion: visible markup, never opacity 0.
+ * Desktop keeps GSAP.
  */
 export function AltLoadEntranceMotion({
   children,
@@ -52,22 +33,6 @@ export function AltLoadEntranceMotion({
   const ready = useClientReady();
   const isIOS = useIsIOS();
   const ref = useRef<HTMLDivElement>(null);
-
-  const useIosCss = ready && isIOS && !reducedMotion;
-
-  useLayoutEffect(() => {
-    if (!useIosCss) return;
-    const el = ref.current;
-    if (!el) return;
-
-    const failsafeId = window.setTimeout(() => {
-      if (!el.isConnected) return;
-      el.style.opacity = "1";
-      el.style.transform = "none";
-    }, roleDelayMs(role) + roleDurationMs(role) + 250);
-
-    return () => window.clearTimeout(failsafeId);
-  }, [role, useIosCss]);
 
   useLayoutEffect(() => {
     const el = ref.current;
@@ -105,15 +70,7 @@ export function AltLoadEntranceMotion({
     };
   }, [role, reducedMotion, ready]);
 
-  if (reducedMotion) {
-    return (
-      <div className={className} style={style}>
-        {children}
-      </div>
-    );
-  }
-
-  if (isIOS && !useIosCss) {
+  if (reducedMotion || !ready || isIOS) {
     return (
       <div className={className} style={style}>
         {children}
@@ -124,17 +81,13 @@ export function AltLoadEntranceMotion({
   return (
     <div
       ref={ref}
-      className={`${useIosCss ? "ios-alt-entrance" : "alt-load-entrance"} ${className ?? ""}`.trim()}
+      className={`alt-load-entrance ${className ?? ""}`.trim()}
       data-role={role}
-      style={
-        useIosCss
-          ? style
-          : {
-              ...style,
-              opacity: 0,
-              transform: getAltEntranceInitialTransform(role),
-            }
-      }
+      style={{
+        ...style,
+        opacity: 0,
+        transform: getAltEntranceInitialTransform(role),
+      }}
     >
       {children}
     </div>
