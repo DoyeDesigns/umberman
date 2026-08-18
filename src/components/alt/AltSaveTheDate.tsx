@@ -12,11 +12,7 @@ type AltSaveTheDateProps = {
 
 export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
   const theme = getAltTheme(design) ?? getAltTheme("alt")!;
-  const isPairCta = theme.ctaLayout === "pair";
-
-  const mobileBtnClassName = isPairCta
-    ? btnClassName
-    : `${btnClassName} md:flex-1`;
+  const showEnquiry = theme.ctaLayout !== "pair";
 
   return (
     <section
@@ -61,81 +57,49 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
         </div>
       </div>
 
-      {isPairCta ? (
-        <div className="relative z-50 grid w-full grid-cols-2 gap-4 md:mt-20 md:gap-40!">
-          <AltFadeUpReveal delay={0.08}>
-            <button
-              type="button"
-              className={btnClassName}
-              style={{ ["--cta-fill" as string]: theme.ctaRsvp }}
-            >
-              RSVP
-            </button>
-          </AltFadeUpReveal>
+      <div className="relative z-50 mt-8 flex w-full flex-col items-stretch gap-4 md:mt-20 md:flex-row md:gap-6 lg:gap-10">
+        <AltFadeUpReveal delay={0.08} className="w-full md:flex-1">
+          <button
+            type="button"
+            className={btnClassName}
+            style={{ ["--cta-fill" as string]: theme.ctaRegister }}
+          >
+            Register
+          </button>
+        </AltFadeUpReveal>
 
-          <AltFadeUpReveal delay={0.16}>
-            <a
-              href="#"
-              className={`${btnClassName} flex items-center justify-center`}
-              style={{ ["--cta-fill" as string]: theme.ctaPressKit }}
-            >
-              Press Kit
-            </a>
-          </AltFadeUpReveal>
+        <AltFadeUpReveal delay={0.12} className="w-full md:flex-1">
+          <a
+            href="#"
+            className={`${btnClassName} flex items-center justify-center`}
+            style={{ ["--cta-fill" as string]: theme.ctaPressKit }}
+          >
+            Press Kit
+          </a>
+        </AltFadeUpReveal>
 
-          <AltFadeUpReveal delay={0.2} className="col-span-2">
-            <a
-              href="mailto:enquiry@umbermanbybabajideolatunji.com"
-              className={`${btnClassName} flex items-center justify-center`}
-              style={{ ["--cta-fill" as string]: theme.ctaEnquiry }}
-            >
-              Enquiry
-            </a>
-          </AltFadeUpReveal>
-        </div>
-      ) : (
-        <div className="relative z-50 mt-8 flex w-full flex-col items-stretch gap-4 md:mt-20 md:flex-row md:gap-6 lg:gap-10">
-          <AltFadeUpReveal delay={0.08} className="w-full md:flex-1">
-            <button
-              type="button"
-              className={mobileBtnClassName}
-              style={{ ["--cta-fill" as string]: theme.ctaRegister }}
-            >
-              Register
-            </button>
-          </AltFadeUpReveal>
+        <AltFadeUpReveal delay={0.16} className="w-full md:flex-1">
+          <button
+            type="button"
+            className={btnClassName}
+            style={{ ["--cta-fill" as string]: theme.ctaRsvp }}
+          >
+            RSVP
+          </button>
+        </AltFadeUpReveal>
 
-          <AltFadeUpReveal delay={0.12} className="w-full md:flex-1">
-            <a
-              href="#"
-              className={`${mobileBtnClassName} flex items-center justify-center`}
-              style={{ ["--cta-fill" as string]: theme.ctaPressKit }}
-            >
-              Press Kit
-            </a>
-          </AltFadeUpReveal>
-
-          <AltFadeUpReveal delay={0.16} className="w-full md:flex-1">
-            <button
-              type="button"
-              className={mobileBtnClassName}
-              style={{ ["--cta-fill" as string]: theme.ctaRsvp }}
-            >
-              RSVP
-            </button>
-          </AltFadeUpReveal>
-
+        {showEnquiry ? (
           <AltFadeUpReveal delay={0.2} className="w-full md:flex-1">
             <a
               href="mailto:enquiry@umbermanbybabajideolatunji.com"
-              className={`${mobileBtnClassName} flex items-center justify-center`}
+              className={`${btnClassName} flex items-center justify-center`}
               style={{ ["--cta-fill" as string]: theme.ctaEnquiry }}
             >
               Enquiry
             </a>
           </AltFadeUpReveal>
-        </div>
-      )}
+        ) : null}
+      </div>
     </section>
   );
 }

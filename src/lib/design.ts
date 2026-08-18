@@ -81,7 +81,7 @@ export const ALT_THEMES: Record<"alt" | "alt2", AltTheme> = {
     logo: "circle-u",
     ctaLayout: "pair",
     ctaRsvp: "#CC587A",
-    ctaPressKit: "#E09B14",
+    ctaPressKit: "#BD6942",
     ctaRegister: "#253178",
     ctaEnquiry: "#AD7911",
     logoBar: {
