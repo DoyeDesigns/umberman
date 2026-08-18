@@ -4,7 +4,7 @@ import { AltFadeUpReveal } from "@/components/animations/AltFadeUpReveal";
 import { getAltTheme, type PageDesign } from "@/lib/design";
 
 const btnClassName =
-  "w-full rounded-full py-[clamp(0.75rem,2.5vw,1.5rem)] text-center font-body text-[clamp(0.875rem,4.86vw,70px)] font-normal leading-none tracking-normal text-white";
+  "w-full rounded-full border-2 border-[#F1F1F1] bg-transparent py-[clamp(0.75rem,2.5vw,1.5rem)] text-center font-body text-[clamp(0.875rem,4.86vw,70px)] font-normal leading-none tracking-normal text-white transition-colors hover:border-[var(--cta-fill)] hover:bg-[var(--cta-fill)]";
 
 type AltSaveTheDateProps = {
   design?: PageDesign;
@@ -20,7 +20,8 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
 
   return (
     <section
-      className="flex min-h-130 w-full max-w-full flex-col justify-between px-[clamp(1.125rem,5.5vw,4.5rem)] py-[clamp(1.5rem,4vw,3rem)] md:h-screen"
+      id="save-the-date"
+      className="flex min-h-130 w-full max-w-full scroll-mt-[100px] flex-col justify-between px-[clamp(1.125rem,5.5vw,4.5rem)] py-[clamp(1.5rem,4vw,3rem)] md:h-screen"
       style={{ backgroundColor: theme.bg }}
     >
       <div className="flex flex-1 flex-col items-center justify-center">
@@ -40,9 +41,9 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
             </span>
           </AltFadeUpReveal>
 
-          <AltFadeUpReveal delay={0.1}>
+          <AltFadeUpReveal delay={0.1} className="mb-10 shrink-0">
             <span
-              className="mb-10 shrink-0 font-display text-[clamp(1.25rem,14.875vw,214.2px)] font-normal uppercase leading-none tracking-[-0.02em]"
+              className="font-display text-[clamp(1.25rem,14.875vw,214.2px)] font-normal uppercase leading-none tracking-[-0.02em]"
               style={{ color: theme.orange }}
             >
               THE
@@ -66,7 +67,7 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
             <button
               type="button"
               className={btnClassName}
-              style={{ backgroundColor: theme.ctaRsvp }}
+              style={{ ["--cta-fill" as string]: theme.ctaRsvp }}
             >
               RSVP
             </button>
@@ -76,9 +77,19 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
             <a
               href="#"
               className={`${btnClassName} flex items-center justify-center`}
-              style={{ backgroundColor: theme.ctaPressKit }}
+              style={{ ["--cta-fill" as string]: theme.ctaPressKit }}
             >
               Press Kit
+            </a>
+          </AltFadeUpReveal>
+
+          <AltFadeUpReveal delay={0.2} className="col-span-2">
+            <a
+              href="mailto:enquiry@umbermanbybabajideolatunji.com"
+              className={`${btnClassName} flex items-center justify-center`}
+              style={{ ["--cta-fill" as string]: theme.ctaEnquiry }}
+            >
+              Enquiry
             </a>
           </AltFadeUpReveal>
         </div>
@@ -88,7 +99,7 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
             <button
               type="button"
               className={mobileBtnClassName}
-              style={{ backgroundColor: theme.ctaRegister }}
+              style={{ ["--cta-fill" as string]: theme.ctaRegister }}
             >
               Register
             </button>
@@ -98,7 +109,7 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
             <a
               href="#"
               className={`${mobileBtnClassName} flex items-center justify-center`}
-              style={{ backgroundColor: theme.ctaPressKit }}
+              style={{ ["--cta-fill" as string]: theme.ctaPressKit }}
             >
               Press Kit
             </a>
@@ -108,10 +119,20 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
             <button
               type="button"
               className={mobileBtnClassName}
-              style={{ backgroundColor: theme.ctaRsvp }}
+              style={{ ["--cta-fill" as string]: theme.ctaRsvp }}
             >
               RSVP
             </button>
+          </AltFadeUpReveal>
+
+          <AltFadeUpReveal delay={0.2} className="w-full md:flex-1">
+            <a
+              href="mailto:enquiry@umbermanbybabajideolatunji.com"
+              className={`${mobileBtnClassName} flex items-center justify-center`}
+              style={{ ["--cta-fill" as string]: theme.ctaEnquiry }}
+            >
+              Enquiry
+            </a>
           </AltFadeUpReveal>
         </div>
       )}

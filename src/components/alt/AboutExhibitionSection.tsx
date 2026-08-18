@@ -19,7 +19,8 @@ export function AboutExhibitionSection({ design = "alt" }: AboutExhibitionSectio
 
   return (
     <section
-      className="w-full max-w-full border-b-[50px] bg-[#F1F1F1]"
+      id="about"
+      className="w-full max-w-full scroll-mt-[100px] border-b-[50px] bg-[#F1F1F1]"
       style={{ borderBottomColor: theme.bg }}
     >
       <div className="section-px mx-auto w-full max-w-[min(100%,52rem)] py-[clamp(3rem,8vw,5.5rem)]">

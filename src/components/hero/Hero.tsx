@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useRef } from "react";
 import { AltLogo } from "@/components/alt/AltLogo";
+import { useAltMenu } from "@/components/alt/AltNavbar";
 import { AltLoadEntranceMotion } from "@/components/animations/AltLoadEntranceMotion";
 import { useAnimationVariant } from "@/components/animations/AnimationVariantProvider";
 import { HeroEntranceMotion } from "@/components/animations/HeroEntranceMotion";
@@ -24,6 +25,7 @@ export function Hero({ design = "default" }: HeroProps) {
   const liveAtInHero = variant === 1;
   const altTheme = getAltTheme(design);
   const isAlt = isAltDesign(design);
+  const altMenu = useAltMenu();
 
   return (
     <section
@@ -39,7 +41,7 @@ export function Hero({ design = "default" }: HeroProps) {
             liveAtInHero ? "section-px w-full" : "w-fit"
           }`}
         >
-          <header className="shrink-0">
+          <header className={`shrink-0 ${isAlt && altTheme?.logo === "bars" ? "hidden" : ""}`}>
             {isAlt && altTheme ? (
               <AltLoadEntranceMotion role="logo">
                 <AltLogo theme={altTheme} />
@@ -75,7 +77,11 @@ export function Hero({ design = "default" }: HeroProps) {
           <HeroNavBehindMotion
             heroRef={heroRef}
             lag={0}
-            className="mt-20! flex w-full min-w-0 shrink-0 flex-col items-center gap-2 text-center md:mt-6 md:flex-row md:items-baseline md:justify-between md:gap-4 md:text-left lg:mt-9"
+            className={`min-w-0 shrink-0 flex-col items-center gap-2 text-center md:mt-6 md:flex-row md:items-baseline md:justify-between md:gap-4 md:text-left lg:mt-9 ${
+              isAlt && altTheme?.logo === "bars"
+                ? "mt-8 flex w-full md:mt-6"
+                : "mt-20! flex w-full"
+            }`}
           >
             {isAlt && altTheme ? (
               <AltLoadEntranceMotion role="name">

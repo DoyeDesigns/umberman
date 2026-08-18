@@ -47,18 +47,30 @@ export function AltLogo({ theme }: AltLogoProps) {
     );
   }
 
-  const { width, height, radius, gap } = theme.logoBar;
-  const barStyle = {
+  const { width, widthMobile, height, radius, gap } = theme.logoBar;
+  const desktopBarStyle = {
     width,
+    height,
+    borderRadius: radius,
+    backgroundColor: theme.orange,
+  };
+  const mobileBarStyle = {
+    width: widthMobile,
     height,
     borderRadius: radius,
     backgroundColor: theme.orange,
   };
 
   return (
-    <div className="flex flex-col" style={{ gap }} aria-hidden>
-      <span className="block shrink-0" style={barStyle} />
-      <span className="block shrink-0" style={barStyle} />
-    </div>
+    <>
+      <div className="flex flex-col md:hidden" style={{ gap }} aria-hidden>
+        <span className="block shrink-0" style={mobileBarStyle} />
+        <span className="block shrink-0" style={mobileBarStyle} />
+      </div>
+      <div className="hidden flex-col md:flex" style={{ gap }} aria-hidden>
+        <span className="block shrink-0" style={desktopBarStyle} />
+        <span className="block shrink-0" style={desktopBarStyle} />
+      </div>
+    </>
   );
 }

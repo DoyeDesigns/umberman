@@ -19,8 +19,10 @@ export type AltTheme = {
   ctaRsvp: string;
   ctaPressKit: string;
   ctaRegister: string;
+  ctaEnquiry: string;
   logoBar: {
     width: number;
+    widthMobile: number;
     height: number;
     radius: number;
     gap: number;
@@ -50,8 +52,10 @@ export const ALT_THEMES: Record<"alt" | "alt2", AltTheme> = {
     ctaRsvp: "#CC587A",
     ctaPressKit: "#BD6942",
     ctaRegister: "#253178",
+    ctaEnquiry: "#AD7911",
     logoBar: {
       width: 81,
+      widthMobile: 63,
       height: 7.788461208343506,
       radius: 15.58,
       gap: 10,
@@ -79,8 +83,10 @@ export const ALT_THEMES: Record<"alt" | "alt2", AltTheme> = {
     ctaRsvp: "#CC587A",
     ctaPressKit: "#E09B14",
     ctaRegister: "#253178",
+    ctaEnquiry: "#AD7911",
     logoBar: {
       width: 81,
+      widthMobile: 63,
       height: 7.788461208343506,
       radius: 15.58,
       gap: 10,

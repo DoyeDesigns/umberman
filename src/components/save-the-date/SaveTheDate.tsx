@@ -20,8 +20,8 @@ export function SaveTheDate() {
             </span>
           </SaveWordMotion>
 
-          <SaveWordMotion role="the" preset="snap" beat={2} delay={0.1}>
-            <span className="mb-10 shrink-0 font-display text-[clamp(1.25rem,14.875vw,214.2px)] font-normal uppercase leading-none tracking-[-0.02em] text-orange">
+          <SaveWordMotion role="the" preset="snap" beat={2} delay={0.1} className="mb-10 shrink-0">
+            <span className="font-display text-[clamp(1.25rem,14.875vw,214.2px)] font-normal uppercase leading-none tracking-[-0.02em] text-orange">
               THE
             </span>
           </SaveWordMotion>

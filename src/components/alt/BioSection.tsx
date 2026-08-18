@@ -16,7 +16,7 @@ const PARAGRAPHS = [
 
 export function BioSection() {
   return (
-    <section className="w-full max-w-full bg-[#F1F1F1]">
+    <section id="bio" className="w-full max-w-full scroll-mt-[100px] bg-[#F1F1F1]">
       <div className="section-px mx-auto w-full max-w-[min(100%,52rem)] py-[clamp(3rem,8vw,5.5rem)]">
         <AltFadeUpReveal>
           <h2 className="text-alt-section-title mb-[clamp(2rem,5vw,3.5rem)] text-center font-heading font-normal text-[#1C1C1C]">
