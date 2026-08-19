@@ -65,7 +65,9 @@ export function AltSaveTheDate() {
 
         <AltFadeUpReveal delay={0.12} className="w-full md:flex-1">
           <a
-            href="#"
+            href="https://drive.google.com/drive/folders/1PxpYGFI9Z2Pz7rhQBSmXd3JoLTkMhGr8"
+            target="_blank"
+            rel="noopener noreferrer"
             className={btnClassName}
             style={{ ["--cta-fill" as string]: theme.ctaPressKit }}
           >
@@ -75,7 +77,9 @@ export function AltSaveTheDate() {
 
         <AltFadeUpReveal delay={0.16} className="w-full md:flex-1">
           <a
-            href="#"
+            href="https://www.ikiform.com/f/babajide-olatunji-presents-umberman-psluab"
+            target="_blank"
+            rel="noopener noreferrer"
             className={btnClassName}
             style={{ ["--cta-fill" as string]: theme.ctaRsvp }}
           >
