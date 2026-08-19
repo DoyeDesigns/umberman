@@ -14,7 +14,7 @@ export function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative isolate flex w-full max-w-full flex-col pt-7 md:pt-9"
+      className="relative z-0 flex w-full max-w-full flex-col pt-7 md:pt-9"
       style={{ backgroundColor: theme.bg }}
     >
       <IntroScrollProvider sectionRef={heroRef}>

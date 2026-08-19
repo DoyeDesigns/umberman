@@ -51,13 +51,13 @@ export function AltNavbar() {
   return (
     <>
       <header
-        className="sticky top-0 z-50"
+        className="sticky top-0 z-60"
         style={{ backgroundColor: theme.bg }}
       >
-        <div className="section-px flex h-[100px] items-center">
+        <div className="section-px relative z-10 flex h-[100px] items-center">
           <button
             type="button"
-            className="cursor-pointer text-[#BD6942] transition-colors hover:text-[#F1F1F1]"
+            className="relative z-10 flex min-h-11 min-w-11 cursor-pointer items-center touch-manipulation text-[#BD6942] transition-colors hover:text-[#F1F1F1]"
             aria-label="Open menu"
             aria-expanded={open}
             onClick={() => setOpen(true)}

@@ -20,8 +20,8 @@ export function AltLogo({ theme }: AltLogoProps) {
   return (
     <>
       <div className="flex flex-col md:hidden" style={{ gap }} aria-hidden>
-        <span className="block shrink-0 bg-current" style={mobileBarStyle} />
-        <span className="block shrink-0 bg-current" style={mobileBarStyle} />
+        <span className="pointer-events-none block shrink-0 bg-current" style={mobileBarStyle} />
+        <span className="pointer-events-none block shrink-0 bg-current" style={mobileBarStyle} />
       </div>
       <div className="hidden flex-col md:flex" style={{ gap }} aria-hidden>
         <span className="block shrink-0 bg-current" style={desktopBarStyle} />
