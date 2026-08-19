@@ -62,10 +62,10 @@ export function AltNavbar() {
           className="pointer-events-none absolute inset-x-0 bottom-full h-[50vh]"
           style={{ backgroundColor: theme.bg }}
         />
-        <div className="section-px relative z-10 flex h-[100px] items-center">
+        <div className="relative z-10 h-[100px]">
           <button
             type="button"
-            className="relative z-10 flex min-h-11 min-w-11 cursor-pointer items-center touch-manipulation text-[#BD6942] transition-colors hover:text-[#F1F1F1]"
+            className="absolute inset-y-0 left-0 z-20 flex w-[min(42vw,11rem)] cursor-pointer items-center pl-[clamp(1.125rem,5.5vw,4.5rem)] touch-manipulation text-[#BD6942] transition-colors hover:text-[#F1F1F1] md:w-auto md:pr-8"
             aria-label="Open menu"
             aria-expanded={open}
             onClick={() => setOpen(true)}
