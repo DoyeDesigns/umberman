@@ -17,7 +17,7 @@ const PARAGRAPHS = [
 export function BioSection() {
   return (
     <section id="bio" className="w-full max-w-full scroll-mt-[100px] bg-[#F1F1F1]">
-      <div className="section-px mx-auto w-full max-w-[min(100%,52rem)] py-[clamp(3rem,8vw,5.5rem)]">
+      <div className="section-px mx-auto w-full max-w-[min(100%,80rem)] py-[clamp(3rem,8vw,5.5rem)]">
         <AltFadeUpReveal>
           <h2 className="text-alt-section-title mb-[clamp(2rem,5vw,3.5rem)] text-center font-heading font-normal text-[#1C1C1C]">
             Bio
@@ -50,7 +50,7 @@ export function BioSection() {
             href="https://www.babajideolatunji.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-[clamp(2rem,5vw,3.5rem)] block text-center font-heading text-[clamp(1.125rem,3vw,1.75rem)] font-normal tracking-[-0.02em] text-[#1C1C1C]/70 underline decoration-[#1C1C1C]/70 decoration-2 underline-offset-[0.25em] transition-colors hover:text-[#FABC43] hover:decoration-[#FABC43]"
+            className="mt-[clamp(2rem,5vw,3.5rem)] block text-center font-heading text-[clamp(1.125rem,3vw,1.75rem)] font-normal tracking-[-0.02em] text-[#1C1C1C]/70 underline decoration-[#1C1C1C]/70 decoration-2 underline-offset-[0.25em] transition-colors hover:text-[#BD6942] hover:decoration-[#BD6942]"
           >
             www.babajideolatunji.com
           </Link>

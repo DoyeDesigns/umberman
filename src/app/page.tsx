@@ -1,26 +1,20 @@
-import { Hero } from "@/components/hero/Hero";
-import { LiveAt } from "@/components/live-at/LiveAt";
-import { EventSection } from "@/components/event/EventSection";
-import { ArtistSection } from "@/components/artist/ArtistSection";
-import { SaveTheDate } from "@/components/save-the-date/SaveTheDate";
+import { AboutExhibitionSection } from "@/components/alt/AboutExhibitionSection";
+import { AltMenuProvider, AltNavbar } from "@/components/alt/AltNavbar";
+import { AltSaveTheDate } from "@/components/alt/AltSaveTheDate";
+import { BioSection } from "@/components/alt/BioSection";
 import { AnimatedPage } from "@/components/animations/AnimatedPage";
-import { parseAnimationVariant } from "@/lib/animations/config";
+import { Hero } from "@/components/hero/Hero";
 
-export default async function Home({
-  searchParams,
-}: {
-  searchParams: Promise<{ variant?: string }>;
-}) {
-  const { variant: variantParam } = await searchParams;
-  const variant = parseAnimationVariant(variantParam);
-
+export default function Home() {
   return (
-    <AnimatedPage variant={variant}>
-      <Hero />
-      {variant !== 1 ? <LiveAt /> : null}
-      <EventSection />
-      <ArtistSection />
-      <SaveTheDate />
-    </AnimatedPage>
+    <AltMenuProvider>
+      <AnimatedPage>
+        <AltNavbar />
+        <Hero />
+        <AboutExhibitionSection />
+        <BioSection />
+        <AltSaveTheDate />
+      </AnimatedPage>
+    </AltMenuProvider>
   );
 }

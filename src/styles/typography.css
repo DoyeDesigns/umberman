@@ -57,7 +57,7 @@
     }
 
     .text-hero-title {
-      font-size: clamp(5rem, min(33vw, 44svh), 28rem);
+      font-size: clamp(6.5rem, min(42vw, 56svh), 28rem);
     }
   }
 
@@ -71,7 +71,7 @@
     }
 
     .text-hero-title {
-      font-size: clamp(5.5rem, min(34vw, 45.5svh), 32rem);
+      font-size: clamp(6.5rem, min(42vw, 56svh), 32rem);
     }
   }
 
@@ -85,7 +85,7 @@
     }
 
     .text-hero-title {
-      font-size: clamp(5rem, min(34.6vw, 46svh), 497.89px);
+      font-size: clamp(6.5rem, min(44vw, 60svh), 620px);
     }
   }
 

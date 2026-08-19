@@ -1,29 +1,24 @@
 "use client";
 
 import { AltFadeUpReveal } from "@/components/animations/AltFadeUpReveal";
-import { getAltTheme, type PageDesign } from "@/lib/design";
+import { ALT_THEMES } from "@/lib/design";
+
+const theme = ALT_THEMES.alt;
 
 const btnClassName =
-  "w-full rounded-full border-2 border-[#F1F1F1] bg-transparent py-[clamp(0.75rem,2.5vw,1.5rem)] text-center font-body text-[clamp(0.875rem,4.86vw,70px)] font-normal leading-none tracking-normal text-white transition-colors hover:border-[var(--cta-fill)] hover:bg-[var(--cta-fill)]";
+  "flex w-full cursor-pointer items-center justify-center rounded-full border-2 border-[#F1F1F1] bg-transparent py-[clamp(0.75rem,2.5vw,1.5rem)] text-center font-body text-[clamp(0.875rem,4.86vw,70px)] font-normal leading-none tracking-normal text-white transition-colors hover:border-[var(--cta-fill)] hover:bg-[var(--cta-fill)]";
 
-type AltSaveTheDateProps = {
-  design?: PageDesign;
-};
-
-export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
-  const theme = getAltTheme(design) ?? getAltTheme("alt")!;
-  const showEnquiry = theme.ctaLayout !== "pair";
-
+export function AltSaveTheDate() {
   return (
     <section
       id="save-the-date"
-      className="flex min-h-130 w-full max-w-full scroll-mt-[100px] flex-col justify-between px-[clamp(1.125rem,5.5vw,4.5rem)] py-[clamp(1.5rem,4vw,3rem)] md:h-screen"
+      className="flex min-h-130 w-full max-w-full scroll-mt-[100px] flex-col justify-between px-[clamp(1.125rem,5.5vw,4.5rem)] py-[clamp(1.5rem,4vw,3rem)] md:min-h-screen"
       style={{ backgroundColor: theme.bg }}
     >
       <div className="flex flex-1 flex-col items-center justify-center">
         <AltFadeUpReveal>
           <p className="w-full text-center font-display text-[clamp(1.5rem,12.31vw,177.29px)] font-normal uppercase leading-[1.2] tracking-normal text-[#F1F1F1]">
-            OCT. 15 – 18, 2026
+            SEPT. 21–24, 2026
           </p>
         </AltFadeUpReveal>
 
@@ -59,19 +54,19 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
 
       <div className="relative z-50 mt-8 flex w-full flex-col items-stretch gap-4 md:mt-20 md:flex-row md:gap-6 lg:gap-10">
         <AltFadeUpReveal delay={0.08} className="w-full md:flex-1">
-          <button
-            type="button"
+          <a
+            href="#"
             className={btnClassName}
             style={{ ["--cta-fill" as string]: theme.ctaRegister }}
           >
             Register
-          </button>
+          </a>
         </AltFadeUpReveal>
 
         <AltFadeUpReveal delay={0.12} className="w-full md:flex-1">
           <a
             href="#"
-            className={`${btnClassName} flex items-center justify-center`}
+            className={btnClassName}
             style={{ ["--cta-fill" as string]: theme.ctaPressKit }}
           >
             Press Kit
@@ -79,26 +74,14 @@ export function AltSaveTheDate({ design = "alt" }: AltSaveTheDateProps) {
         </AltFadeUpReveal>
 
         <AltFadeUpReveal delay={0.16} className="w-full md:flex-1">
-          <button
-            type="button"
+          <a
+            href="#"
             className={btnClassName}
             style={{ ["--cta-fill" as string]: theme.ctaRsvp }}
           >
             RSVP
-          </button>
+          </a>
         </AltFadeUpReveal>
-
-        {showEnquiry ? (
-          <AltFadeUpReveal delay={0.2} className="w-full md:flex-1">
-            <a
-              href="mailto:enquiry@umbermanbybabajideolatunji.com"
-              className={`${btnClassName} flex items-center justify-center`}
-              style={{ ["--cta-fill" as string]: theme.ctaEnquiry }}
-            >
-              Enquiry
-            </a>
-          </AltFadeUpReveal>
-        ) : null}
       </div>
     </section>
   );

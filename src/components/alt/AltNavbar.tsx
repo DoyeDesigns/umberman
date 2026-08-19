@@ -2,15 +2,10 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { AltLogo } from "@/components/alt/AltLogo";
-import { getAltTheme, type PageDesign } from "@/lib/design";
+import { ALT_THEMES } from "@/lib/design";
 
 const ENQUIRY_MAIL = "mailto:enquiry@umbermanbybabajideolatunji.com";
-
-const LINKS = [
-  { href: "#bio", id: "bio", label: "Bio" },
-  { href: "#save-the-date", id: "save-the-date", label: "Register" },
-  { href: ENQUIRY_MAIL, id: null, label: "Enquiry" },
-] as const;
+const theme = ALT_THEMES.alt;
 
 type AltMenuContextValue = {
   open: boolean;
@@ -32,12 +27,7 @@ export function useAltMenu() {
   return useContext(AltMenuContext);
 }
 
-type AltNavbarProps = {
-  design: PageDesign;
-};
-
-export function AltNavbar({ design }: AltNavbarProps) {
-  const theme = getAltTheme(design);
+export function AltNavbar() {
   const menu = useAltMenu();
   const open = menu?.open ?? false;
   const setOpen = menu?.setOpen ?? (() => {});
@@ -58,20 +48,6 @@ export function AltNavbar({ design }: AltNavbarProps) {
     };
   }, [open, setOpen]);
 
-  const goToSection = (id: string) => {
-    document.body.style.overflow = "";
-    setOpen(false);
-
-    window.setTimeout(() => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const top = el.getBoundingClientRect().top + window.scrollY - 100;
-      window.scrollTo({ top, behavior: "smooth" });
-    }, 50);
-  };
-
-  if (!theme) return null;
-
   return (
     <>
       <header
@@ -81,7 +57,7 @@ export function AltNavbar({ design }: AltNavbarProps) {
         <div className="section-px flex h-[100px] items-center">
           <button
             type="button"
-            className="flex items-center"
+            className="cursor-pointer text-[#BD6942] transition-colors hover:text-[#F1F1F1]"
             aria-label="Open menu"
             aria-expanded={open}
             onClick={() => setOpen(true)}
@@ -100,8 +76,8 @@ export function AltNavbar({ design }: AltNavbarProps) {
             onClick={() => setOpen(false)}
           />
           <div
-            className="relative flex max-h-[428px] min-h-0 flex-col"
-            style={{ height: 428, backgroundColor: "#E3E7FC" }}
+            className="relative flex max-h-[265px] min-h-0 flex-col"
+            style={{ height: 265, backgroundColor: "#E3E7FC" }}
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
@@ -109,7 +85,7 @@ export function AltNavbar({ design }: AltNavbarProps) {
             <div className="section-px flex h-[100px] shrink-0 items-center justify-end">
               <button
                 type="button"
-                className="flex size-10 items-center justify-center"
+                className="flex size-10 cursor-pointer items-center justify-center text-[#18225E] transition-colors hover:text-[#BD6942]"
                 aria-label="Close menu"
                 onClick={() => setOpen(false)}
               >
@@ -122,7 +98,7 @@ export function AltNavbar({ design }: AltNavbarProps) {
                 >
                   <path
                     d="M1 1L21 21M21 1L1 21"
-                    stroke="#18225E"
+                    stroke="currentColor"
                     strokeWidth="1.5"
                   />
                 </svg>
@@ -133,23 +109,13 @@ export function AltNavbar({ design }: AltNavbarProps) {
               className="section-px flex flex-col gap-10 pt-2 pb-10"
               aria-label="Page"
             >
-              {LINKS.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="font-body text-[34.21px] font-normal capitalize leading-none tracking-[-0.02em] text-[#18225E]"
-                  onClick={(event) => {
-                    if (!link.id) {
-                      setOpen(false);
-                      return;
-                    }
-                    event.preventDefault();
-                    goToSection(link.id);
-                  }}
-                >
-                  {link.label}
-                </a>
-              ))}
+              <a
+                href={ENQUIRY_MAIL}
+                className="w-fit cursor-pointer font-body text-[34.21px] font-normal capitalize leading-none tracking-[-0.02em] text-[#18225E] transition-colors hover:text-[#BD6942]"
+                onClick={() => setOpen(false)}
+              >
+                Enquiry
+              </a>
             </nav>
           </div>
         </div>

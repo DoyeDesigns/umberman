@@ -1,7 +1,5 @@
 @import "tailwindcss";
-@import "../styles/animista.css";
 @import "../styles/alt-entrance.css";
-@import "../styles/ios-hero-entrance.css";
 @import "../styles/ios-alt-entrance.css";
 @import "../styles/ios-inview.css";
 @import "../styles/typography.css";
@@ -12,10 +10,6 @@
   --orange: #D74F24;
   --navy: #354396;
   --ink: #1C1C1C;
-  --cream-rgb: 238, 220, 173;
-  --orange-rgb: 215, 79, 36;
-  --navy-rgb: 53, 67, 150;
-  --ink-rgb: 28, 28, 28;
 }
 
 @theme inline {
@@ -38,43 +32,4 @@ body {
   overflow-x: clip;
   color: var(--ink);
   font-family: var(--font-infini), "Times New Roman", serif;
-}
-
-/* Variant 1 — sticky stack panels fill the viewport edge-to-edge */
-.v1-stack-panel > section {
-  min-height: 100%;
-  height: 100%;
-}
-
-@media (min-width: 768px) {
-  .v1-stack-panel > section {
-    min-height: 100vh;
-    height: 100vh;
-  }
-
-  /* Scroll runway — one viewport per sticky panel in the stack. */
-  .v1-reveal-track {
-    height: calc(var(--v1-panel-count, 2) * 100vh);
-  }
-}
-
-/* Variant 1 — LiveAt inside Hero, borders flush to viewport edges */
-.live-at-v1-bleed {
-  width: 100vw;
-  max-width: 100vw;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
-}
-
-.v2-pixel-grid {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: grid;
-  pointer-events: none;
-}
-
-.v2-pixel-cell {
-  opacity: 1;
-  will-change: opacity;
 }
