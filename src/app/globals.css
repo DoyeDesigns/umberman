@@ -31,6 +31,6 @@ body {
   margin: 0;
   overflow-x: clip;
   color: var(--ink);
-  background-color: var(--navy);
+  background-color: #18225E;
   font-family: var(--font-infini), "Times New Roman", serif;
 }
