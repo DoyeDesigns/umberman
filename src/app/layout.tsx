@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { MotionInit } from "@/components/animations/MotionInit";
 import { august, infini, panthoma } from "./fonts";
@@ -8,6 +8,10 @@ export const metadata: Metadata = {
   title: "Umberman — Babajide Olatunji",
   description:
     "Umberman is a solo art exhibition by Babajide Olatunji at the Fitzrovia Chapel, London. October 15–18, 2026.",
+};
+
+export const viewport: Viewport = {
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

@@ -51,9 +51,17 @@ export function AltNavbar() {
   return (
     <>
       <header
-        className="sticky top-0 z-60"
-        style={{ backgroundColor: theme.bg }}
+        className="fixed inset-x-0 top-0 z-60"
+        style={{
+          backgroundColor: theme.bg,
+          paddingTop: "env(safe-area-inset-top, 0px)",
+        }}
       >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-full h-[50vh]"
+          style={{ backgroundColor: theme.bg }}
+        />
         <div className="section-px relative z-10 flex h-[100px] items-center">
           <button
             type="button"
@@ -66,6 +74,11 @@ export function AltNavbar() {
           </button>
         </div>
       </header>
+      <div
+        aria-hidden
+        className="shrink-0"
+        style={{ height: "calc(100px + env(safe-area-inset-top, 0px))" }}
+      />
 
       {open ? (
         <div className="fixed inset-0 z-[100]">
@@ -82,7 +95,10 @@ export function AltNavbar() {
             aria-modal="true"
             aria-label="Menu"
           >
-            <div className="section-px flex h-[100px] shrink-0 items-center justify-end">
+            <div
+              className="section-px flex h-[100px] shrink-0 items-center justify-end"
+              style={{ marginTop: "env(safe-area-inset-top, 0px)" }}
+            >
               <button
                 type="button"
                 className="flex size-10 cursor-pointer items-center justify-center text-[#18225E] transition-colors hover:text-[#BD6942]"
