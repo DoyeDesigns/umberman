@@ -26,7 +26,7 @@ export function AboutExhibitionSection() {
           </h2>
         </AltFadeUpReveal>
 
-        <div className="flex flex-col gap-[clamp(1.25rem,3vw,1.75rem)] text-center font-body text-[clamp(1rem,2.5vw,1.375rem)] font-normal leading-[1.45] tracking-normal text-[#1C1C1C]">
+        <div className="flex flex-col gap-[clamp(1.25rem,3vw,1.75rem)] text-left font-body text-[clamp(1rem,2.5vw,1.375rem)] font-normal leading-[1.45] tracking-normal text-[#1C1C1C] md:text-center">
           {PARAGRAPHS.map((paragraph, index) => (
             <AltFadeUpReveal key={index} delay={0.08 + index * 0.07}>
               <p>{paragraph}</p>

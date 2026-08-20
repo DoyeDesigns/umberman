@@ -62,7 +62,7 @@ export function AltNavbar() {
           className="pointer-events-none absolute inset-x-0 bottom-full h-[50vh]"
           style={{ backgroundColor: theme.bg }}
         />
-        <div className="relative z-10 h-[100px]">
+        <div className="relative z-10 md:h-[100px] h-[70px]">
           <button
             type="button"
             className="absolute inset-y-0 left-0 z-20 flex w-[min(42vw,11rem)] cursor-pointer items-center pl-[clamp(1.125rem,5.5vw,4.5rem)] touch-manipulation text-[#BD6942] transition-colors hover:text-[#F1F1F1] md:w-auto md:pr-8"
@@ -89,25 +89,35 @@ export function AltNavbar() {
             onClick={() => setOpen(false)}
           />
           <div
-            className="relative flex max-h-[265px] min-h-0 flex-col"
-            style={{ height: 265, backgroundColor: "#E3E7FC" }}
+            className="absolute inset-x-0 top-0"
+            style={{ backgroundColor: "#E3E7FC" }}
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
           >
             <div
-              className="section-px flex h-[100px] shrink-0 items-center justify-end"
-              style={{ marginTop: "env(safe-area-inset-top, 0px)" }}
-            >
+              aria-hidden
+              style={{ height: "env(safe-area-inset-top, 0px)" }}
+            />
+            <div className="section-px flex md:h-[100px] h-[70px] items-center justify-between">
+              <nav aria-label="Page">
+                <a
+                  href={ENQUIRY_MAIL}
+                  className="w-fit cursor-pointer font-body text-[18px] font-normal capitalize leading-none tracking-[-0.02em] text-[#18225E] transition-colors hover:text-[#BD6942]"
+                  onClick={() => setOpen(false)}
+                >
+                  Enquiry
+                </a>
+              </nav>
               <button
                 type="button"
-                className="flex size-10 cursor-pointer items-center justify-center text-[#18225E] transition-colors hover:text-[#BD6942]"
+                className="flex size-10 shrink-0 cursor-pointer items-center justify-center text-[#18225E] transition-colors hover:text-[#BD6942]"
                 aria-label="Close menu"
                 onClick={() => setOpen(false)}
               >
                 <svg
-                  width="22"
-                  height="22"
+                  width="15"
+                  height="15"
                   viewBox="0 0 22 22"
                   fill="none"
                   aria-hidden
@@ -120,19 +130,6 @@ export function AltNavbar() {
                 </svg>
               </button>
             </div>
-
-            <nav
-              className="section-px flex flex-col gap-10 pt-2 pb-10"
-              aria-label="Page"
-            >
-              <a
-                href={ENQUIRY_MAIL}
-                className="w-fit cursor-pointer font-body text-[34.21px] font-normal capitalize leading-none tracking-[-0.02em] text-[#18225E] transition-colors hover:text-[#BD6942]"
-                onClick={() => setOpen(false)}
-              >
-                Enquiry
-              </a>
-            </nav>
           </div>
         </div>
       ) : null}

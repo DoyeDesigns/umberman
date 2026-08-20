@@ -33,6 +33,23 @@
     line-height: 1;
   }
 
+  @media (max-width: 767px) {
+    .text-hero-name {
+      font-size: 33.68px;
+      line-height: 1;
+    }
+
+    .text-hero-presents {
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .text-hero-title {
+      font-size: 148.28px;
+      line-height: 1;
+    }
+  }
+
   @media (min-width: 768px) {
     .text-hero-name {
       font-size: clamp(1.875rem, min(8.5vw, 7.5svh), 7.5rem);
