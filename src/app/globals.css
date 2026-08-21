@@ -4,6 +4,14 @@
 @import "../styles/ios-inview.css";
 @import "../styles/typography.css";
 
+/*
+  Tailwind v4 gates hover: behind @media (hover: hover).
+  On phones, tablets, and many hybrid touchscreen laptops that query is false,
+  so hover: utilities never apply. Restore classic :hover so feedback works
+  on every device (including tap-to-hover on touch).
+*/
+@custom-variant hover (&:hover);
+
 :root {
   --cream: #EEDCAD;
   --paper: #f1f1f1;
@@ -26,6 +34,7 @@
 html {
   overflow-x: clip;
   overscroll-behavior: none;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -35,4 +44,5 @@ body {
   color: var(--ink);
   background-color: #18225E;
   font-family: var(--font-infini), "Times New Roman", serif;
+  -webkit-tap-highlight-color: transparent;
 }
