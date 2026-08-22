@@ -4,7 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { AltFadeUpReveal } from "@/components/animations/AltFadeUpReveal";
 
-const PORTRAIT_SRC = "/Jide portrait B&W 48 1.png";
+const PORTRAIT_SRC = "/jide-portrait-bw.webp";
+const PORTRAIT_BLUR =
+  "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADwAQCdASoQAAsAA4BaJaQAAtpB2o/v2QAA/vFmWpM0om2GsNajgm//umgJhyezyeGpxrKEkfmAAA==";
 
 const PARAGRAPHS = [
   "Babajide Olatunji (b. 1989) is a Nigerian-born, London-based, full-time studio artist, songwriter and singer working from studios in London and Ibadan, Nigeria.",
@@ -31,7 +33,10 @@ export function BioSection() {
               alt="Black and white portrait of Babajide Olatunji"
               fill
               priority
-              sizes="(max-width: 1275px) 100vw, 1275px"
+              quality={80}
+              placeholder="blur"
+              blurDataURL={PORTRAIT_BLUR}
+              sizes="(max-width: 768px) 100vw, (max-width: 1275px) 92vw, 1275px"
               className="object-cover object-center"
             />
           </div>
