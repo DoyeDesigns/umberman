@@ -65,7 +65,7 @@ export function AltNavbar() {
         <div className="relative z-10 md:h-[100px] h-[70px]">
           <button
             type="button"
-            className="absolute inset-y-0 left-0 z-20 flex w-[min(42vw,11rem)] cursor-pointer items-center pl-[clamp(1.125rem,5.5vw,4.5rem)] touch-manipulation text-[#BD6942] transition-colors hover:text-[#F1F1F1] active:text-[#F1F1F1] md:w-auto md:pr-8"
+            className="absolute inset-y-0 left-0 z-20 flex w-[min(42vw,11rem)] cursor-pointer items-center pl-[clamp(1.125rem,5.5vw,4.5rem)] touch-manipulation text-[#BD6942] md:w-auto md:pr-8"
             aria-label="Open menu"
             aria-expanded={open}
             onClick={() => setOpen(true)}
@@ -111,7 +111,7 @@ export function AltNavbar() {
               </nav>
               <button
                 type="button"
-                className="flex size-10 shrink-0 cursor-pointer items-center justify-center text-[#18225E] transition-colors hover:text-[#BD6942] active:text-[#BD6942]"
+                className="flex size-10 shrink-0 cursor-pointer items-center justify-center text-[#18225E]"
                 aria-label="Close menu"
                 onClick={() => setOpen(false)}
               >

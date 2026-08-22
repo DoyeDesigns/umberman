@@ -6,7 +6,7 @@ import { ALT_THEMES } from "@/lib/design";
 const theme = ALT_THEMES.alt;
 
 const btnClassName =
-  "flex h-9 w-[135px] max-w-[135px] cursor-pointer items-center justify-center rounded-full border-2 border-[#F1F1F1] bg-transparent text-center font-body text-[21px] font-normal leading-none tracking-normal text-white transition-colors hover:border-[var(--cta-fill)] hover:bg-[var(--cta-fill)] active:border-[var(--cta-fill)] active:bg-[var(--cta-fill)] md:h-auto md:w-full md:max-w-none md:py-[clamp(0.75rem,2.5vw,1.5rem)] md:text-[clamp(0.875rem,4.86vw,70px)]";
+  "flex h-12.5 w-[203px] max-w-[203px] cursor-pointer items-center justify-center rounded-full border-2 border-[#F1F1F1] bg-transparent text-center font-body text-[21px] font-normal leading-none tracking-normal text-white transition-colors hover:border-[var(--cta-fill)] hover:bg-[var(--cta-fill)] active:border-[var(--cta-fill)] active:bg-[var(--cta-fill)] md:h-auto md:w-full md:max-w-none md:py-[clamp(0.75rem,2.5vw,1.5rem)] md:text-[clamp(0.875rem,4.86vw,70px)]";
 
 export function AltSaveTheDate() {
   return (
@@ -32,7 +32,7 @@ export function AltSaveTheDate() {
             </span>
           </AltFadeUpReveal>
 
-          <AltFadeUpReveal delay={0.1} className="mb-10 shrink-0">
+          <AltFadeUpReveal delay={0.1} className="mb-[clamp(0.25rem,2.83vw,2.5rem)] shrink-0">
             <span
               className="font-display text-[clamp(1.25rem,14.875vw,214.2px)] font-normal uppercase leading-none tracking-[-0.02em]"
               style={{ color: theme.orange }}

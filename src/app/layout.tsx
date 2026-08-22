@@ -7,7 +7,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Umberman — Babajide Olatunji",
   description:
-    "Umberman is a solo art exhibition by Babajide Olatunji at the Fitzrovia Chapel, London. October 15–18, 2026.",
+    "Umberman is a solo art exhibition by Babajide Olatunji at the Fitzrovia Chapel, London. September 21–24, 2026.",
 };
 
 export const viewport: Viewport = {
