@@ -6,7 +6,7 @@ import { ALT_THEMES } from "@/lib/design";
 const theme = ALT_THEMES.alt;
 
 const btnClassName =
-  "flex h-12.5 w-[203px] max-w-[203px] cursor-pointer items-center justify-center rounded-full border-2 border-[#F1F1F1] bg-transparent text-center font-body text-[21px] font-normal leading-none tracking-normal text-white transition-colors hover:border-[var(--cta-fill)] hover:bg-[var(--cta-fill)] active:border-[var(--cta-fill)] active:bg-[var(--cta-fill)] md:h-auto md:w-full md:max-w-none md:py-[clamp(0.75rem,2.5vw,1.5rem)] md:text-[clamp(0.875rem,4.86vw,70px)]";
+  "flex h-12.5 w-[203px] max-w-[203px] cursor-pointer items-center justify-center rounded-full border-2 border-[#F1F1F1] bg-transparent text-center font-body text-[21px] font-normal leading-none tracking-normal text-white transition-colors hover:border-[var(--cta-fill)] hover:bg-[var(--cta-fill)] active:border-[var(--cta-fill)] active:bg-[var(--cta-fill)] md:h-auto md:w-full md:max-w-none md:py-[clamp(0.75rem,2.5vw,1.5rem)] md:text-[clamp(0.875rem,4.86vw,70px)] xl:max-w-[546px] xl:text-[clamp(0.875rem,4.86vw,48px)]";
 
 export function AltSaveTheDate() {
   return (
@@ -17,15 +17,15 @@ export function AltSaveTheDate() {
     >
       <div className="flex flex-1 flex-col items-center justify-center">
         <AltFadeUpReveal>
-          <p className="w-full text-center font-display text-[clamp(1.5rem,12.31vw,177.29px)] font-normal uppercase leading-[1.2] tracking-normal text-[#F1F1F1]">
-            SEPT. 21–24, 2026
+          <p className="text-save-date-line w-full text-center font-display font-normal uppercase text-[#F1F1F1]">
+            SEPT. 21–24, 2026.
           </p>
         </AltFadeUpReveal>
 
-        <div className="mt-[clamp(1.5rem,5vw,3rem)] flex w-full max-w-[min(100%,1400px)] items-end justify-between gap-[clamp(0.25rem,1vw,1rem)]">
+        <div className="mt-[clamp(1.5rem,5vw,3rem)] flex w-full max-w-[min(100%,1400px)] items-end justify-center gap-[25px] md:gap-[86px]">
           <AltFadeUpReveal delay={0.04}>
             <span
-              className="font-display text-[clamp(2.5rem,30.29vw,436.2px)] font-normal uppercase leading-none tracking-[-0.02em]"
+              className="text-save-word font-display font-normal uppercase"
               style={{ color: theme.orange }}
             >
               SAVE
@@ -34,7 +34,7 @@ export function AltSaveTheDate() {
 
           <AltFadeUpReveal delay={0.1} className="mb-[clamp(0.25rem,2.83vw,2.5rem)] shrink-0">
             <span
-              className="font-display text-[clamp(1.25rem,14.875vw,214.2px)] font-normal uppercase leading-none tracking-[-0.02em]"
+              className="text-save-the font-display font-normal uppercase"
               style={{ color: theme.orange }}
             >
               THE
@@ -43,7 +43,7 @@ export function AltSaveTheDate() {
 
           <AltFadeUpReveal delay={0.04}>
             <span
-              className="font-display text-[clamp(2.5rem,30.29vw,436.2px)] font-normal uppercase leading-none tracking-[-0.02em]"
+              className="text-save-word font-display font-normal uppercase"
               style={{ color: theme.orange }}
             >
               DATE
@@ -52,8 +52,8 @@ export function AltSaveTheDate() {
         </div>
       </div>
 
-      <div className="relative z-50 mt-8 flex w-full flex-col items-center gap-4 md:mt-20 md:flex-row md:items-stretch md:gap-6 lg:gap-10">
-        <AltFadeUpReveal delay={0.08} className="w-auto md:w-full md:flex-1">
+      <div className="relative z-50 mt-8 flex w-full flex-col items-center gap-4 md:flex-row md:items-stretch md:justify-center md:gap-6 lg:gap-10">
+        <AltFadeUpReveal delay={0.08} className="w-auto md:w-full md:flex-1 xl:max-w-[546px]">
           <a
             href="#"
             className={btnClassName}
@@ -63,7 +63,7 @@ export function AltSaveTheDate() {
           </a>
         </AltFadeUpReveal>
 
-        <AltFadeUpReveal delay={0.12} className="w-auto md:w-full md:flex-1">
+        <AltFadeUpReveal delay={0.12} className="w-auto md:w-full md:flex-1 xl:max-w-[546px]">
           <a
             href="https://drive.google.com/drive/folders/1PxpYGFI9Z2Pz7rhQBSmXd3JoLTkMhGr8"
             target="_blank"
@@ -75,7 +75,7 @@ export function AltSaveTheDate() {
           </a>
         </AltFadeUpReveal>
 
-        <AltFadeUpReveal delay={0.16} className="w-auto md:w-full md:flex-1">
+        <AltFadeUpReveal delay={0.16} className="w-auto md:w-full md:flex-1 xl:max-w-[546px]">
           <a
             href="https://www.ikiform.com/f/babajide-olatunji-presents-umberman-psluab"
             target="_blank"

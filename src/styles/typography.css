@@ -237,20 +237,25 @@
     }
   }
 
-  /* —— Save the date —— */
+  /* —— Save the date ——
+     Mobile floor / desktop ceiling from spec.
+     Preferred size scales with viewport; svh cap keeps laptop layouts from overflowing. */
   .text-save-date-line {
-    font-size: clamp(1.5rem, 12.31vw, 6rem);
+    font-size: clamp(47.32px, min(10.67vw, 12svh), 153.61px);
     line-height: 1.2;
+    letter-spacing: 0;
   }
 
   .text-save-word {
-    font-size: clamp(2.5rem, 30.29vw, 10rem);
+    font-size: clamp(130.68px, min(30.29vw, 32svh), 436.2px);
     line-height: 1;
+    letter-spacing: -0.02em;
   }
 
   .text-save-the {
-    font-size: clamp(1.25rem, 14.875vw, 5rem);
+    font-size: clamp(64.17px, min(14.875vw, 16svh), 214.2px);
     line-height: 1;
+    letter-spacing: -0.02em;
   }
 
   .text-save-btn {
@@ -258,51 +263,7 @@
     line-height: 1;
   }
 
-  @media (min-width: 768px) {
-    .text-save-date-line {
-      font-size: clamp(1.375rem, min(8vw, 9svh), 5.5rem);
-    }
-
-    .text-save-word {
-      font-size: clamp(2rem, min(18vw, 20svh), 9rem);
-    }
-
-    .text-save-the {
-      font-size: clamp(1.125rem, min(9vw, 10svh), 4.5rem);
-    }
-
-    .text-save-btn {
-      font-size: clamp(0.875rem, min(2.8vw, 2.5svh), 2rem);
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .text-save-date-line {
-      font-size: clamp(1.5rem, min(9vw, 10svh), 7rem);
-    }
-
-    .text-save-word {
-      font-size: clamp(2.25rem, min(22vw, 24svh), 12rem);
-    }
-
-    .text-save-the {
-      font-size: clamp(1.25rem, min(11vw, 12svh), 6rem);
-    }
-  }
-
   @media (min-width: 1536px) {
-    .text-save-date-line {
-      font-size: clamp(1.5rem, 12.31vw, 177.29px);
-    }
-
-    .text-save-word {
-      font-size: clamp(2.5rem, 30.29vw, 436.2px);
-    }
-
-    .text-save-the {
-      font-size: clamp(1.25rem, 14.875vw, 214.2px);
-    }
-
     .text-save-btn {
       font-size: clamp(0.875rem, 4.86vw, 70px);
     }
