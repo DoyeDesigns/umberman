@@ -32,7 +32,7 @@ export function AltSaveTheDate() {
             </span>
           </AltFadeUpReveal>
 
-          <AltFadeUpReveal delay={0.1} className="mb-[clamp(0.25rem,2.83vw,2.5rem)] shrink-0">
+          <AltFadeUpReveal delay={0.1} className="mb-[clamp(0.25rem,2.83vw,1.5rem)] shrink-0">
             <span
               className="text-save-the font-display font-normal uppercase"
               style={{ color: theme.orange }}
