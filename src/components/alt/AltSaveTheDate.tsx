@@ -6,7 +6,7 @@ import { ALT_THEMES } from "@/lib/design";
 const theme = ALT_THEMES.alt;
 
 const btnClassName =
-  "flex h-12.5 w-[203px] max-w-[203px] cursor-pointer items-center justify-center rounded-full border-2 border-[#F1F1F1] bg-transparent text-center font-body text-[21px] font-normal leading-none tracking-normal text-white transition-colors hover:border-[var(--cta-fill)] hover:bg-[var(--cta-fill)] active:border-[var(--cta-fill)] active:bg-[var(--cta-fill)] md:h-auto md:w-full md:max-w-none md:py-[clamp(0.75rem,2.5vw,1.5rem)] md:text-[clamp(0.875rem,4.86vw,70px)] xl:max-w-[546px] xl:text-[clamp(0.875rem,4.86vw,48px)]";
+  "text-save-btn flex h-12.5 w-[203px] max-w-[203px] cursor-pointer items-center justify-center rounded-full border-2 border-[#F1F1F1] bg-transparent text-center font-body font-normal text-white transition-colors hover:border-[var(--cta-fill)] hover:bg-[var(--cta-fill)] active:border-[var(--cta-fill)] active:bg-[var(--cta-fill)] md:h-auto md:w-full md:max-w-none md:py-[clamp(0.75rem,2.5vw,1.5rem)] xl:max-w-[546px]";
 
 export function AltSaveTheDate() {
   return (
@@ -22,8 +22,8 @@ export function AltSaveTheDate() {
           </p>
         </AltFadeUpReveal>
 
-        <div className="mt-[clamp(1.5rem,5vw,3rem)] flex w-full max-w-[min(100%,1400px)] items-end justify-center gap-[20px] md:gap-[40px] xl:gap-[60px]">
-          <AltFadeUpReveal delay={0.04}>
+        <div className="mt-[clamp(1.5rem,5vw,3rem)] flex w-full max-w-[min(100%,1400px)] [container-type:inline-size] items-end justify-center gap-[20px] md:gap-[40px] xl:gap-[60px]">
+          <AltFadeUpReveal from="left" delay={0.04}>
             <span
               className="text-save-word font-display font-normal uppercase"
               style={{ color: theme.orange }}
@@ -32,7 +32,7 @@ export function AltSaveTheDate() {
             </span>
           </AltFadeUpReveal>
 
-          <AltFadeUpReveal delay={0.1} className="mb-[clamp(0.25rem,2.83vw,1.5rem)] shrink-0">
+          <AltFadeUpReveal from="up" delay={0.1} className="mb-[1.5rem] shrink-0 md:mb-[2.5rem]">
             <span
               className="text-save-the font-display font-normal uppercase"
               style={{ color: theme.orange }}
@@ -41,7 +41,7 @@ export function AltSaveTheDate() {
             </span>
           </AltFadeUpReveal>
 
-          <AltFadeUpReveal delay={0.04}>
+          <AltFadeUpReveal from="right" delay={0.04}>
             <span
               className="text-save-word font-display font-normal uppercase"
               style={{ color: theme.orange }}

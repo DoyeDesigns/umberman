@@ -238,34 +238,61 @@
   }
 
   /* —— Save the date ——
-     Mobile floor / desktop ceiling from spec.
-     Preferred size scales with viewport; svh cap keeps laptop layouts from overflowing. */
+     Exact mobile sizes below md. From md, scale with viewport toward
+     desktop spec; cqi keeps SAVE / THE / DATE inside the row. */
   .text-save-date-line {
-    font-size: clamp(47.32px, min(10.67vw, 12svh), 153.61px);
+    font-family: var(--font-august), sans-serif;
+    font-size: 47.32px;
+    font-weight: 400;
     line-height: 1.2;
     letter-spacing: 0;
   }
 
   .text-save-word {
-    font-size: clamp(130.68px, min(30.29vw, 32svh), 436.2px);
+    font-family: var(--font-august), sans-serif;
+    font-size: 130.68px;
+    font-weight: 400;
     line-height: 1;
     letter-spacing: -0.02em;
+    white-space: nowrap;
   }
 
   .text-save-the {
-    font-size: clamp(64.17px, min(14.875vw, 16svh), 214.2px);
+    font-family: var(--font-august), sans-serif;
+    font-size: 64.17px;
+    font-weight: 400;
     line-height: 1;
     letter-spacing: -0.02em;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 768px) {
+    .text-save-date-line {
+      font-size: clamp(47.32px, 10.667vw, 153.61px);
+    }
+
+    .text-save-word {
+      font-size: clamp(130.68px, 30.29vw, 436.2px);
+      font-size: clamp(130.68px, 31.157cqi, 436.2px);
+    }
+
+    .text-save-the {
+      font-size: clamp(64.17px, 14.875vw, 214.2px);
+      font-size: clamp(64.17px, 15.3cqi, 214.2px);
+    }
   }
 
   .text-save-btn {
-    font-size: clamp(0.875rem, 4.86vw, 2.5rem);
+    font-family: var(--font-infini), "Times New Roman", serif;
+    font-size: 21px;
+    font-weight: 400;
     line-height: 1;
+    letter-spacing: 0;
   }
 
-  @media (min-width: 1536px) {
+  @media (min-width: 768px) {
     .text-save-btn {
-      font-size: clamp(0.875rem, 4.86vw, 70px);
+      font-size: clamp(1.25rem, 3.9vw, 56.22px);
     }
   }
 

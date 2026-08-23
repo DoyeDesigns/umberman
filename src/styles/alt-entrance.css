@@ -103,8 +103,83 @@
   animation-delay: 0.92s;
 }
 
+@keyframes alt-fade-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes alt-slide-left {
+  from {
+    opacity: 0;
+    transform: translate3d(-72px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes alt-slide-right {
+  from {
+    opacity: 0;
+    transform: translate3d(72px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.alt-fade-up,
+.alt-slide-left,
+.alt-slide-right {
+  opacity: 0;
+}
+
+.alt-fade-up {
+  transform: translate3d(0, 28px, 0);
+}
+
+.alt-slide-left {
+  transform: translate3d(-72px, 0, 0);
+}
+
+.alt-slide-right {
+  transform: translate3d(72px, 0, 0);
+}
+
+.alt-fade-up.is-inview,
+.alt-slide-left.is-inview,
+.alt-slide-right.is-inview {
+  animation-duration: 0.7s;
+  animation-delay: var(--alt-fade-delay, 0s);
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.alt-fade-up.is-inview {
+  animation-name: alt-fade-up;
+}
+
+.alt-slide-left.is-inview {
+  animation-name: alt-slide-left;
+}
+
+.alt-slide-right.is-inview {
+  animation-name: alt-slide-right;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .alt-load-entrance {
+  .alt-load-entrance,
+  .alt-fade-up,
+  .alt-slide-left,
+  .alt-slide-right {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;

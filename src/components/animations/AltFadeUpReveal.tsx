@@ -1,52 +1,90 @@
 "use client";
 
-import { useClientReady } from "@/hooks/useClientReady";
-import { useIOSAnimationPath } from "@/hooks/useIOSAnimationPath";
-import { useReducedMotion } from "@/hooks/useReducedMotion";
-import { useInViewReveal } from "@/hooks/useInViewReveal";
+import { useEffect, useRef } from "react";
+
+type AltRevealFrom = "up" | "left" | "right";
 
 type AltFadeUpRevealProps = {
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
   delay?: number;
-  y?: number;
+  from?: AltRevealFrom;
 };
 
-/**
- * Fade up on desktop. iPhone path matches V2Motion: visible markup, never opacity 0.
- */
+const FROM_CLASS: Record<AltRevealFrom, string> = {
+  up: "alt-fade-up",
+  left: "alt-slide-left",
+  right: "alt-slide-right",
+};
+
+/** Hidden in CSS until this element enters the viewport, then a CSS keyframe runs. */
 export function AltFadeUpReveal({
   children,
   className,
   style,
   delay = 0,
-  y = 28,
+  from = "up",
 }: AltFadeUpRevealProps) {
-  const reducedMotion = useReducedMotion();
-  const ready = useClientReady();
-  const { useNativeScroll } = useIOSAnimationPath();
-  const enabled = !reducedMotion && ready && !useNativeScroll;
-  const { ref, revealed } = useInViewReveal({ enabled });
+  const ref = useRef<HTMLDivElement>(null);
 
-  if (reducedMotion || !ready || useNativeScroll) {
-    return (
-      <div className={className} style={style}>
-        {children}
-      </div>
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    let revealed = false;
+
+    const reveal = () => {
+      if (revealed) return;
+      revealed = true;
+      el.classList.add("is-inview");
+    };
+
+    const isOnScreen = () => {
+      const rect = el.getBoundingClientRect();
+      return rect.bottom > 0 && rect.top < window.innerHeight;
+    };
+
+    if (isOnScreen()) {
+      reveal();
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          reveal();
+          observer.disconnect();
+        }
+      },
+      {
+        threshold: 0,
+        rootMargin: "0px 0px 20% 0px",
+      },
     );
-  }
+
+    observer.observe(el);
+
+    const onLoad = () => {
+      if (isOnScreen()) reveal();
+    };
+    window.addEventListener("load", onLoad);
+    window.addEventListener("pageshow", onLoad);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("load", onLoad);
+      window.removeEventListener("pageshow", onLoad);
+    };
+  }, []);
 
   return (
     <div
       ref={ref}
-      className={className}
+      className={`${FROM_CLASS[from]} ${className ?? ""}`.trim()}
       style={{
         ...style,
-        opacity: revealed ? 1 : 0,
-        transform: revealed ? "translate3d(0, 0, 0)" : `translate3d(0, ${y}px, 0)`,
-        transition: `opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s, transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) ${delay}s`,
-        willChange: revealed ? "auto" : "transform, opacity",
+        ["--alt-fade-delay" as string]: `${delay}s`,
       }}
     >
       {children}
