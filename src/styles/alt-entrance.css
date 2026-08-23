@@ -156,14 +156,16 @@
 
 .alt-fade-up.is-inview,
 .alt-slide-left.is-inview,
-.alt-slide-right.is-inview {
+.alt-slide-right.is-inview,
+.alt-stagger-group.is-inview .alt-fade-up {
   animation-duration: 0.7s;
   animation-delay: var(--alt-fade-delay, 0s);
   animation-fill-mode: both;
   animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.alt-fade-up.is-inview {
+.alt-fade-up.is-inview,
+.alt-stagger-group.is-inview .alt-fade-up {
   animation-name: alt-fade-up;
 }
 

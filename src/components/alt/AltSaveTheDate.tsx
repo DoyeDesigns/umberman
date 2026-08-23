@@ -1,12 +1,14 @@
 "use client";
 
-import { AltFadeUpReveal } from "@/components/animations/AltFadeUpReveal";
+import { AltFadeUpReveal, AltStaggerGroup } from "@/components/animations/AltFadeUpReveal";
 import { ALT_THEMES } from "@/lib/design";
 
 const theme = ALT_THEMES.alt;
 
 const btnClassName =
-  "text-save-btn flex h-12.5 w-[203px] max-w-[203px] cursor-pointer items-center justify-center rounded-full border-2 border-[#F1F1F1] bg-transparent text-center font-body font-normal text-white transition-colors hover:border-[var(--cta-fill)] hover:bg-[var(--cta-fill)] active:border-[var(--cta-fill)] active:bg-[var(--cta-fill)] md:h-auto md:w-full md:max-w-none md:py-[clamp(0.75rem,2.5vw,1.5rem)] xl:max-w-[546px]";
+  "text-save-btn flex h-12.5 w-[203px] max-w-[203px] shrink-0 cursor-pointer items-center justify-center rounded-full border-2 border-[#F1F1F1] bg-transparent text-center font-body font-normal text-white transition-colors hover:border-[var(--cta-fill)] hover:bg-[var(--cta-fill)] active:border-[var(--cta-fill)] active:bg-[var(--cta-fill)] md:h-[clamp(3.125rem,6.58vw,94.77px)] md:max-h-[94.77px] md:w-[clamp(12.5rem,24.54vw,353.39px)] md:max-w-[353.39px]";
+
+const ctaWrapClassName = "alt-fade-up w-auto shrink-0";
 
 export function AltSaveTheDate() {
   return (
@@ -52,8 +54,8 @@ export function AltSaveTheDate() {
         </div>
       </div>
 
-      <div className="relative z-50 mt-8 flex w-full flex-col items-center gap-4 md:flex-row md:items-stretch md:justify-center md:gap-6 lg:gap-10">
-        <AltFadeUpReveal delay={0.08} className="w-auto md:w-full md:flex-1 xl:max-w-[546px]">
+      <AltStaggerGroup className="relative z-50 mt-8 flex w-full flex-col items-center gap-4 md:flex-row md:items-center md:justify-center md:gap-[clamp(1.25rem,4.86vw,70px)]">
+        <div className={ctaWrapClassName} style={{ ["--alt-fade-delay" as string]: "0s" }}>
           <a
             href="#"
             className={btnClassName}
@@ -61,9 +63,9 @@ export function AltSaveTheDate() {
           >
             Register
           </a>
-        </AltFadeUpReveal>
+        </div>
 
-        <AltFadeUpReveal delay={0.12} className="w-auto md:w-full md:flex-1 xl:max-w-[546px]">
+        <div className={ctaWrapClassName} style={{ ["--alt-fade-delay" as string]: "0.16s" }}>
           <a
             href="https://drive.google.com/drive/folders/1PxpYGFI9Z2Pz7rhQBSmXd3JoLTkMhGr8"
             target="_blank"
@@ -73,9 +75,9 @@ export function AltSaveTheDate() {
           >
             Press Kit
           </a>
-        </AltFadeUpReveal>
+        </div>
 
-        <AltFadeUpReveal delay={0.16} className="w-auto md:w-full md:flex-1 xl:max-w-[546px]">
+        <div className={ctaWrapClassName} style={{ ["--alt-fade-delay" as string]: "0.32s" }}>
           <a
             href="https://www.ikiform.com/f/babajide-olatunji-presents-umberman-psluab"
             target="_blank"
@@ -85,8 +87,8 @@ export function AltSaveTheDate() {
           >
             RSVP
           </a>
-        </AltFadeUpReveal>
-      </div>
+        </div>
+      </AltStaggerGroup>
     </section>
   );
 }

@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type ReactNode, type RefObject } from "react";
 
 type AltRevealFrom = "up" | "left" | "right";
 
 type AltFadeUpRevealProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   style?: React.CSSProperties;
   delay?: number;
@@ -18,16 +18,7 @@ const FROM_CLASS: Record<AltRevealFrom, string> = {
   right: "alt-slide-right",
 };
 
-/** Hidden in CSS until this element enters the viewport, then a CSS keyframe runs. */
-export function AltFadeUpReveal({
-  children,
-  className,
-  style,
-  delay = 0,
-  from = "up",
-}: AltFadeUpRevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
-
+function useInViewReveal(ref: RefObject<HTMLElement | null>) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -45,11 +36,6 @@ export function AltFadeUpReveal({
       return rect.bottom > 0 && rect.top < window.innerHeight;
     };
 
-    if (isOnScreen()) {
-      reveal();
-      return;
-    }
-
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
@@ -59,24 +45,39 @@ export function AltFadeUpReveal({
       },
       {
         threshold: 0,
-        rootMargin: "0px 0px 20% 0px",
+        rootMargin: "0px 0px 30% 0px",
       },
     );
 
     observer.observe(el);
 
-    const onLoad = () => {
+    const check = () => {
       if (isOnScreen()) reveal();
     };
-    window.addEventListener("load", onLoad);
-    window.addEventListener("pageshow", onLoad);
+    check();
+    const raf = requestAnimationFrame(check);
+    window.addEventListener("load", check);
+    window.addEventListener("pageshow", check);
 
     return () => {
       observer.disconnect();
-      window.removeEventListener("load", onLoad);
-      window.removeEventListener("pageshow", onLoad);
+      cancelAnimationFrame(raf);
+      window.removeEventListener("load", check);
+      window.removeEventListener("pageshow", check);
     };
-  }, []);
+  }, [ref]);
+}
+
+/** Hidden in CSS until this element enters the viewport, then a CSS keyframe runs. */
+export function AltFadeUpReveal({
+  children,
+  className,
+  style,
+  delay = 0,
+  from = "up",
+}: AltFadeUpRevealProps) {
+  const ref = useRef<HTMLDivElement>(null);
+  useInViewReveal(ref);
 
   return (
     <div
@@ -87,6 +88,24 @@ export function AltFadeUpReveal({
         ["--alt-fade-delay" as string]: `${delay}s`,
       }}
     >
+      {children}
+    </div>
+  );
+}
+
+/** Reveals every child fade-up together so none stay hidden. */
+export function AltStaggerGroup({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  useInViewReveal(ref);
+
+  return (
+    <div ref={ref} className={`alt-stagger-group ${className ?? ""}`.trim()}>
       {children}
     </div>
   );
