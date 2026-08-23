@@ -22,7 +22,7 @@ export function AltSaveTheDate() {
           </p>
         </AltFadeUpReveal>
 
-        <div className="mt-[clamp(1.5rem,5vw,3rem)] flex w-full max-w-[min(100%,1400px)] items-end justify-center gap-[25px] md:gap-[86px]">
+        <div className="mt-[clamp(1.5rem,5vw,3rem)] flex w-full max-w-[min(100%,1400px)] items-end justify-center gap-[20px] md:gap-[40px] xl:gap-[60px]">
           <AltFadeUpReveal delay={0.04}>
             <span
               className="text-save-word font-display font-normal uppercase"
