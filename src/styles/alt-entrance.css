@@ -1,41 +1,112 @@
-/* Alt hero / LiveAt — hidden until GSAP entrance runs (pre-hydration safe). */
+/* Hero / LiveAt load entrance — CSS only. Hidden in CSS before paint, then keyframes run. */
+
+@keyframes alt-entrance-drop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -48px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes alt-entrance-left {
+  from {
+    opacity: 0;
+    transform: translate3d(-56px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes alt-entrance-right {
+  from {
+    opacity: 0;
+    transform: translate3d(56px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes alt-entrance-up {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 56px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes alt-entrance-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 40px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
 
 .alt-load-entrance {
   opacity: 0;
-  will-change: transform, opacity;
-}
-
-html.ios .alt-load-entrance {
-  opacity: 1 !important;
-  transform: none !important;
-  will-change: auto;
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .alt-load-entrance[data-role="logo"] {
   transform: translate3d(0, -48px, 0);
+  animation-name: alt-entrance-drop;
+  animation-duration: 0.68s;
+  animation-delay: 0.06s;
 }
 
 .alt-load-entrance[data-role="name"] {
   transform: translate3d(-56px, 0, 0);
+  animation-name: alt-entrance-left;
+  animation-duration: 0.72s;
+  animation-delay: 0.22s;
 }
 
 .alt-load-entrance[data-role="presents"] {
   transform: translate3d(56px, 0, 0);
+  animation-name: alt-entrance-right;
+  animation-duration: 0.72s;
+  animation-delay: 0.34s;
 }
 
 .alt-load-entrance[data-role="title"] {
   transform: translate3d(0, 56px, 0);
+  animation-name: alt-entrance-up;
+  animation-duration: 0.78s;
+  animation-delay: 0.5s;
 }
 
-.alt-load-entrance[data-role="liveAtCall"],
+.alt-load-entrance[data-role="liveAtCall"] {
+  transform: translate3d(0, 40px, 0);
+  animation-name: alt-entrance-rise;
+  animation-duration: 0.72s;
+  animation-delay: 0.72s;
+}
+
 .alt-load-entrance[data-role="liveAtResponse"] {
   transform: translate3d(0, 40px, 0);
+  animation-name: alt-entrance-rise;
+  animation-duration: 0.78s;
+  animation-delay: 0.92s;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .alt-load-entrance {
-    opacity: 1;
-    transform: none;
-    will-change: auto;
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }
