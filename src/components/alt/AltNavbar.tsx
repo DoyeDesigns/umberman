@@ -1,11 +1,29 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
-import { AltLogo } from "@/components/alt/AltLogo";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { ALT_THEMES } from "@/lib/design";
 
 const ENQUIRY_MAIL = "mailto:enquiry@umbermanbybabajideolatunji.com";
+const ENQUIRY_LABEL = "enquiry@umbermanbybabajideolatunji.com";
 const theme = ALT_THEMES.alt;
+
+const MENU_LINKS = [
+  {
+    href: "https://www.ikiform.com/f/babajide-olatunji-presents-umberman-psluab",
+    label: "RSVP",
+    delay: "0s",
+    caps: true,
+    external: true,
+  },
+  { href: "#save-the-date", label: "Register", delay: "0.18s" },
+  {
+    href: "https://drive.google.com/drive/folders/1PxpYGFI9Z2Pz7rhQBSmXd3JoLTkMhGr8",
+    label: "Press Kit",
+    delay: "0.36s",
+    external: true,
+  },
+  { href: ENQUIRY_MAIL, label: "Enquiry", delay: "0.54s" },
+] as const;
 
 type AltMenuContextValue = {
   open: boolean;
@@ -31,6 +49,16 @@ export function AltNavbar() {
   const menu = useAltMenu();
   const open = menu?.open ?? false;
   const setOpen = menu?.setOpen ?? (() => {});
+  const [moving, setMoving] = useState(false);
+  const ready = useRef(false);
+
+  useEffect(() => {
+    if (!ready.current) {
+      ready.current = true;
+      return;
+    }
+    setMoving(true);
+  }, [open]);
 
   useEffect(() => {
     if (!open) return;
@@ -62,77 +90,88 @@ export function AltNavbar() {
           className="pointer-events-none absolute inset-x-0 bottom-full h-[50vh]"
           style={{ backgroundColor: theme.bg }}
         />
-        <div className="relative z-10 md:h-[100px] h-[70px]">
-          <button
-            type="button"
-            className="absolute inset-y-0 left-0 z-20 flex w-[min(42vw,11rem)] cursor-pointer items-center pl-[clamp(1.125rem,5.5vw,4.5rem)] touch-manipulation text-[#BD6942] md:w-auto md:pr-8"
-            aria-label="Open menu"
-            aria-expanded={open}
-            onClick={() => setOpen(true)}
-          >
-            <AltLogo theme={theme} />
-          </button>
-        </div>
+        <div className="relative h-[70px] md:h-[100px]" />
       </header>
+
+      <button
+        type="button"
+        aria-expanded={open}
+        aria-label={open ? "Close menu" : "Open menu"}
+        className="fixed top-[calc(35px+env(safe-area-inset-top,0px))] right-[clamp(1.125rem,5.5vw,4.5rem)] z-[110] flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/10 text-brown sm:h-11 sm:w-11 md:top-[calc(50px+env(safe-area-inset-top,0px))] md:h-12 md:w-12"
+        onClick={() => setOpen(!open)}
+      >
+        <span
+          className={`absolute h-[1.25px] w-3.75 bg-current transition-transform duration-700 ease-[cubic-bezier(.87,0,.13,1)] ${open ? "translate-y-0 rotate-45 scale-x-105" : "-translate-y-1"}`}
+        />
+        <span
+          className={`absolute h-[1.25px] w-3.75 bg-current transition-transform duration-700 ease-[cubic-bezier(.87,0,.13,1)] ${open ? "translate-y-0 -rotate-45 scale-x-105" : "translate-y-1"}`}
+        />
+      </button>
+
+      <div
+        className={`alt-menu-overlay ${open ? "is-open" : ""} ${moving ? "is-moving" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+        aria-hidden={!open}
+        onTransitionEnd={(event) => {
+          if (event.target !== event.currentTarget) return;
+          if (event.propertyName === "transform") setMoving(false);
+        }}
+      >
+        <div className="flex h-full min-h-0 flex-col justify-between px-[clamp(1.125rem,5.5vw,4.5rem)] pt-[calc(70px+env(safe-area-inset-top,0px))] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] md:pt-[calc(100px+env(safe-area-inset-top,0px))]">
+          <nav
+            className="mx-auto flex min-h-0 w-full max-w-3xl flex-1 flex-col items-start justify-center gap-3 md:gap-2"
+            aria-label="Page"
+          >
+            {MENU_LINKS.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                className={`alt-fade-up inline-block font-heading font-normal text-[clamp(3rem,4.5vw,4.5rem)] leading-tight text-white transition-colors hover:text-[#FABC43] active:text-[#FABC43] ${"caps" in link && link.caps ? "uppercase" : "capitalize"}`}
+                style={{ ["--alt-fade-delay" as string]: link.delay }}
+                onClick={() => setOpen(false)}
+                tabIndex={open ? 0 : -1}
+                {...("external" in link && link.external
+                  ? { target: "_blank", rel: "noopener noreferrer" }
+                  : {})}
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="mt-10 flex items-end justify-between gap-6">
+            <p
+              className="alt-fade-up font-body text-[clamp(0.75rem,1.4vw,1rem)] leading-[1.35] text-white/50"
+              style={{ ["--alt-fade-delay" as string]: "0.7s" }}
+            >
+              Fitzrovia Chapel
+              <br />
+              Fitzroy Place
+              <br />
+              2 Pearson Square
+              <br />
+              London W1T 3BF
+            </p>
+            <a
+              href={ENQUIRY_MAIL}
+              className="alt-fade-up max-w-[50%] text-right font-body text-[clamp(0.75rem,1.4vw,1rem)] leading-[1.35] break-all text-white/50 hover:text-[#BD6942] active:text-[#BD6942]"
+              style={{ ["--alt-fade-delay" as string]: "0.82s" }}
+              onClick={() => setOpen(false)}
+              tabIndex={open ? 0 : -1}
+            >
+              {ENQUIRY_LABEL}
+            </a>
+          </div>
+        </div>
+      </div>
+
       <div
         aria-hidden
         className="shrink-0"
         style={{ height: "calc(100px + env(safe-area-inset-top, 0px))" }}
       />
-
-      {open ? (
-        <div className="fixed inset-0 z-[100]">
-          <button
-            type="button"
-            className="absolute inset-0"
-            aria-label="Close menu"
-            onClick={() => setOpen(false)}
-          />
-          <div
-            className="absolute inset-x-0 top-0"
-            style={{ backgroundColor: "#E3E7FC" }}
-            role="dialog"
-            aria-modal="true"
-            aria-label="Menu"
-          >
-            <div
-              aria-hidden
-              style={{ height: "env(safe-area-inset-top, 0px)" }}
-            />
-            <div className="section-px flex md:h-[100px] h-[70px] items-center justify-between">
-              <nav aria-label="Page">
-                <a
-                  href={ENQUIRY_MAIL}
-                  className="w-fit cursor-pointer font-body text-[18px] font-normal capitalize leading-none tracking-[-0.02em] text-[#18225E] transition-colors hover:text-[#BD6942] active:text-[#BD6942]"
-                  onClick={() => setOpen(false)}
-                >
-                  Enquiry
-                </a>
-              </nav>
-              <button
-                type="button"
-                className="flex size-10 shrink-0 cursor-pointer items-center justify-center text-[#18225E]"
-                aria-label="Close menu"
-                onClick={() => setOpen(false)}
-              >
-                <svg
-                  width="15"
-                  height="15"
-                  viewBox="0 0 22 22"
-                  fill="none"
-                  aria-hidden
-                >
-                  <path
-                    d="M1 1L21 21M21 1L1 21"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : null}
     </>
   );
 }

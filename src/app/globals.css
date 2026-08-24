@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "../styles/alt-entrance.css";
+@import "../styles/alt-menu.css";
 @import "../styles/ios-inview.css";
 @import "../styles/typography.css";
 
@@ -15,6 +16,7 @@
   --cream: #EEDCAD;
   --paper: #f1f1f1;
   --orange: #D74F24;
+  --brown: #BD6942;
   --navy: #354396;
   --ink: #1C1C1C;
 }
@@ -23,6 +25,7 @@
   --color-cream: var(--cream);
   --color-paper: var(--paper);
   --color-orange: var(--orange);
+  --color-brown: var(--brown);
   --color-navy: var(--navy);
   --color-ink: var(--ink);
   --font-display: var(--font-august);

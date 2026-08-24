@@ -1,0 +1,54 @@
+.alt-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  height: 100dvh;
+  background: #18225e;
+  pointer-events: none;
+  transform: translate3d(0, -100%, 0);
+  visibility: hidden;
+  transition:
+    transform 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.95s;
+  border-bottom: 1px solid transparent;
+}
+
+.alt-menu-overlay.is-moving {
+  border-bottom-color: rgb(255 255 255 / 0.5);
+}
+
+.alt-menu-overlay.is-open {
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0);
+  visibility: visible;
+}
+
+.alt-menu-overlay .alt-fade-up {
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+}
+
+.alt-menu-overlay.is-open .alt-fade-up {
+  animation-name: alt-fade-up;
+  animation-duration: 1.1s;
+  animation-delay: var(--alt-fade-delay, 0s);
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .alt-menu-overlay {
+    transition: none !important;
+    transform: translate3d(0, -100%, 0);
+  }
+
+  .alt-menu-overlay.is-open {
+    transform: none;
+  }
+
+  .alt-menu-overlay .alt-fade-up {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
