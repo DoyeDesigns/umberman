@@ -57,15 +57,42 @@ export function AltNavbar() {
   const open = menu?.open ?? false;
   const setOpen = menu?.setOpen ?? (() => {});
   const [moving, setMoving] = useState(false);
-  const ready = useRef(false);
+  const [phase, setPhase] = useState<"closed" | "opening" | "open" | "closing">(
+    "closed",
+  );
+  const [textReady, setTextReady] = useState(false);
+  const phaseRef = useRef(phase);
+  phaseRef.current = phase;
 
   useEffect(() => {
-    if (!ready.current) {
-      ready.current = true;
+    if (open) {
+      setMoving(true);
+      setTextReady(false);
+      setPhase("opening");
       return;
     }
+
+    if (phaseRef.current === "closed") return;
+
     setMoving(true);
+    setTextReady(false);
+    setPhase("closing");
   }, [open]);
+
+  useEffect(() => {
+    if (phase !== "opening") return;
+    const id = window.setTimeout(() => setTextReady(true), 480);
+    return () => window.clearTimeout(id);
+  }, [phase]);
+
+  useEffect(() => {
+    if (phase !== "opening" && phase !== "closing") return;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduced) return;
+    setPhase(phase === "opening" ? "open" : "closed");
+    setMoving(false);
+    if (phase === "opening") setTextReady(true);
+  }, [phase]);
 
   useEffect(() => {
     if (!open) return;
@@ -116,14 +143,21 @@ export function AltNavbar() {
       </button>
 
       <div
-        className={`alt-menu-overlay ${open ? "is-open" : ""} ${moving ? "is-moving" : ""}`}
+        className={`alt-menu-overlay ${phase !== "closed" ? "is-open" : ""} ${phase === "opening" ? "is-opening" : ""} ${textReady ? "is-settled" : ""} ${phase === "closing" ? "is-closing" : ""} ${moving ? "is-moving" : ""}`}
         role="dialog"
         aria-modal="true"
         aria-label="Menu"
-        aria-hidden={!open}
-        onTransitionEnd={(event) => {
+        aria-hidden={phase === "closed"}
+        onAnimationEnd={(event) => {
           if (event.target !== event.currentTarget) return;
-          if (event.propertyName === "transform") setMoving(false);
+          if (event.animationName === "alt-menu-down") {
+            setPhase("open");
+            setMoving(false);
+          }
+          if (event.animationName === "alt-menu-up") {
+            setPhase("closed");
+            setMoving(false);
+          }
         }}
       >
         <div className="flex h-full min-h-0 flex-col justify-between px-[clamp(1.125rem,5.5vw,4.5rem)] pt-[calc(70px+env(safe-area-inset-top,0px))] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] md:pt-[calc(100px+env(safe-area-inset-top,0px))]">
@@ -152,7 +186,7 @@ export function AltNavbar() {
             ))}
           </nav>
 
-          <div className="mt-10 flex items-end justify-between gap-6">
+          <div className="mt-10 flex flex-col items-start gap-1 text-left md:flex-row md:items-end md:justify-between">
             <div className="font-body text-[clamp(0.75rem,1.4vw,1rem)] leading-[1.35] text-white/50">
               {ADDRESS_LINES.map((line, index) => (
                 <div
@@ -162,17 +196,17 @@ export function AltNavbar() {
                     ["--alt-fade-delay" as string]: `${0.66 + index * 0.12}s`,
                   }}
                 >
-                  <span className="alt-menu-reveal block">{line}</span>
+                  <span className="alt-menu-reveal block text-left">{line}</span>
                 </div>
               ))}
             </div>
             <div
-              className="alt-menu-clip max-w-[50%]"
+              className="alt-menu-clip w-full max-w-full md:max-w-[50%]"
               style={{ ["--alt-fade-delay" as string]: "0.78s" }}
             >
               <a
                 href={ENQUIRY_MAIL}
-                className="alt-menu-reveal block text-right font-body text-[clamp(0.75rem,1.4vw,1rem)] leading-[1.35] break-all text-white/50 hover:text-[#BD6942] active:text-[#BD6942]"
+                className="alt-menu-reveal block text-left font-body text-[clamp(0.75rem,1.4vw,1rem)] leading-[1.35] break-all text-white/50 hover:text-[#FABC43] active:text-[#FABC43] md:text-right"
                 onClick={() => setOpen(false)}
                 tabIndex={open ? 0 : -1}
               >
