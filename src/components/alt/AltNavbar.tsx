@@ -25,6 +25,13 @@ const MENU_LINKS = [
   { href: ENQUIRY_MAIL, label: "Enquiry", delay: "0.54s" },
 ] as const;
 
+const ADDRESS_LINES = [
+  "Fitzrovia Chapel",
+  "Fitzroy Place",
+  "2 Pearson Square",
+  "London W1T 3BF",
+] as const;
+
 type AltMenuContextValue = {
   open: boolean;
   setOpen: (open: boolean) => void;
@@ -125,44 +132,53 @@ export function AltNavbar() {
             aria-label="Page"
           >
             {MENU_LINKS.map((link) => (
-              <a
+              <div
                 key={link.label}
-                href={link.href}
-                className={`alt-fade-up inline-block font-heading font-normal text-[clamp(3rem,4.5vw,4.5rem)] leading-tight text-white transition-colors hover:text-[#FABC43] active:text-[#FABC43] ${"caps" in link && link.caps ? "uppercase" : "capitalize"}`}
+                className="alt-menu-clip"
                 style={{ ["--alt-fade-delay" as string]: link.delay }}
-                onClick={() => setOpen(false)}
-                tabIndex={open ? 0 : -1}
-                {...("external" in link && link.external
-                  ? { target: "_blank", rel: "noopener noreferrer" }
-                  : {})}
               >
-                {link.label}
-              </a>
+                <a
+                  href={link.href}
+                  className={`alt-menu-reveal inline-block font-heading font-normal text-[clamp(3rem,4.5vw,4.5rem)] leading-tight text-white transition-colors hover:text-[#FABC43] active:text-[#FABC43] ${"caps" in link && link.caps ? "uppercase" : "capitalize"}`}
+                  onClick={() => setOpen(false)}
+                  tabIndex={open ? 0 : -1}
+                  {...("external" in link && link.external
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                >
+                  {link.label}
+                </a>
+              </div>
             ))}
           </nav>
 
           <div className="mt-10 flex items-end justify-between gap-6">
-            <p
-              className="alt-fade-up font-body text-[clamp(0.75rem,1.4vw,1rem)] leading-[1.35] text-white/50"
-              style={{ ["--alt-fade-delay" as string]: "0.7s" }}
+            <div className="font-body text-[clamp(0.75rem,1.4vw,1rem)] leading-[1.35] text-white/50">
+              {ADDRESS_LINES.map((line, index) => (
+                <div
+                  key={line}
+                  className="alt-menu-clip"
+                  style={{
+                    ["--alt-fade-delay" as string]: `${0.66 + index * 0.12}s`,
+                  }}
+                >
+                  <span className="alt-menu-reveal block">{line}</span>
+                </div>
+              ))}
+            </div>
+            <div
+              className="alt-menu-clip max-w-[50%]"
+              style={{ ["--alt-fade-delay" as string]: "0.78s" }}
             >
-              Fitzrovia Chapel
-              <br />
-              Fitzroy Place
-              <br />
-              2 Pearson Square
-              <br />
-              London W1T 3BF
-            </p>
-            <a
-              href={ENQUIRY_MAIL}
-              className="alt-fade-up max-w-[50%] text-right font-body text-[clamp(0.75rem,1.4vw,1rem)] leading-[1.35] break-all text-white/50 hover:text-[#BD6942] active:text-[#BD6942]"
-              style={{ ["--alt-fade-delay" as string]: "0.82s" }}
-              onClick={() => setOpen(false)}
-              tabIndex={open ? 0 : -1}
-            >
-              {ENQUIRY_LABEL}
-            </a>
+              <a
+                href={ENQUIRY_MAIL}
+                className="alt-menu-reveal block text-right font-body text-[clamp(0.75rem,1.4vw,1rem)] leading-[1.35] break-all text-white/50 hover:text-[#BD6942] active:text-[#BD6942]"
+                onClick={() => setOpen(false)}
+                tabIndex={open ? 0 : -1}
+              >
+                {ENQUIRY_LABEL}
+              </a>
+            </div>
           </div>
         </div>
       </div>
