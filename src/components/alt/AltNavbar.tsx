@@ -123,6 +123,21 @@ export function AltNavbar() {
 
   const chrome = (
       <>
+      <header
+        className="fixed inset-x-0 top-0 z-60"
+        style={{
+          backgroundColor: theme.bg,
+          paddingTop: "env(safe-area-inset-top, 0px)",
+        }}
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-full h-[50vh]"
+          style={{ backgroundColor: theme.bg }}
+        />
+        <div className="relative h-[70px] md:h-[100px]" />
+      </header>
+
       <button
         type="button"
         aria-expanded={open}
@@ -218,25 +233,9 @@ export function AltNavbar() {
   return (
     <>
       {mounted ? createPortal(chrome, document.body) : chrome}
-      <header
-        className="fixed inset-x-0 top-0 z-60"
-        style={{
-          backgroundColor: theme.bg,
-          paddingTop: "env(safe-area-inset-top, 0px)",
-        }}
-      >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-full h-[50vh]"
-          style={{ backgroundColor: theme.bg }}
-        />
-        <div className="relative h-[70px] md:h-[100px]" />
-      </header>
-
       <div
         aria-hidden
-        className="shrink-0"
-        style={{ height: "calc(100px + env(safe-area-inset-top, 0px))" }}
+        className="h-[calc(70px+env(safe-area-inset-top,0px))] shrink-0 md:h-[calc(100px+env(safe-area-inset-top,0px))]"
       />
     </>
   );
