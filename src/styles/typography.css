@@ -45,8 +45,26 @@
     }
 
     .text-hero-title {
-      font-size: 112px;
+      font-size: 148px;
       line-height: 1;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .text-hero-title {
+      font-size: 116px;
+    }
+  }
+
+  @media (min-width: 361px) and (max-width: 396px) {
+    .text-hero-title {
+      font-size: 128px;
+    }
+  }
+
+  @media (min-width: 430px) and (max-width: 759px) {
+    .text-hero-title {
+      font-size: 168px;
     }
   }
 
@@ -75,6 +93,12 @@
 
     .text-hero-title {
       font-size: clamp(6.5rem, min(42vw, 56svh), 28rem);
+    }
+  }
+
+  @media (min-width: 1024px) and (max-width: 1120px) {
+    .text-hero-title {
+      font-size: calc(clamp(6.5rem, min(42vw, 56svh), 28rem) - 50px);
     }
   }
 

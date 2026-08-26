@@ -131,14 +131,14 @@ export function AltNavbar() {
         type="button"
         aria-expanded={open}
         aria-label={open ? "Close menu" : "Open menu"}
-        className="fixed top-[calc(35px+env(safe-area-inset-top,0px))] right-[clamp(1.125rem,5.5vw,4.5rem)] z-[110] flex h-12 w-12 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/20 text-brown sm:h-14 sm:w-14 md:top-[calc(50px+env(safe-area-inset-top,0px))] md:h-16 md:w-16"
+        className="fixed top-[calc(35px+env(safe-area-inset-top,0px))] right-[clamp(1.125rem,5.5vw,4.5rem)] z-[110] flex h-4 w-[38px] -translate-y-1/2 cursor-pointer items-center justify-center text-[#BD6942] md:top-[calc(50px+env(safe-area-inset-top,0px))] md:w-12"
         onClick={() => setOpen(!open)}
       >
         <span
-          className={`absolute h-0.5 w-5 bg-current transition-transform duration-700 ease-[cubic-bezier(.87,0,.13,1)] sm:w-6 ${open ? "translate-y-0 rotate-45 scale-x-105" : "-translate-y-1.5"}`}
+          className={`absolute h-[4.7px] w-[38px] rounded-[9.4px] bg-current transition-transform duration-700 ease-[cubic-bezier(.87,0,.13,1)] md:w-12 ${open ? "translate-y-0 rotate-45" : "-translate-y-[5.35px]"}`}
         />
         <span
-          className={`absolute h-0.5 w-5 bg-current transition-transform duration-700 ease-[cubic-bezier(.87,0,.13,1)] sm:w-6 ${open ? "translate-y-0 -rotate-45 scale-x-105" : "translate-y-1.5"}`}
+          className={`absolute h-[4.7px] w-[38px] rounded-[9.4px] bg-current transition-transform duration-700 ease-[cubic-bezier(.87,0,.13,1)] md:w-12 ${open ? "translate-y-0 -rotate-45" : "translate-y-[5.35px]"}`}
         />
       </button>
 
