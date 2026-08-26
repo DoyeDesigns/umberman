@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { ALT_THEMES } from "@/lib/design";
 
 const ENQUIRY_MAIL = "mailto:enquiry@umbermanbybabajideolatunji.com";
@@ -60,7 +61,12 @@ export function AltNavbar() {
   const [phase, setPhase] = useState<"closed" | "opening" | "open" | "closing">(
     "closed",
   );
+  const [mounted, setMounted] = useState(false);
   const [textReady, setTextReady] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const phaseRef = useRef(phase);
   phaseRef.current = phase;
 
@@ -95,38 +101,28 @@ export function AltNavbar() {
   }, [phase]);
 
   useEffect(() => {
-    if (!open) return;
+    document.documentElement.dataset.menuPhase = phase;
+    const locked = phase !== "closed";
+    document.documentElement.style.overflow = locked ? "hidden" : "";
+    document.body.style.overflow = locked ? "hidden" : "";
+    return () => {
+      delete document.documentElement.dataset.menuPhase;
+      document.documentElement.style.overflow = "";
+      document.body.style.overflow = "";
+    };
+  }, [phase]);
 
+  useEffect(() => {
+    if (phase === "closed") return;
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") setOpen(false);
     };
-
-    document.body.style.overflow = "hidden";
     window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [phase, setOpen]);
 
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [open, setOpen]);
-
-  return (
-    <>
-      <header
-        className="fixed inset-x-0 top-0 z-60"
-        style={{
-          backgroundColor: theme.bg,
-          paddingTop: "env(safe-area-inset-top, 0px)",
-        }}
-      >
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-full h-[50vh]"
-          style={{ backgroundColor: theme.bg }}
-        />
-        <div className="relative h-[70px] md:h-[100px]" />
-      </header>
-
+  const chrome = (
+      <>
       <button
         type="button"
         aria-expanded={open}
@@ -216,6 +212,26 @@ export function AltNavbar() {
           </div>
         </div>
       </div>
+      </>
+  );
+
+  return (
+    <>
+      {mounted ? createPortal(chrome, document.body) : chrome}
+      <header
+        className="fixed inset-x-0 top-0 z-60"
+        style={{
+          backgroundColor: theme.bg,
+          paddingTop: "env(safe-area-inset-top, 0px)",
+        }}
+      >
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-full h-[50vh]"
+          style={{ backgroundColor: theme.bg }}
+        />
+        <div className="relative h-[70px] md:h-[100px]" />
+      </header>
 
       <div
         aria-hidden

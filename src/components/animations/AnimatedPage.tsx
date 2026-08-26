@@ -6,7 +6,7 @@ type AnimatedPageProps = {
 
 export function AnimatedPage({ children }: AnimatedPageProps) {
   return (
-    <main className="relative w-full max-w-full">
+    <main className="alt-site-push relative w-full max-w-full">
       {children}
     </main>
   );
