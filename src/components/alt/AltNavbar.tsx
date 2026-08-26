@@ -142,15 +142,17 @@ export function AltNavbar() {
         type="button"
         aria-expanded={open}
         aria-label={open ? "Close menu" : "Open menu"}
-        className="fixed top-[calc(35px+env(safe-area-inset-top,0px))] right-[clamp(1.125rem,5.5vw,4.5rem)] z-[110] flex h-4 w-[38px] -translate-y-1/2 cursor-pointer items-center justify-center text-[#BD6942] md:top-[calc(50px+env(safe-area-inset-top,0px))] md:w-12"
+        className="fixed top-[calc(35px+env(safe-area-inset-top,0px))] right-[clamp(0.5rem,calc(5.5vw-0.5rem),4rem)] z-[110] flex h-14 w-14 -translate-y-1/2 cursor-pointer items-center justify-center overflow-visible text-[#BD6942] md:top-[calc(50px+env(safe-area-inset-top,0px))] md:h-16 md:w-16"
         onClick={() => setOpen(!open)}
       >
-        <span
-          className={`absolute h-[4.7px] w-[38px] rounded-[9.4px] bg-current transition-transform duration-700 ease-[cubic-bezier(.87,0,.13,1)] md:w-12 ${open ? "translate-y-0 rotate-45" : "-translate-y-[5.35px]"}`}
-        />
-        <span
-          className={`absolute h-[4.7px] w-[38px] rounded-[9.4px] bg-current transition-transform duration-700 ease-[cubic-bezier(.87,0,.13,1)] md:w-12 ${open ? "translate-y-0 -rotate-45" : "translate-y-[5.35px]"}`}
-        />
+        <span className="flex w-[38px] flex-col justify-center gap-[6px] md:w-12">
+          <span
+            className={`block h-[4.7px] w-full rounded-[9.4px] bg-current transition-transform duration-700 ease-[cubic-bezier(.87,0,.13,1)] ${open ? "translate-y-[5.35px] rotate-45" : ""}`}
+          />
+          <span
+            className={`block h-[4.7px] w-full rounded-[9.4px] bg-current transition-transform duration-700 ease-[cubic-bezier(.87,0,.13,1)] ${open ? "-translate-y-[5.35px] -rotate-45" : ""}`}
+          />
+        </span>
       </button>
 
       <div

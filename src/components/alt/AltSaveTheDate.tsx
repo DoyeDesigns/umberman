@@ -14,7 +14,7 @@ export function AltSaveTheDate() {
   return (
     <section
       id="save-the-date"
-      className="flex min-h-130 w-full max-w-full scroll-mt-[100px] flex-col justify-between px-[clamp(1.125rem,5.5vw,4.5rem)] pb-16 md:pb-10 py-[clamp(1.5rem,4vw,3rem)] md:min-h-screen"
+      className="flex min-h-130 w-full max-w-full scroll-mt-[100px] flex-col justify-between px-[clamp(1.125rem,5.5vw,4.5rem)] pb-16 md:pb-10 py-[clamp(1.5rem,4vw,3rem)] xl:min-h-screen"
       style={{ backgroundColor: theme.bg }}
     >
       <div className="flex flex-1 flex-col items-center justify-center">
