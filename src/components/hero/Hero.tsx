@@ -26,7 +26,7 @@ export function Hero() {
                   className="text-hero-name font-heading font-normal leading-none tracking-[-0.02em]"
                   style={{ color: theme.name }}
                 >
-                  Babajide Olatunji
+                  Babájídé Ọlátúnjí
                 </p>
               </AltLoadEntranceMotion>
               <AltLoadEntranceMotion role="presents">
