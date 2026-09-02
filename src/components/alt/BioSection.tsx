@@ -5,7 +5,7 @@ import Link from "next/link";
 import { AltFadeUpReveal } from "@/components/animations/AltFadeUpReveal";
 
 const LEAD =
-  "Babajide Olatunji (b. 1989) is a Nigerian-born, London-based, full-time studio artist, songwriter and singer working from studios in London and Ibadan, Nigeria.";
+  "Babájídé Ọlátúnjí (b. 1989) is a Nigerian-born, London-based, full-time studio artist, songwriter and singer working from studios in London and Ibadan, Nigeria.";
 
 const PARAGRAPHS = [
   "His work explores his Yoruba history and philosophies with the perpetual goal of presenting these in a relatable global context. A self-taught painter with a background in Botany from Obafemi Awolowo University, Ile Ife, Nigeria. He has spent more than a decade developing a distinctive practice inspired by art and antiquities original to South Western Nigeria as well as the works of old masters from the early renaissance to the modern era. He combines careful observation with imagination, creating portraits and narrative paintings that draw on Yoruba culture and mythologies while speaking to universal human questions.",
@@ -22,7 +22,7 @@ export function BioSection() {
           <div className="mx-auto h-[170px] w-[255px] shrink-0 overflow-hidden rounded-[9.17px] border-[0.92px] border-solid border-[#18225E] md:mx-0 md:mt-0 md:h-auto md:w-full md:max-w-[28rem] md:border-[3px]">
             <Image
               src="/jide-portrait.webp"
-              alt="Portrait of Babajide Olatunji"
+              alt="Portrait of Babájídé Ọlátúnjí"
               width={1920}
               height={1280}
               sizes="(max-width: 768px) 255px, 28rem"
@@ -33,7 +33,7 @@ export function BioSection() {
 
           <div className="mt-6 min-w-0 flex-1 md:mt-0 md:flex md:flex-col md:justify-center">
             <h1 className="text-bio-name text-center text-[#BD6942] font-heading font-normal text-[#1C1C1C] md:text-left">
-              Babajide Olatunji
+              Babájídé Ọlátúnjí
             </h1>
             <p className="text-bio-role mt-2 text-center font-body font-normal uppercase text-[#1C1C1C] md:mt-3 md:text-left">
               <span className="">Artist</span>

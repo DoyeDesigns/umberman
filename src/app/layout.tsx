@@ -4,9 +4,9 @@ import { MotionInit } from "@/components/animations/MotionInit";
 import { august, infini, panthoma } from "./fonts";
 import "./globals.css";
 
-const title = "Umberman — Babajide Olatunji";
+const title = "Umberman — Babájídé Ọlátúnjí";
 const description =
-  "Umberman is a solo art exhibition by Babajide Olatunji at the Fitzrovia Chapel, London. September 21–24, 2026.";
+  "Umberman is a solo art exhibition by Babájídé Ọlátúnjí at the Fitzrovia Chapel, London. September 21–24, 2026.";
 
 export const metadata: Metadata = {
   title,
