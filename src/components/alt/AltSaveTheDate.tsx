@@ -57,7 +57,9 @@ export function AltSaveTheDate() {
       <AltStaggerGroup className="relative z-50 mt-8 flex w-full flex-col items-center gap-4 md:flex-row md:items-center md:justify-center md:gap-[clamp(1.25rem,4.86vw,70px)]">
         <div className={ctaWrapClassName} style={{ ["--alt-fade-delay" as string]: "0s" }}>
           <a
-            href="#"
+            href="https://luma.com/ar5fae87"
+            target="_blank"
+            rel="noopener noreferrer"
             className={btnClassName}
             style={{ ["--cta-fill" as string]: theme.ctaRegister }}
           >
