@@ -1,9 +1,6 @@
 "use client";
 
 import { AltFadeUpReveal } from "@/components/animations/AltFadeUpReveal";
-import { ALT_THEMES } from "@/lib/design";
-
-const theme = ALT_THEMES.alt;
 
 const PARAGRAPHS = [
   `In this body of work, I bring together music and painting to tell a single story—the story of The Umberman. He's unsure and unmoored, but he's in love, too. He struggles with a hero complex while somewhat paranoid. And, like most other 30 somethings, he's overworked and still can't afford a mortgage. He feels betrayed by the generation before him and is mortified to have children for fear of not measuring up either. He's sometimes full of shit and other times an eternal optimist. He believes his destiny is tied to his choices and, at the same time, knows there are neural pathways threaded before his umbilical cord was snipped and buried. Or eaten. Or whatever.`,
@@ -16,8 +13,7 @@ export function AboutExhibitionSection() {
   return (
     <section
       id="about"
-      className="w-full max-w-full scroll-mt-[100px] border-b-[50px] bg-[#F1F1F1]"
-      style={{ borderBottomColor: theme.bg }}
+      className="w-full max-w-full scroll-mt-[100px] bg-[#F1F1F1]"
     >
       <div className="section-px mx-auto w-full max-w-[min(100%,80rem)] py-[clamp(3rem,8vw,5.5rem)]">
         <AltFadeUpReveal>

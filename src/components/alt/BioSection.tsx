@@ -1,15 +1,12 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { AltFadeUpReveal } from "@/components/animations/AltFadeUpReveal";
 
-const PORTRAIT_SRC = "/jide-portrait-bw.webp";
-const PORTRAIT_BLUR =
-  "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADwAQCdASoQAAsAA4BaJaQAAtpB2o/v2QAA/vFmWpM0om2GsNajgm//umgJhyezyeGpxrKEkfmAAA==";
+const LEAD =
+  "Babajide Olatunji (b. 1989) is a Nigerian-born, London-based, full-time studio artist, songwriter and singer working from studios in London and Ibadan, Nigeria.";
 
 const PARAGRAPHS = [
-  "Babajide Olatunji (b. 1989) is a Nigerian-born, London-based, full-time studio artist, songwriter and singer working from studios in London and Ibadan, Nigeria.",
   "His work explores his Yoruba history and philosophies with the perpetual goal of presenting these in a relatable global context. A self-taught painter with a background in Botany from Obafemi Awolowo University, Ile Ife, Nigeria. He has spent more than a decade developing a distinctive practice inspired by art and antiquities original to South Western Nigeria as well as the works of old masters from the early renaissance to the modern era. He combines careful observation with imagination, creating portraits and narrative paintings that draw on Yoruba culture and mythologies while speaking to universal human questions.",
   "His work has been exhibited internationally and is held in public and private collections in the United Kingdom, Europe, Africa, China and the United States, including the Bank of England Museum and the Mott-Warsh Collection. In 2017, he was selected for a curated section of the Royal Academy Summer Exhibition, and more recently his monumental History of the Yorubas painting was unveiled at the John Randle Centre for Yoruba Culture & History in Lagos. Throughout his career, Olatunji has approached painting as a way of preserving cultural memory while inviting conversations about the present.",
   "Across projects such as Tribal Marks, Aroko, The Book of Proverbs, History of the Yorubas and The Cowrie Project, Olatunji has returned to the lives, beliefs, and traditions that have shaped Yoruba society. Developing a multimedia practice, he executes these projects using Charcoal, Pastels, various types of paints as well as ground cowrie shells as tools. His mastery of the chalk pastel medium is evident in the outsized hyperrealistic portraits that are a staple of his studio in Ibadan and London. He uses precision and history as tools to ask enduring questions about the vagaries of human life. Moreso, his paintings are results of extensive research built upon imagined figures, allowing individual stories to emerge as relatable, shared human experiences.",
@@ -18,31 +15,37 @@ const PARAGRAPHS = [
 
 export function BioSection() {
   return (
-    <section id="bio" className="w-full max-w-full scroll-mt-[100px] bg-[#F1F1F1]">
-      <div className="section-px mx-auto w-full max-w-[min(100%,80rem)] py-[clamp(3rem,8vw,5.5rem)]">
-        <AltFadeUpReveal>
-          <h2 className="text-alt-section-title mb-[clamp(2rem,5vw,3.5rem)] text-center font-heading font-normal text-[#1C1C1C]">
-            Bio
-          </h2>
-        </AltFadeUpReveal>
-
-        <AltFadeUpReveal delay={0.08}>
-          <div className="relative mx-auto mb-[clamp(2rem,5vw,3.5rem)] aspect-[1275/850] w-full max-h-[850px] max-w-[1275px]">
-            <Image
-              src={PORTRAIT_SRC}
-              alt="Black and white portrait of Babajide Olatunji"
-              fill
-              priority
-              quality={80}
-              placeholder="blur"
-              blurDataURL={PORTRAIT_BLUR}
-              sizes="(max-width: 768px) 100vw, (max-width: 1275px) 92vw, 1275px"
-              className="object-cover object-center"
+    <section id="bio" className="w-full max-w-full scroll-mt-[100px] bg-[#E3E7FC]">
+      <div className="mx-auto w-full max-w-[min(100%,80rem)] pb-[clamp(3rem,8vw,5.5rem)] md:pt-[clamp(3rem,8vw,5.5rem)]">
+        <div className="section-px pt-25 md:pt-27 mb-[clamp(1.25rem,3vw,1.75rem)] flex flex-col items-center md:mb-[clamp(2rem,5vw,3.5rem)] md:flex-row md:items-center md:gap-12">
+          <div className="mx-auto h-[170px] w-[255px] shrink-0 overflow-hidden rounded-[9.17px] border-[0.92px] border-[#1C1C1C] md:mx-0 md:mt-0 md:h-auto md:w-full md:max-w-[28rem]">
+            <img
+              src="/jide-portrait.png"
+              alt="Portrait of Babajide Olatunji"
+              width={659}
+              height={563}
+              className="block h-full w-full object-cover object-center md:h-auto"
             />
           </div>
-        </AltFadeUpReveal>
 
-        <div className="flex flex-col gap-[clamp(1.25rem,3vw,1.75rem)] text-left font-body text-[clamp(1rem,2.5vw,1.375rem)] font-normal leading-[1.45] tracking-normal text-[#1C1C1C]">
+          <div className="mt-6 min-w-0 flex-1 md:mt-0 md:flex md:flex-col md:justify-center">
+            <h1 className="text-bio-name text-center text-[#BD6942] font-heading font-normal text-[#1C1C1C] md:text-left">
+              Babajide Olatunji
+            </h1>
+            <p className="text-bio-role mt-2 text-center font-body font-normal uppercase text-[#1C1C1C] md:mt-3 md:text-left">
+              <span className="md:hidden">Artist</span>
+              <span className="hidden md:inline">Contemporary Artist</span>
+            </p>
+            <p className="text-bio-lead mt-6 hidden text-left font-body font-normal text-[#1C1C1C] md:block">
+              {LEAD}
+            </p>
+          </div>
+        </div>
+
+        <div className="section-px flex flex-col gap-[clamp(1.25rem,3vw,1.75rem)] text-left font-body text-[clamp(1rem,2.5vw,1.375rem)] font-normal leading-[1.45] tracking-normal text-[#1C1C1C]">
+          <AltFadeUpReveal className="md:hidden" delay={0.08}>
+            <p>{LEAD}</p>
+          </AltFadeUpReveal>
           {PARAGRAPHS.map((paragraph, index) => (
             <AltFadeUpReveal key={index} delay={0.12 + index * 0.07}>
               <p>{paragraph}</p>
@@ -55,7 +58,7 @@ export function BioSection() {
             href="https://www.babajideolatunji.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-[clamp(2rem,5vw,3.5rem)] block text-center font-heading text-[clamp(1.125rem,3vw,1.75rem)] font-normal tracking-[-0.02em] text-[#1C1C1C]/70 underline decoration-[#1C1C1C]/70 decoration-2 underline-offset-[0.25em] transition-colors hover:text-[#BD6942] hover:decoration-[#BD6942] active:text-[#BD6942] active:decoration-[#BD6942]"
+            className="section-px mt-[clamp(2rem,5vw,3.5rem)] block text-center font-heading text-[clamp(1.125rem,3vw,1.75rem)] font-normal tracking-[-0.02em] text-[#1C1C1C]/70 underline decoration-[#1C1C1C]/70 decoration-2 underline-offset-[0.25em] transition-colors hover:text-[#BD6942] hover:decoration-[#BD6942] active:text-[#BD6942] active:decoration-[#BD6942]"
           >
             www.babajideolatunji.com
           </Link>
