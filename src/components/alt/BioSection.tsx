@@ -19,7 +19,7 @@ export function BioSection() {
     <section id="bio" className="w-full max-w-full scroll-mt-[100px] bg-[#E3E7FC]">
       <div className="mx-auto w-full max-w-[min(100%,80rem)] pb-[clamp(3rem,8vw,5.5rem)] md:pt-[clamp(3rem,8vw,5.5rem)]">
         <div className="section-px pt-25 md:pt-27 mb-[clamp(1.25rem,3vw,1.75rem)] flex flex-col items-center md:mb-[clamp(2rem,5vw,3.5rem)] md:flex-row md:items-center md:gap-12">
-          <div className="mx-auto h-[170px] w-[255px] shrink-0 overflow-hidden rounded-[9.17px] border-[0.92px] border-[#1C1C1C] md:mx-0 md:mt-0 md:h-auto md:w-full md:max-w-[28rem]">
+          <div className="mx-auto h-[170px] w-[255px] shrink-0 overflow-hidden rounded-[9.17px] border-[0.92px] border-solid border-[#18225E] md:mx-0 md:mt-0 md:h-auto md:w-full md:max-w-[28rem] md:border-[3px]">
             <Image
               src="/jide-portrait.webp"
               alt="Portrait of Babajide Olatunji"
