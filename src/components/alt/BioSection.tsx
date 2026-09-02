@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { AltFadeUpReveal } from "@/components/animations/AltFadeUpReveal";
 
@@ -19,11 +20,13 @@ export function BioSection() {
       <div className="mx-auto w-full max-w-[min(100%,80rem)] pb-[clamp(3rem,8vw,5.5rem)] md:pt-[clamp(3rem,8vw,5.5rem)]">
         <div className="section-px pt-25 md:pt-27 mb-[clamp(1.25rem,3vw,1.75rem)] flex flex-col items-center md:mb-[clamp(2rem,5vw,3.5rem)] md:flex-row md:items-center md:gap-12">
           <div className="mx-auto h-[170px] w-[255px] shrink-0 overflow-hidden rounded-[9.17px] border-[0.92px] border-[#1C1C1C] md:mx-0 md:mt-0 md:h-auto md:w-full md:max-w-[28rem]">
-            <img
-              src="/jide-portrait.png"
+            <Image
+              src="/jide-portrait.webp"
               alt="Portrait of Babajide Olatunji"
-              width={659}
-              height={563}
+              width={1920}
+              height={1280}
+              sizes="(max-width: 768px) 255px, 28rem"
+              quality={80}
               className="block h-full w-full object-cover object-center md:h-auto"
             />
           </div>
