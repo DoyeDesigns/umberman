@@ -36,8 +36,8 @@ export function BioSection() {
               Babajide Olatunji
             </h1>
             <p className="text-bio-role mt-2 text-center font-body font-normal uppercase text-[#1C1C1C] md:mt-3 md:text-left">
-              <span className="md:hidden">Artist</span>
-              <span className="hidden md:inline">Contemporary Artist</span>
+              <span className="">Artist</span>
+              {/* <span className="hidden md:inline">Contemporary Artist</span> */}
             </p>
             <p className="text-bio-lead mt-6 hidden text-left font-body font-normal text-[#1C1C1C] md:block">
               {LEAD}
