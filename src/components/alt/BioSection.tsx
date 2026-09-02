@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { OWithDot, withODot } from "@/components/alt/OWithDot";
 import { AltFadeUpReveal } from "@/components/animations/AltFadeUpReveal";
 
 const LEAD =
@@ -33,21 +34,21 @@ export function BioSection() {
 
           <div className="mt-6 min-w-0 flex-1 md:mt-0 md:flex md:flex-col md:justify-center">
             <h1 className="text-bio-name text-center text-[#BD6942] font-heading font-normal text-[#1C1C1C] md:text-left">
-              Babájídé Ọlátúnjí
+              Babájídé <OWithDot />látúnjí
             </h1>
             <p className="text-bio-role mt-2 text-center font-body font-normal uppercase text-[#1C1C1C] md:mt-3 md:text-left">
               <span className="">Artist</span>
               {/* <span className="hidden md:inline">Contemporary Artist</span> */}
             </p>
             <p className="text-bio-lead mt-6 hidden text-left font-body font-normal text-[#1C1C1C] md:block">
-              {LEAD}
+              {withODot(LEAD)}
             </p>
           </div>
         </div>
 
         <div className="section-px flex flex-col gap-[clamp(1.25rem,3vw,1.75rem)] text-left font-body text-[clamp(1rem,2.5vw,1.375rem)] font-normal leading-[1.45] tracking-normal text-[#1C1C1C]">
           <AltFadeUpReveal className="md:hidden" delay={0.08}>
-            <p>{LEAD}</p>
+            <p>{withODot(LEAD)}</p>
           </AltFadeUpReveal>
           {PARAGRAPHS.map((paragraph, index) => (
             <AltFadeUpReveal key={index} delay={0.12 + index * 0.07}>

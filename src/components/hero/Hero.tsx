@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { OWithDot } from "@/components/alt/OWithDot";
 import { AltLoadEntranceMotion } from "@/components/animations/AltLoadEntranceMotion";
 import { IntroScrollProvider } from "@/components/animations/IntroScrollContext";
 import { LiveAt } from "@/components/live-at/LiveAt";
@@ -23,10 +24,10 @@ export function Hero() {
             <div className="flex w-full min-w-0 shrink-0 flex-row items-baseline justify-between gap-4 text-left md:mt-6 lg:mt-9">
               <AltLoadEntranceMotion role="name">
                 <p
-                  className="text-hero-name font-heading font-normal leading-none tracking-[-0.02em]"
+                  className="text-hero-name overflow-visible font-heading font-normal leading-none tracking-[-0.02em]"
                   style={{ color: theme.name }}
                 >
-                  Babájídé Ọlátúnjí
+                  Babájídé <OWithDot />látúnjí
                 </p>
               </AltLoadEntranceMotion>
               <AltLoadEntranceMotion role="presents">
