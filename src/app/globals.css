@@ -36,16 +36,15 @@
 .o-with-dot {
   position: relative;
   display: inline-block;
-  padding-bottom: -0.18em;
 }
 
 .o-with-dot::after {
   content: "";
   position: absolute;
   left: 50%;
-  bottom: 0.02em;
-  width: 0.12em;
-  height: 0.12em;
+  bottom: 0.08em;
+  width: 0.1em;
+  height: 0.1em;
   border-radius: 50%;
   background: currentColor;
   transform: translateX(-50%);
