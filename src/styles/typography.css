@@ -431,5 +431,7 @@
 
   .font-prose p {
     text-wrap: pretty;
+    overflow-wrap: normal;
+    word-break: normal;
   }
 }
