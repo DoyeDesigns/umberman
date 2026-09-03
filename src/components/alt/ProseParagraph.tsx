@@ -41,7 +41,12 @@ type ProseParagraphProps = {
 export function ProseParagraph({ text, className }: ProseParagraphProps) {
   const lines = text.split("\n").filter((line) => line.length > 0);
   const nodes: ReactNode[] = lines.flatMap((line, index) => [
-    index > 0 ? <br key={`br-${index}`} /> : null,
+    index > 0 ? (
+      <Fragment key={`sep-${index}`}>
+        <br className="md:hidden" />
+        <span className="hidden md:inline"> </span>
+      </Fragment>
+    ) : null,
     <Fragment key={`line-${index}`}>{glueWords(line)}</Fragment>,
   ]);
 
