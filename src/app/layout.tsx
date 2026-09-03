@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { MotionInit } from "@/components/animations/MotionInit";
-import { august, infini, panthoma } from "./fonts";
+import { alegreyaSans, august, infini, panthoma } from "./fonts";
 import "./globals.css";
 
 const title = "Umberman — Babájídé Ọlátúnjí";
@@ -53,7 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${infini.variable} ${august.variable} ${panthoma.variable} h-full antialiased`}
+      className={`${infini.variable} ${august.variable} ${panthoma.variable} ${alegreyaSans.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <Script

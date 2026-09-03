@@ -1,9 +1,9 @@
 import { Fragment, type ReactNode } from "react";
 
 /** Panthoma/Infini have no Ọ glyph. Draw O plus a matching underdot. */
-export function OWithDot() {
+export function OWithDot({ className }: { className?: string }) {
   return (
-    <span className="o-with-dot" aria-label="Ọ">
+    <span className={`o-with-dot ${className ?? ""}`.trim()} aria-label="Ọ">
       <span aria-hidden="true">O</span>
     </span>
   );

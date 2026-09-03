@@ -41,3 +41,20 @@ export const panthoma = localFont({
   variable: "--font-panthoma",
   display: "swap",
 });
+
+export const alegreyaSans = localFont({
+  src: [
+    {
+      path: "./fonts/AlegreyaSans-Regular.ttf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/AlegreyaSans-Italic.ttf",
+      weight: "400",
+      style: "italic",
+    },
+  ],
+  variable: "--font-alegreya-sans",
+  display: "swap",
+});

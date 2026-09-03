@@ -31,6 +31,7 @@
   --font-display: var(--font-august);
   --font-heading: var(--font-panthoma);
   --font-body: var(--font-infini);
+  --font-prose: var(--font-alegreya-sans);
 }
 
 .o-with-dot {
@@ -48,6 +49,10 @@
   border-radius: 50%;
   background: currentColor;
   transform: translateX(-50%);
+}
+
+.o-with-dot-link::after {
+  bottom: 0.14em;
 }
 
 html {
