@@ -89,7 +89,7 @@ export function BioSection() {
             rel="noopener noreferrer"
             className="section-px mt-[clamp(2rem,5vw,3.5rem)] block text-center font-heading text-[clamp(1.125rem,3vw,1.75rem)] font-normal tracking-[-0.02em] text-[#1C1C1C]/70 underline decoration-[#1C1C1C]/70 decoration-2 underline-offset-[0.25em] transition-colors hover:text-[#BD6942] hover:decoration-[#BD6942] active:text-[#BD6942] active:decoration-[#BD6942]"
           >
-            www.Babájídé<OWithDot className="o-with-dot-link" />látúnjí.com
+            www.babajideolatunji.com
           </Link>
         </AltFadeUpReveal>
       </div>
