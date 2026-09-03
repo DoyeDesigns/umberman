@@ -4,18 +4,11 @@ import { AltFadeUpReveal } from "@/components/animations/AltFadeUpReveal";
 import { ProseParagraph } from "@/components/alt/ProseParagraph";
 
 const PARAGRAPHS = [
-  `In this body of work, I bring together music and painting to tell a single story—the story of The Umberman. He's unsure and unmoored, but he's in love, too. He struggles with a hero complex while somewhat paranoid. And, like most other 30-somethings, he's overworked and still can't afford a mortgage. He feels betrayed by the generation before him and is mortified to have children for fear of not measuring up either.
-He's sometimes steeped in dread, other times an eternal optimist.
-He believes his destiny is tied to his choices and, at the same time, knows there are neural pathways threaded before his umbilical cord was snipped and buried. Or eaten. Or whatever.`,
-  `His concerns are universal: love, doubt, grief, displacement, and a yearning to be rooted, to belong somewhere; lingering questions that remain unanswered regardless of our origins or beliefs.
-Each song and painting records snapshots from different moments in life, but together they ask how we find meaning while living through uncertainty.`,
-  `We spend much of our lives in search of ourselves, acceptance, or the next sure thing, yet we rarely pause to consider the shrines that guide those pursuits or the people we become on these dusty paths.
-For this reason, The Umberman asks more questions than gives answers. After all, the artist is on this same journey to find himself.`,
-  `Consider The Umberman a building. Some rooms are empty, lit by a single 40-watt bulb, furnish them.
-Others are baroque and overstuffed; others shift like mirages through a kaleidoscope.`,
-  `Come in, have a look, bring what you will and take all you can.
-I hope it's to your liking.
-If it isn't, I'll stick to painting portraits—after 77 times 7 more tries.`,
+  `In this body of work, I bring together music and painting to tell a single story—the story of The Umberman. He's unsure and unmoored, but he's in love, too. He struggles with a hero complex while somewhat paranoid. And, like most other 30-somethings, he's overworked and still can't afford a mortgage. He feels betrayed by the generation before him and is mortified to have children for fear of not measuring up either. He's sometimes steeped in dread; at other times, he's an eternal optimist. He believes his destiny is tied to his choices and, at the same time, knows there are neural pathways threaded before his umbilical cord was snipped and buried. Or eaten. Or whatever.`,
+  `His concerns are universal: love, doubt, grief, displacement, and a yearning to be rooted and to belong somewhere—lingering questions that remain unanswered, regardless of our origins or beliefs. Each song and painting records snapshots from different moments in life, but together they ask how we find meaning while living through uncertainty.`,
+  `We spend much of our lives in search of ourselves, acceptance, or the next sure thing, yet we rarely pause to consider the shrines that guide those pursuits or the people we become on these dusty paths. For this reason, The Umberman asks more questions than gives answers. After all, the artist is on this same journey to find himself.`,
+  `Consider The Umberman a building. Some rooms are empty, lit by a single 40-watt bulb, furnish them. Others are baroque and overstuffed; others shift like mirages through a kaleidoscope.`,
+  `Come in, have a look, bring what you will and take all you can. I hope it's to your liking. If it isn't, I'll stick to painting portraits-after 77 times 7 more tries.`,
 ] as const;
 
 export function AboutExhibitionSection() {
