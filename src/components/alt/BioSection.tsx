@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { OWithDot } from "@/components/alt/OWithDot";
@@ -28,11 +29,15 @@ The Umberman continues Ọlátúnjí's long-standing commitment to storytelling,
 ] as const;
 
 export function BioSection() {
+  const [portraitReady, setPortraitReady] = useState(false);
+
   return (
     <section id="bio" className="w-full max-w-full scroll-mt-[100px] bg-[#E3E7FC]">
       <div className="mx-auto w-full max-w-[min(100%,80rem)] pb-[clamp(3rem,8vw,5.5rem)] md:pt-[clamp(3rem,8vw,5.5rem)]">
         <div className="section-px pt-25 md:pt-27 mb-[clamp(1.25rem,3vw,1.75rem)] flex flex-col items-center md:mb-[clamp(2rem,5vw,3.5rem)] md:flex-row md:items-center md:gap-12">
-          <div className="mx-auto h-[170px] w-[255px] shrink-0 overflow-hidden rounded-[9.17px] border-[0.92px] border-solid border-[#18225E] md:mx-0 md:mt-0 md:h-auto md:w-full md:max-w-[28rem] md:border-[3px]">
+          <div
+            className={`mx-auto h-[170px] w-[255px] shrink-0 overflow-hidden rounded-[9.17px] border-[0.92px] border-solid border-[#18225E] bg-[#18225E] transition-opacity duration-300 md:mx-0 md:mt-0 md:h-auto md:w-full md:max-w-[28rem] md:border-[3px] ${portraitReady ? "opacity-100" : "opacity-0"}`}
+          >
             <Image
               src="/jide-portrait.webp"
               alt="Portrait of Babájídé Ọlátúnjí"
@@ -40,28 +45,38 @@ export function BioSection() {
               height={1280}
               sizes="(max-width: 768px) 255px, 28rem"
               quality={80}
-              className="block h-full w-full object-cover object-center md:h-auto"
+              onLoad={() => setPortraitReady(true)}
+              onLoadingComplete={() => setPortraitReady(true)}
+              className="block h-full w-full rounded-[9.17px] object-cover object-center md:h-auto"
             />
           </div>
 
           <div className="mt-6 min-w-0 flex-1 md:mt-0 md:flex md:flex-col md:justify-center">
-            <h1 className="text-bio-name text-center text-[#BD6942] font-heading font-normal text-[#1C1C1C] md:text-left">
-              Babájídé <OWithDot />látúnjí
-            </h1>
-            <p className="text-bio-role mt-2 text-center font-body font-normal uppercase text-[#1C1C1C] md:mt-3 md:text-left">
-              <span className="">Artist</span>
-              {/* <span className="hidden md:inline">Contemporary Artist</span> */}
-            </p>
-            <ProseParagraph className="text-bio-lead mt-6 hidden text-left font-prose font-normal text-[#1C1C1C] md:block" text={LEAD} />
+            <AltFadeUpReveal delay={0.08}>
+              <h1 className="text-bio-name text-center text-[#BD6942] font-heading font-normal text-[#1C1C1C] md:text-left">
+                Babájídé <OWithDot />látúnjí
+              </h1>
+            </AltFadeUpReveal>
+            <AltFadeUpReveal delay={0.15}>
+              <p className="text-bio-role mt-2 text-center font-body font-normal uppercase text-[#1C1C1C] md:mt-3 md:text-left">
+                Artist
+              </p>
+            </AltFadeUpReveal>
+            <AltFadeUpReveal className="hidden md:block" delay={0.22}>
+              <ProseParagraph
+                className="text-bio-lead mt-6 text-left font-prose font-normal text-[#1C1C1C]"
+                text={LEAD}
+              />
+            </AltFadeUpReveal>
           </div>
         </div>
 
         <div className="section-px flex flex-col gap-[clamp(1.25rem,3vw,1.75rem)] text-left font-prose text-[16px] font-normal leading-[1.45] tracking-normal text-[#1C1C1C] md:text-[clamp(1rem,2.5vw,1.375rem)]">
-          <AltFadeUpReveal className="md:hidden" delay={0.08}>
+          <AltFadeUpReveal className="md:hidden" delay={0.22}>
             <ProseParagraph text={LEAD} />
           </AltFadeUpReveal>
           {PARAGRAPHS.map((paragraph, index) => (
-            <AltFadeUpReveal key={index} delay={0.12 + index * 0.07}>
+            <AltFadeUpReveal key={index} delay={0.29 + index * 0.07}>
               <ProseParagraph text={paragraph} />
             </AltFadeUpReveal>
           ))}
