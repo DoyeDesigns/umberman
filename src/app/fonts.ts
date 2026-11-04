@@ -22,12 +22,6 @@ export const infini = localFont({
   display: "swap",
 });
 
-export const infiniPicto = localFont({
-  src: "./fonts/infini-picto.otf",
-  variable: "--font-infini-picto",
-  display: "swap",
-});
-
 export const august = localFont({
   src: "./fonts/August-Bold.otf",
   weight: "400",

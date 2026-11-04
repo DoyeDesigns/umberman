@@ -1,7 +1,9 @@
 import { AboutExhibitionSection } from "@/components/alt/AboutExhibitionSection";
 import { AltMenuProvider, AltNavbar } from "@/components/alt/AltNavbar";
-import { AltSaveTheDate } from "@/components/alt/AltSaveTheDate";
 import { BioSection } from "@/components/alt/BioSection";
+import { ConnectWithUsSection } from "@/components/alt/ConnectWithUsSection";
+import { OutNowSection } from "@/components/alt/OutNowSection";
+import { PastExhibitionSection } from "@/components/alt/PastExhibitionSection";
 import { AnimatedPage } from "@/components/animations/AnimatedPage";
 import { Hero } from "@/components/hero/Hero";
 
@@ -13,7 +15,9 @@ export default function Home() {
         <Hero />
         <AboutExhibitionSection />
         <BioSection />
-        <AltSaveTheDate />
+        <PastExhibitionSection />
+        <OutNowSection />
+        <ConnectWithUsSection />
       </AnimatedPage>
     </AltMenuProvider>
   );
