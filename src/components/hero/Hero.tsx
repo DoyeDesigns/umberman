@@ -13,7 +13,7 @@ export function Hero() {
       className="relative z-0 flex w-full max-w-full flex-col pt-7 md:pt-9"
       style={{ backgroundColor: theme.bg }}
     >
-      <div className="flex flex-col gap-[10px] md:gap-[50px]">
+      <div className="flex flex-col gap-[10px] md:gap-[50px] md:mb-25 mb-10">
         <div className="relative mx-auto flex w-fit min-w-0 max-w-full flex-col">
           <div className="flex w-full min-w-0 shrink-0 flex-row items-baseline justify-between gap-4 text-left md:mt-6 lg:mt-9">
             <AltLoadEntranceMotion role="name">

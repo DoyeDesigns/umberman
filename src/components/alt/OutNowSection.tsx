@@ -64,11 +64,11 @@ export function OutNowSection() {
   return (
     <section
       id="out-now"
-      className="w-full max-w-full scroll-mt-[100px] bg-[#F1F1F1] pt-[33px] md:pt-[50px] pb-[60px]"
+      className="w-full max-w-full scroll-mt-[100px] bg-[#18225E] pt-[33px] md:pt-[50px] pb-[60px] border-y-8 md:border-y-14 lg:border-y-20 border-[#F1F1F1]/60"
     >
       <div className="section-px mx-auto flex w-full max-w-[min(100%,80rem)] flex-col items-center">
         <AltFadeUpReveal>
-          <h2 className="text-out-now text-center font-heading font-normal text-[#18225E]">
+          <h2 className="text-out-now text-center md:mt-10 mt-5 font-heading font-normal text-[#F1F1F1]">
             OUT NOW...
           </h2>
         </AltFadeUpReveal>
@@ -87,7 +87,7 @@ export function OutNowSection() {
         </AltFadeUpReveal>
 
         <AltFadeUpReveal delay={0.14} className="mt-[clamp(1.5rem,4vw,2.5rem)]">
-          <p className="text-out-platforms text-center font-prose text-[#1C1C1C]">
+          <p className="text-out-platforms text-center font-prose text-[#F1F1F1]">
             Available on all platforms
           </p>
         </AltFadeUpReveal>
@@ -108,7 +108,7 @@ export function OutNowSection() {
                     alt=""
                     width={200}
                     height={48}
-                    className="h-[clamp(0.875rem,2.2vw,1.75rem)] w-auto max-w-full object-contain opacity-90"
+                    className="h-[clamp(0.875rem,2.2vw,1.75rem)] text-[#F1F1F1] w-auto max-w-full object-contain opacity-90"
                   />
                 </a>
               </li>

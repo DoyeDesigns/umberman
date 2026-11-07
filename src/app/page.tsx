@@ -13,10 +13,10 @@ export default function Home() {
       <AnimatedPage>
         <AltNavbar />
         <Hero />
+        <OutNowSection />
+        <PastExhibitionSection />
         <AboutExhibitionSection />
         <BioSection />
-        <PastExhibitionSection />
-        <OutNowSection />
         <ConnectWithUsSection />
       </AnimatedPage>
     </AltMenuProvider>

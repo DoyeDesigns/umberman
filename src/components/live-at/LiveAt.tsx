@@ -13,7 +13,7 @@ type LiveAtProps = {
 export function LiveAt({ className = "" }: LiveAtProps) {
   return (
     <section
-      className={`w-full max-w-full border-y border-[#F1F1F1] ${className}`.trim()}
+      className={`w-full hidden max-w-full border-y border-[#F1F1F1] ${className}`.trim()}
       style={{ backgroundColor: theme.bg }}
     >
       <div className="border-b border-[#F1F1F1] py-6 md:py-7 lg:py-9">

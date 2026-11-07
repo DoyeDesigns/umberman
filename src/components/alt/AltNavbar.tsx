@@ -2,12 +2,28 @@
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { SocialConnectButtons } from "@/components/alt/SocialConnectButtons";
 import { ALT_THEMES } from "@/lib/design";
 
 const ENQUIRY_MAIL = "mailto:enquiry@umbermanbybabajideolatunji.com";
 const ENQUIRY_LABEL = "enquiry@umbermanbybabajideolatunji.com";
 const theme = ALT_THEMES.alt;
+
+const MENU_LINKS = [
+  {
+    href: "https://www.instagram.com/umbermanbybabajideolatunji",
+    label: "Instagram",
+    delay: "0s",
+    external: true,
+  },
+  { href: "https://www.tiktok.com/@umberman", label: "Tiktok", delay: "0.18s" },
+  { href: ENQUIRY_MAIL, label: "Enquiry", delay: "0.54s" },
+  {
+    href: "https://drive.google.com/drive/folders/1PxpYGFI9Z2Pz7rhQBSmXd3JoLTkMhGr8",
+    label: "Press Kit",
+    delay: "0.36s",
+    external: true,
+  },
+] as const;
 
 const ADDRESS_LINES = [
   "Fitzrovia Chapel",
@@ -158,36 +174,28 @@ export function AltNavbar() {
       >
         <div className="flex h-full min-h-0 flex-col justify-between px-[clamp(1.125rem,5.5vw,4.5rem)] pt-[calc(70px+env(safe-area-inset-top,0px))] pb-[max(1.5rem,env(safe-area-inset-bottom,0px))] md:pt-[calc(100px+env(safe-area-inset-top,0px))]">
           <nav
-            className="flex min-h-0 w-full max-w-3xl flex-1 flex-col items-start justify-center !gap-[30px]"
+            className="mx-auto flex min-h-0 w-full max-w-xl flex-1 flex-col items-start justify-center gap-3 md:gap-2"
             aria-label="Page"
           >
-            <div
-              className="alt-menu-clip"
-              style={{ ["--alt-fade-delay" as string]: "0s" }}
-            >
-              <a
-                href={ENQUIRY_MAIL}
-                className="alt-menu-reveal inline-block font-heading text-[clamp(3rem,4.5vw,4.5rem)] leading-tight font-normal capitalize text-white transition-colors hover:text-[#FABC43] active:text-[#FABC43]"
-                onClick={() => setOpen(false)}
-                tabIndex={open ? 0 : -1}
+            {MENU_LINKS.map((link) => (
+              <div
+                key={link.label}
+                className="alt-menu-clip"
+                style={{ ["--alt-fade-delay" as string]: link.delay }}
               >
-                Enquiry
-              </a>
-            </div>
-
-            <div
-              className="alt-menu-clip"
-              style={{ ["--alt-fade-delay" as string]: "0.18s" }}
-            >
-              <div className="alt-menu-reveal">
-                <SocialConnectButtons
-                  className="mx-0"
-                  gapClassName="flex-col gap-[12px]"
-                  onLinkClick={() => setOpen(false)}
+                <a
+                  href={link.href}
+                  className={`alt-menu-reveal inline-block font-heading font-normal text-[clamp(3rem,4.5vw,4.5rem)] leading-tight text-white transition-colors hover:text-[#FABC43] active:text-[#FABC43] ${"caps" in link && link.caps ? "uppercase" : "capitalize"}`}
+                  onClick={() => setOpen(false)}
                   tabIndex={open ? 0 : -1}
-                />
+                  {...("external" in link && link.external
+                    ? { target: "_blank", rel: "noopener noreferrer" }
+                    : {})}
+                >
+                  {link.label}
+                </a>
               </div>
-            </div>
+            ))}
           </nav>
 
           <div className="mt-10 flex flex-col items-start gap-1 text-left md:flex-row md:items-end md:justify-between">
