@@ -15,7 +15,7 @@ const MENU_LINKS = [
     delay: "0s",
     external: true,
   },
-  { href: "https://www.tiktok.com/@umberman", label: "Tiktok", delay: "0.18s" },
+  { href: "https://www.tiktok.com/@umberman", label: "Tiktok", delay: "0.18s", external: true },
   { href: ENQUIRY_MAIL, label: "Enquiry", delay: "0.54s" },
   {
     href: "https://drive.google.com/drive/folders/1PxpYGFI9Z2Pz7rhQBSmXd3JoLTkMhGr8",
