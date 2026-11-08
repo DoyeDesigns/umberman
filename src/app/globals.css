@@ -55,6 +55,7 @@
 }
 
 html {
+  color-scheme: only light;
   overflow-x: clip;
   overscroll-behavior: none;
   -webkit-text-size-adjust: 100%;
